@@ -1,0 +1,415 @@
+[
+  {
+    "id": "story_boker_tel_aviv",
+    "title_hebrew": "בֹּקֶר בְּתֵל אָבִיב",
+    "title_russian": "Утро в Тель-Авиве",
+    "level": "A1",
+    "reading_time_minutes": 2,
+    "cover_emoji": "☕",
+    "summary_russian": "Пятничное утро, прогулка к Средиземному морю и заказ кофе со свежим круассаном.",
+    "paragraphs": [
+      {
+        "id": "p1_1",
+        "sentences": [
+          {
+            "id": "s1_1",
+            "hebrew_vocalized": "הַיּוֹם יוֹם שִׁשִּׁי, וְהַשֶּׁמֶשׁ זוֹרַחַת מֵעַל הַיָּם.",
+            "russian_translation": "Сегодня пятница, и солнце светит над морем.",
+            "tokens": [
+              {"word_vocalized": "הַיּוֹם", "word_normalized": "היום", "russian_translation": "сегодня", "transliteration": "ha-yóm", "category": "particle"},
+              {"word_vocalized": "יוֹם", "word_normalized": "יום", "russian_translation": "день", "transliteration": "yom", "root": "י-ו-ם", "category": "noun"},
+              {"word_vocalized": "שִׁשִּׁי", "word_normalized": "שישי", "russian_translation": "пятница (шестой день)", "transliteration": "shi-shí", "category": "adjective"},
+              {"word_vocalized": "וְהַשֶּׁמֶשׁ", "word_normalized": "והשמש", "russian_translation": "и солнце", "transliteration": "ve-ha-shémesh", "root": "ש-מ-ש", "category": "noun"},
+              {"word_vocalized": "זוֹרַחַת", "word_normalized": "זורחת", "russian_translation": "светит, восходит (ж.р.)", "transliteration": "zo-ráchat", "root": "ז-ר-ח", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "מֵעַל", "word_normalized": "מעל", "russian_translation": "над, свыше", "transliteration": "me-ál", "category": "particle"},
+              {"word_vocalized": "הַיָּם", "word_normalized": "הים", "russian_translation": "море", "transliteration": "ha-yam", "root": "י-מ-ם", "category": "noun"}
+            ]
+          },
+          {
+            "id": "s1_2",
+            "hebrew_vocalized": "דָּנִיאֵל קָם מֻקְדָּם וְהוֹלֵךְ לַטַּיֶּלֶת עִם כֶּלֶב חָמוּד.",
+            "russian_translation": "Даниэль встает рано и идет на набережную с милой собакой.",
+            "tokens": [
+              {"word_vocalized": "דָּנִיאֵל", "word_normalized": "דניאל", "russian_translation": "Даниэль (имя)", "transliteration": "Da-ni-él", "category": "noun"},
+              {"word_vocalized": "קָם", "word_normalized": "קם", "russian_translation": "встает (м.р.)", "transliteration": "kam", "root": "ק-ו-ם", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "מֻקְדָּם", "word_normalized": "מוקדם", "russian_translation": "рано", "transliteration": "muk-dám", "root": "ק-ד-ם", "category": "adjective"},
+              {"word_vocalized": "וְהוֹלֵךְ", "word_normalized": "והולך", "russian_translation": "и идет", "transliteration": "ve-ho-léch", "root": "ה-ל-ך", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "לַטַּיֶּלֶת", "word_normalized": "לטיילת", "russian_translation": "на набережную", "transliteration": "la-ta-yé-let", "root": "ט-י-ל", "category": "noun"},
+              {"word_vocalized": "עִם", "word_normalized": "עם", "russian_translation": "с (предлог)", "transliteration": "im", "category": "particle"},
+              {"word_vocalized": "כֶּלֶב", "word_normalized": "כלב", "russian_translation": "собака, пес", "transliteration": "ké-lev", "root": "כ-ל-ב", "category": "noun"},
+              {"word_vocalized": "חָמוּד", "word_normalized": "חמוד", "russian_translation": "милый, симпатичный", "transliteration": "cha-múd", "root": "ח-מ-ד", "category": "adjective"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p1_2",
+        "sentences": [
+          {
+            "id": "s1_3",
+            "hebrew_vocalized": "הוּא נִכְנָס לְבֵית קָפֶה קָטָן וְאוֹמֵר: «שָׁלוֹם, קָפֶה הָפוּךְ בְּבַקָּשָׁה».",
+            "russian_translation": "Он заходит в маленькое кафе и говорит: «Здравствуйте, капучино, пожалуйста».",
+            "tokens": [
+              {"word_vocalized": "הוּא", "word_normalized": "הוא", "russian_translation": "он", "transliteration": "hu", "category": "particle"},
+              {"word_vocalized": "נִכְנָס", "word_normalized": "נכנס", "russian_translation": "входит (наст. вр.)", "transliteration": "nich-nás", "root": "כ-נ-ס", "binyan": "nifal", "category": "verb"},
+              {"word_vocalized": "לְבֵית קָפֶה", "word_normalized": "לבית קפה", "russian_translation": "в кафе", "transliteration": "le-veyt ka-fe", "category": "phrase"},
+              {"word_vocalized": "קָטָן", "word_normalized": "קטן", "russian_translation": "маленький", "transliteration": "ka-tán", "root": "ק-ט-ן", "category": "adjective"},
+              {"word_vocalized": "וְאוֹמֵר", "word_normalized": "ואומר", "russian_translation": "и говорит", "transliteration": "ve-o-mér", "root": "א-מ-ר", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "שָׁלוֹם", "word_normalized": "שלום", "russian_translation": "здравствуйте / мир", "transliteration": "sha-lóm", "root": "ש-ל-ם", "category": "noun"},
+              {"word_vocalized": "קָפֶה הָפוּךְ", "word_normalized": "קפה הפוך", "russian_translation": "кофе капучино", "transliteration": "ka-fé ha-fúch", "category": "phrase"},
+              {"word_vocalized": "בְּבַקָּשָׁה", "word_normalized": "בבקשה", "russian_translation": "пожалуйста", "transliteration": "be-va-ka-shá", "root": "ב-ק-ש", "category": "phrase"}
+            ]
+          },
+          {
+            "id": "s1_4",
+            "hebrew_vocalized": "הַמֶּלְצָרִית מְחַיֶּכֶת: «גָּדוֹל אוֹ קָטָן? וְאֵיזֶה חָלָב אַתָּה רוֹצֶה?»",
+            "russian_translation": "Официантка улыбается: «Большой или маленький? И какое молоко ты хочешь?»",
+            "tokens": [
+              {"word_vocalized": "הַמֶּלְצָרִית", "word_normalized": "המלצרית", "russian_translation": "официантка", "transliteration": "ha-mel-tsa-rít", "root": "מ-ל-צ-ר", "category": "noun"},
+              {"word_vocalized": "מְחַיֶּכֶת", "word_normalized": "מחייכת", "russian_translation": "улыбается (ж.р.)", "transliteration": "me-cha-yé-chet", "root": "ח-י-ך", "binyan": "piel", "category": "verb"},
+              {"word_vocalized": "גָּדוֹל", "word_normalized": "גדול", "russian_translation": "большой", "transliteration": "ga-dól", "root": "ג-ד-ל", "category": "adjective"},
+              {"word_vocalized": "אוֹ", "word_normalized": "או", "russian_translation": "или", "transliteration": "o", "category": "particle"},
+              {"word_vocalized": "קָטָן", "word_normalized": "קטן", "russian_translation": "маленький", "transliteration": "ka-tán", "root": "ק-ט-ן", "category": "adjective"},
+              {"word_vocalized": "וְאֵיזֶה", "word_normalized": "ואיזה", "russian_translation": "и какой", "transliteration": "ve-éy-ze", "category": "particle"},
+              {"word_vocalized": "חָלָב", "word_normalized": "חלב", "russian_translation": "молоко", "transliteration": "cha-láv", "root": "ח-ל-ב", "category": "noun"},
+              {"word_vocalized": "אַתָּה", "word_normalized": "אתה", "russian_translation": "ты (м.р.)", "transliteration": "a-tá", "category": "particle"},
+              {"word_vocalized": "רוֹצֶה", "word_normalized": "רוצה", "russian_translation": "хочешь (м.р.)", "transliteration": "ro-tsé", "root": "ר-צ-ה", "binyan": "paal", "category": "verb"}
+            ]
+          },
+          {
+            "id": "s1_5",
+            "hebrew_vocalized": "דָּנִיאֵל יוֹשֵׁב בַּחוּץ, שׁוֹתֶה בְּשֶׁקֶט וּמַבִּיט בַּגַּלִּים הַכְּחֻלִּים.",
+            "russian_translation": "Даниэль сидит снаружи, спокойно пьет и смотрит на синие волны.",
+            "tokens": [
+              {"word_vocalized": "יוֹשֵׁב", "word_normalized": "יושב", "russian_translation": "сидит (м.р.)", "transliteration": "yo-shév", "root": "י-ש-ב", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "בַּחוּץ", "word_normalized": "בחוץ", "russian_translation": "снаружи, на улице", "transliteration": "ba-chúts", "root": "ח-ו-ץ", "category": "particle"},
+              {"word_vocalized": "שׁוֹתֶה", "word_normalized": "שותה", "russian_translation": "пьет (м.р.)", "transliteration": "sho-té", "root": "ש-ת-ה", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "בְּשֶׁקֶט", "word_normalized": "בשקט", "russian_translation": "тихо, спокойно", "transliteration": "be-shé-ket", "root": "ש-ק-ט", "category": "phrase"},
+              {"word_vocalized": "וּמַבִּיט", "word_normalized": "ומביט", "russian_translation": "и смотрит, глядит", "transliteration": "u-ma-bít", "root": "נ-ב-ט", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "בַּגַּלִּים", "word_normalized": "בגלים", "russian_translation": "на волны", "transliteration": "ba-ga-lím", "root": "ג-ל-ל", "category": "noun"},
+              {"word_vocalized": "הַכְּחֻלִּים", "word_normalized": "הכחולים", "russian_translation": "синие (мн.ч.)", "transliteration": "ha-kchu-lím", "root": "כ-ח-ל", "category": "adjective"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story_shuk_carmel",
+    "title_hebrew": "הַשּׁוּק הַגָּדוֹל",
+    "title_russian": "Большой рынок",
+    "level": "A1",
+    "reading_time_minutes": 2,
+    "cover_emoji": "🍉",
+    "summary_russian": "Атмосфера пятничного рынка Кармель: крики торговцев, сладкая халва и свежие фрукты.",
+    "paragraphs": [
+      {
+        "id": "p2_1",
+        "sentences": [
+          {
+            "id": "s2_1",
+            "hebrew_vocalized": "בְּיוֹם שִׁשִּׁי בַּצָּהֳרַיִם, שׁוּק הַכַּרְמֶל מָלֵא אֲנָשִׁים וְצִבְעוֹנִי מְאוֹד.",
+            "russian_translation": "В пятницу в полдень рынок Кармель полон людей и очень колоритен.",
+            "tokens": [
+              {"word_vocalized": "בְּיוֹם", "word_normalized": "ביום", "russian_translation": "в день", "transliteration": "be-yóm", "root": "י-ו-ם", "category": "noun"},
+              {"word_vocalized": "שִׁשִּׁי", "word_normalized": "שישי", "russian_translation": "пятница", "transliteration": "shi-shí", "category": "adjective"},
+              {"word_vocalized": "בַּצָּהֳרַיִם", "word_normalized": "בצהריים", "russian_translation": "в полдень / днём", "transliteration": "ba-tso-ho-rá-yim", "root": "צ-ה-ר", "category": "noun"},
+              {"word_vocalized": "שׁוּק", "word_normalized": "שוק", "russian_translation": "рынок, базар", "transliteration": "shuk", "root": "ש-ו-ק", "category": "noun"},
+              {"word_vocalized": "הַכַּרְמֶל", "word_normalized": "הכרמל", "russian_translation": "Кармель", "transliteration": "ha-Kar-mél", "category": "noun"},
+              {"word_vocalized": "מָלֵא", "word_normalized": "מלא", "russian_translation": "полон, полный", "transliteration": "ma-lé", "root": "מ-ל-א", "category": "adjective"},
+              {"word_vocalized": "אֲנָשִׁים", "word_normalized": "אנשים", "russian_translation": "люди", "transliteration": "a-na-shím", "root": "א-נ-ש", "category": "noun"},
+              {"word_vocalized": "וְצִבְעוֹנִי", "word_normalized": "וצבעוני", "russian_translation": "и красочный", "transliteration": "ve-tsiv-o-ní", "root": "צ-ב-ע", "category": "adjective"},
+              {"word_vocalized": "מְאוֹד", "word_normalized": "מאוד", "russian_translation": "очень", "transliteration": "me-ód", "category": "particle"}
+            ]
+          },
+          {
+            "id": "s2_2",
+            "hebrew_vocalized": "הַמּוֹכְרִים צוֹעֲקִים: «רַק הַיּוֹם! תּוּתִים מְתוּקִים וַאֲבַטִּיחַ אָדֹם!»",
+            "russian_translation": "Продавцы кричат: «Только сегодня! Сладкая клубника и красный арбуз!»",
+            "tokens": [
+              {"word_vocalized": "הַמּוֹכְרִים", "word_normalized": "המוכרים", "russian_translation": "продавцы", "transliteration": "ha-moch-rím", "root": "מ-כ-ר", "category": "noun"},
+              {"word_vocalized": "צוֹעֲקִים", "word_normalized": "צועקים", "russian_translation": "кричат (мн.ч.)", "transliteration": "tso-a-kím", "root": "צ-ע-ק", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "רַק", "word_normalized": "רק", "russian_translation": "только", "transliteration": "rak", "category": "particle"},
+              {"word_vocalized": "תּוּתִים", "word_normalized": "תותים", "russian_translation": "клубника", "transliteration": "tu-tím", "root": "ת-ו-ת", "category": "noun"},
+              {"word_vocalized": "מְתוּקִים", "word_normalized": "מתוקים", "russian_translation": "сладкие (мн.ч.)", "transliteration": "me-tu-kím", "root": "מ-ת-ק", "category": "adjective"},
+              {"word_vocalized": "וַאֲבַטִּיחַ", "word_normalized": "ואבטיח", "russian_translation": "и арбуз", "transliteration": "va-ava-tí-ach", "root": "ב-ט-ח", "category": "noun"},
+              {"word_vocalized": "אָדֹם", "word_normalized": "אדום", "russian_translation": "красный", "transliteration": "a-dóm", "root": "א-ד-ם", "category": "adjective"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p2_2",
+        "sentences": [
+          {
+            "id": "s2_3",
+            "hebrew_vocalized": "מִירָה טוֹעֶמֶת חַלְוָה עִם פִּסְטוּקִים וְקוֹנָה שְׁנֵי קִילוֹ תַּפּוּזִים.",
+            "russian_translation": "Мира пробует халву с фисташками и покупает два килограмма апельсинов.",
+            "tokens": [
+              {"word_vocalized": "מִירָה", "word_normalized": "מירה", "russian_translation": "Мира (имя)", "transliteration": "Mí-ra", "category": "noun"},
+              {"word_vocalized": "טוֹעֶמֶת", "word_normalized": "טועמת", "russian_translation": "пробует на вкус (ж.р.)", "transliteration": "to-é-met", "root": "ט-ע-ם", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "חַלְוָה", "word_normalized": "חלווה", "russian_translation": "халва", "transliteration": "chal-vá", "category": "noun"},
+              {"word_vocalized": "עִם", "word_normalized": "עם", "russian_translation": "с (предлог)", "transliteration": "im", "category": "particle"},
+              {"word_vocalized": "פִּסְטוּקִים", "word_normalized": "פיסטוקים", "russian_translation": "фисташки", "transliteration": "pis-tu-kím", "category": "noun"},
+              {"word_vocalized": "וְקוֹנָה", "word_normalized": "וקונה", "russian_translation": "и покупает (ж.р.)", "transliteration": "ve-ko-ná", "root": "ק-נ-ה", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "שְׁנֵי", "word_normalized": "שני", "russian_translation": "два (сопряж. ф.)", "transliteration": "shney", "category": "particle"},
+              {"word_vocalized": "קִילוֹ", "word_normalized": "קילו", "russian_translation": "килограмм", "transliteration": "kí-lo", "category": "noun"},
+              {"word_vocalized": "תַּפּוּזִים", "word_normalized": "תפוזים", "russian_translation": "апельсины", "transliteration": "ta-pu-zím", "root": "פ-ו-ז", "category": "noun"}
+            ]
+          },
+          {
+            "id": "s2_4",
+            "hebrew_vocalized": "הַכֹּל טָרִי, הָרֵיחַ נִפְלָא, וְכֻלָּם מְאַחֲלִים: «שַׁבָּת שָׁלוֹם!»",
+            "russian_translation": "Всё свежее, запах чудесный, и все желают друг другу: «Шаббат шалом!»",
+            "tokens": [
+              {"word_vocalized": "הַכֹּל", "word_normalized": "הכל", "russian_translation": "всё", "transliteration": "ha-kol", "root": "כ-ל-ל", "category": "noun"},
+              {"word_vocalized": "טָרִי", "word_normalized": "טרי", "russian_translation": "свежий", "transliteration": "ta-rí", "root": "ט-ר-י", "category": "adjective"},
+              {"word_vocalized": "הָרֵיחַ", "word_normalized": "הריח", "russian_translation": "запах, аромат", "transliteration": "ha-ré-ach", "root": "ר-י-ח", "category": "noun"},
+              {"word_vocalized": "נִפְלָא", "word_normalized": "נפלא", "russian_translation": "чудесный, прекрасный", "transliteration": "nif-lá", "root": "פ-ל-א", "binyan": "nifal", "category": "adjective"},
+              {"word_vocalized": "וְכֻלָּם", "word_normalized": "וכולם", "russian_translation": "и все", "transliteration": "ve-chu-lám", "root": "כ-ל-ל", "category": "noun"},
+              {"word_vocalized": "מְאַחֲלִים", "word_normalized": "מאחלים", "russian_translation": "желают (мн.ч.)", "transliteration": "me-a-cha-lím", "root": "א-ח-ל", "binyan": "piel", "category": "verb"},
+              {"word_vocalized": "שַׁבָּת שָׁלוֹם", "word_normalized": "שבת שלום", "russian_translation": "Мирной субботы! (приветствие)", "transliteration": "Sha-bát Sha-lóm", "category": "phrase"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story_rav_kav",
+    "title_hebrew": "נְסִיעָה בְּאוֹטוֹבּוּס וְרַב-קַו",
+    "title_russian": "Поездка на автобусе и Рав-Кав",
+    "level": "A1",
+    "reading_time_minutes": 3,
+    "cover_emoji": "🚌",
+    "summary_russian": "Первая самостоятельная поездка на автобусе в Иерусалим, проверка карточки и разговор с водителем.",
+    "paragraphs": [
+      {
+        "id": "p3_1",
+        "sentences": [
+          {
+            "id": "s3_1",
+            "hebrew_vocalized": "יוֹסֵף עוֹמֵד בְּתַחֲנַת הָאוֹטוֹבּוּס וּמַחֲזִיק כַּרְטִיס רַב-קַו יָרֹק.",
+            "russian_translation": "Йосеф стоит на автобусной остановке и держит зеленую карту Рав-Кав.",
+            "tokens": [
+              {"word_vocalized": "יוֹסֵף", "word_normalized": "יוסף", "russian_translation": "Йосеф (имя)", "transliteration": "Yo-séf", "category": "noun"},
+              {"word_vocalized": "עוֹמֵד", "word_normalized": "עומד", "russian_translation": "стоит (м.р.)", "transliteration": "o-méd", "root": "ע-מ-ד", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "בְּתַחֲנַת", "word_normalized": "בתחנת", "russian_translation": "на остановке / станции", "transliteration": "be-ta-cha-nát", "root": "ח-נ-ה", "category": "noun"},
+              {"word_vocalized": "הָאוֹטוֹבּוּס", "word_normalized": "האוטובוס", "russian_translation": "автобус", "transliteration": "ha-ó-to-bus", "category": "noun"},
+              {"word_vocalized": "וּמַחֲזִיק", "word_normalized": "ומחזיק", "russian_translation": "и держит", "transliteration": "u-ma-cha-zík", "root": "ח-ז-ק", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "כַּרְטִיס", "word_normalized": "כרטיס", "russian_translation": "билет / карточка", "transliteration": "kar-tís", "root": "כ-ר-ט-ס", "category": "noun"},
+              {"word_vocalized": "רַב-קַו", "word_normalized": "רב-קו", "russian_translation": "Рав-Кав (проездной)", "transliteration": "Rav-kav", "category": "noun"},
+              {"word_vocalized": "יָרֹק", "word_normalized": "ירוק", "russian_translation": "зеленый", "transliteration": "ya-rók", "root": "י-ר-ק", "category": "adjective"}
+            ]
+          },
+          {
+            "id": "s3_2",
+            "hebrew_vocalized": "הָאוֹטוֹבּוּס לִירוּשָׁלַיִם מַגִּיעַ בִּזְמַן, וְהַדְּלָתוֹת נִפְתָּחוֹת.",
+            "russian_translation": "Автобус в Иерусалим прибывает вовремя, и двери открываются.",
+            "tokens": [
+              {"word_vocalized": "לִירוּשָׁלַיִם", "word_normalized": "לירושלים", "russian_translation": "в Иерусалим", "transliteration": "li-ru-sha-lá-yim", "category": "noun"},
+              {"word_vocalized": "מַגִּיעַ", "word_normalized": "מגיע", "russian_translation": "прибывает / приезжает", "transliteration": "ma-gí-a", "root": "נ-ג-ע", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "בִּזְמַן", "word_normalized": "בזמן", "russian_translation": "вовремя", "transliteration": "biz-mán", "root": "ז-מ-ן", "category": "phrase"},
+              {"word_vocalized": "וְהַדְּלָתוֹת", "word_normalized": "והדלתות", "russian_translation": "и двери", "transliteration": "ve-ha-dla-tót", "root": "ד-ל-ת", "category": "noun"},
+              {"word_vocalized": "נִפְתָּחוֹת", "word_normalized": "נפתחות", "russian_translation": "открываются (ж.р. мн.ч.)", "transliteration": "nif-ta-chót", "root": "פ-ת-ח", "binyan": "nifal", "category": "verb"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p3_2",
+        "sentences": [
+          {
+            "id": "s3_3",
+            "hebrew_vocalized": "הוּא עוֹלֶה פְּנִימָה וּמַצְמִיד אֶת הַכַּרְטִיס לַמַּכְשִׁיר: «בִּיפּ!»",
+            "russian_translation": "Он поднимается внутрь и прикладывает карту к валидатору: «Бип!»",
+            "tokens": [
+              {"word_vocalized": "עוֹלֶה", "word_normalized": "עולה", "russian_translation": "поднимается / заходит (м.р.)", "transliteration": "o-lé", "root": "ע-ל-ה", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "פְּנִימָה", "word_normalized": "פנימה", "russian_translation": "внутрь", "transliteration": "pní-ma", "root": "פ-נ-ה", "category": "particle"},
+              {"word_vocalized": "וּמַצְמִיד", "word_normalized": "ומצמיד", "russian_translation": "и прикладывает / прижимает", "transliteration": "u-mats-míd", "root": "צ-מ-ד", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "אֶת", "word_normalized": "את", "russian_translation": "(прямое дополнение)", "transliteration": "et", "category": "particle"},
+              {"word_vocalized": "הַכַּרְטִיס", "word_normalized": "הכרטיס", "russian_translation": "карточка", "transliteration": "ha-kar-tís", "root": "כ-ר-ט-ס", "category": "noun"},
+              {"word_vocalized": "לַמַּכְשִׁיר", "word_normalized": "למכשיר", "russian_translation": "к прибору / валидатору", "transliteration": "la-mach-shír", "root": "כ-ש-ר", "category": "noun"}
+            ]
+          },
+          {
+            "id": "s3_4",
+            "hebrew_vocalized": "הַנֶּהָג אוֹמֵר: «שָׁלוֹם אָחִי, יֵשׁ מָקוֹם פָּנוּי לְיַד הַחַלּוֹן, נְסִיעָה טוֹבָה!»",
+            "russian_translation": "Водитель говорит: «Привет, брат, есть свободное место у окна, хорошей поездки!»",
+            "tokens": [
+              {"word_vocalized": "הַנֶּהָג", "word_normalized": "הנהג", "russian_translation": "водитель", "transliteration": "ha-na-hág", "root": "נ-ה-ג", "category": "noun"},
+              {"word_vocalized": "אָחִי", "word_normalized": "אחי", "russian_translation": "мой брат / дружище", "transliteration": "a-chí", "root": "א-ח-ה", "category": "noun"},
+              {"word_vocalized": "יֵשׁ", "word_normalized": "יש", "russian_translation": "есть, имеется", "transliteration": "yesh", "category": "particle"},
+              {"word_vocalized": "מָקוֹם", "word_normalized": "מקום", "russian_translation": "место", "transliteration": "ma-kóm", "root": "ק-ו-ם", "category": "noun"},
+              {"word_vocalized": "פָּנוּי", "word_normalized": "פנוי", "russian_translation": "свободный", "transliteration": "pa-núy", "root": "פ-נ-ה", "category": "adjective"},
+              {"word_vocalized": "לְיַד", "word_normalized": "ליד", "russian_translation": "возле, рядом с", "transliteration": "le-yád", "root": "י-ד-ד", "category": "particle"},
+              {"word_vocalized": "הַחַלּוֹן", "word_normalized": "החלון", "russian_translation": "окно", "transliteration": "ha-cha-lón", "root": "ח-ל-ל", "category": "noun"},
+              {"word_vocalized": "נְסִיעָה טוֹבָה", "word_normalized": "נסיעה טובה", "russian_translation": "Хорошей поездки! (счастливого пути)", "transliteration": "ne-si-á to-vá", "category": "phrase"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story_chatul_rechov",
+    "title_hebrew": "חֲתוּל הָרְחוֹב הַגִּ'נְגִּ'י",
+    "title_russian": "Рыжий уличный кот",
+    "level": "A2",
+    "reading_time_minutes": 3,
+    "cover_emoji": "🐈",
+    "summary_russian": "История о пушистом рыжем коте во дворе старого дома, который знает всех соседей и понимает иврит.",
+    "paragraphs": [
+      {
+        "id": "p4_1",
+        "sentences": [
+          {
+            "id": "s4_1",
+            "hebrew_vocalized": "בֶּחָצֵר שֶׁל הַבִּנְיָן הַיָּשָׁן בִּירוּשָׁלַיִם חַי חָתוּל גִּ'נְגִּ'י גָּדוֹל וְיָפֶה.",
+            "russian_translation": "Во дворе старого дома в Иерусалиме живет большой и красивый рыжий кот.",
+            "tokens": [
+              {"word_vocalized": "בֶּחָצֵר", "word_normalized": "בחצר", "russian_translation": "во дворе", "transliteration": "be-cha-tsér", "root": "ח-צ-ר", "category": "noun"},
+              {"word_vocalized": "הַבִּנְיָן", "word_normalized": "הבניין", "russian_translation": "здание / дом", "transliteration": "ha-bin-yán", "root": "ב-נ-ה", "category": "noun"},
+              {"word_vocalized": "הַיָּשָׁן", "word_normalized": "הישן", "russian_translation": "старый", "transliteration": "ha-ya-shán", "root": "י-ש-ן", "category": "adjective"},
+              {"word_vocalized": "בִּירוּשָׁלַיִם", "word_normalized": "בירושלים", "russian_translation": "в Иерусалиме", "transliteration": "bi-ru-sha-lá-yim", "category": "noun"},
+              {"word_vocalized": "חַי", "word_normalized": "חי", "russian_translation": "живет (наст. вр.)", "transliteration": "chay", "root": "ח-י-ה", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "חָתוּל", "word_normalized": "חתול", "russian_translation": "кот, кошка", "transliteration": "cha-túl", "root": "ח-ת-ל", "category": "noun"},
+              {"word_vocalized": "גִּ'נְגִּ'י", "word_normalized": "ג'נג'י", "russian_translation": "рыжий", "transliteration": "jín-ji", "category": "adjective"},
+              {"word_vocalized": "גָּדוֹל", "word_normalized": "גדול", "russian_translation": "большой", "transliteration": "ga-dól", "root": "ג-ד-ל", "category": "adjective"},
+              {"word_vocalized": "וְיָפֶה", "word_normalized": "ויפה", "russian_translation": "и красивый", "transliteration": "ve-ya-fé", "root": "י-פ-ה", "category": "adjective"}
+            ]
+          },
+          {
+            "id": "s4_2",
+            "hebrew_vocalized": "הַשְּׁכֵנִים קוֹרְאִים לוֹ «סִימְבָּה», כִּי הוּא הוֹלֵךְ כְּמוֹ מֶלֶךְ אֲמִתִּי.",
+            "russian_translation": "Соседи зовут его «Симба», потому что он ходит как настоящий царь.",
+            "tokens": [
+              {"word_vocalized": "הַשְּׁכֵנִים", "word_normalized": "השכנים", "russian_translation": "соседи", "transliteration": "ha-shche-ním", "root": "ש-כ-ן", "category": "noun"},
+              {"word_vocalized": "קוֹרְאִים", "word_normalized": "קוראים", "russian_translation": "зовут / называют (мн.ч.)", "transliteration": "kor-ím", "root": "ק-ר-א", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "כִּי", "word_normalized": "כי", "russian_translation": "потому что / ведь", "transliteration": "ki", "category": "particle"},
+              {"word_vocalized": "כְּמוֹ", "word_normalized": "כמו", "russian_translation": "как, подобно", "transliteration": "kmo", "category": "particle"},
+              {"word_vocalized": "מֶלֶךְ", "word_normalized": "מלך", "russian_translation": "царь, король", "transliteration": "mé-lech", "root": "מ-ל-ך", "category": "noun"},
+              {"word_vocalized": "אֲמִתִּי", "word_normalized": "אמיתי", "russian_translation": "настоящий, подлинный", "transliteration": "a-mi-tí", "root": "א-מ-ת", "category": "adjective"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p4_2",
+        "sentences": [
+          {
+            "id": "s4_3",
+            "hebrew_vocalized": "בְּכָל עֶרֶב, כְּשֶׁרוֹנִית חוֹזֶרֶת מֵהָעֲבוֹדָה, סִימְבָּה מְחַכֶּה לְיַד הַדֶּלֶת וּמְגַרְגֵּר בְּשִׂמְחָה.",
+            "russian_translation": "Каждый вечер, когда Ронит возвращается с работы, Симба ждет у двери и радостно мурлычет.",
+            "tokens": [
+              {"word_vocalized": "בְּכָל", "word_normalized": "בכל", "russian_translation": "в каждый / во всякий", "transliteration": "be-chól", "root": "כ-ל-ל", "category": "particle"},
+              {"word_vocalized": "עֶרֶב", "word_normalized": "ערב", "russian_translation": "вечер", "transliteration": "é-rev", "root": "ע-ר-ב", "category": "noun"},
+              {"word_vocalized": "כְּשֶׁרוֹנִית", "word_normalized": "כשרונית", "russian_translation": "когда Ронит", "transliteration": "kse-Ro-nít", "category": "noun"},
+              {"word_vocalized": "חוֹזֶרֶת", "word_normalized": "חוזרת", "russian_translation": "возвращается (ж.р.)", "transliteration": "cho-zé-ret", "root": "ח-ז-ר", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "מֵהָעֲבוֹדָה", "word_normalized": "מהעבודה", "russian_translation": "с работы", "transliteration": "me-ha-avo-dá", "root": "ע-ב-ד", "category": "noun"},
+              {"word_vocalized": "מְחַכֶּה", "word_normalized": "מחכה", "russian_translation": "ждет (м.р.)", "transliteration": "me-cha-ké", "root": "ח-כ-ה", "binyan": "piel", "category": "verb"},
+              {"word_vocalized": "לְיַד הַדֶּלֶת", "word_normalized": "ליד הדלת", "russian_translation": "у двери", "transliteration": "le-yád ha-dé-let", "category": "phrase"},
+              {"word_vocalized": "וּמְגַרְגֵּר", "word_normalized": "ומגרגר", "russian_translation": "и мурлычет", "transliteration": "u-me-gar-gér", "root": "ג-ר-ג-ר", "binyan": "piel", "category": "verb"},
+              {"word_vocalized": "בְּשִׂמְחָה", "word_normalized": "בשמחה", "russian_translation": "с радостью / радостно", "transliteration": "be-sim-chá", "root": "ש-מ-ח", "category": "phrase"}
+            ]
+          },
+          {
+            "id": "s4_4",
+            "hebrew_vocalized": "הִיא נוֹתֶנֶת לוֹ קְעָרָה עִם מַיִם וְאוֹכֶל טָעִים, וְהוּа מַנִּיחַ אֶת רֹאשׁוֹ עַל יָדָהּ.",
+            "russian_translation": "Она дает ему миску с водой и вкусной едой, и он кладет голову ей на руку.",
+            "tokens": [
+              {"word_vocalized": "נוֹתֶנֶת", "word_normalized": "נותנת", "russian_translation": "дает (ж.р.)", "transliteration": "no-té-net", "root": "נ-ת-ן", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "קְעָרָה", "word_normalized": "קערה", "russian_translation": "миска, тарелка", "transliteration": "ke-a-rá", "root": "ק-ע-ר", "category": "noun"},
+              {"word_vocalized": "עִם מַיִם", "word_normalized": "עם מים", "russian_translation": "с водой", "transliteration": "im má-yim", "category": "phrase"},
+              {"word_vocalized": "וְאוֹכֶל", "word_normalized": "ואוכל", "russian_translation": "и еда", "transliteration": "ve-ó-chel", "root": "א-כ-ל", "category": "noun"},
+              {"word_vocalized": "טָעִים", "word_normalized": "טעים", "russian_translation": "вкусный", "transliteration": "ta-ím", "root": "ט-ע-ם", "category": "adjective"},
+              {"word_vocalized": "וְהוּא", "word_normalized": "והוא", "russian_translation": "и он", "transliteration": "ve-hú", "category": "particle"},
+              {"word_vocalized": "מַנִּיחַ", "word_normalized": "מניח", "russian_translation": "кладет, опускает", "transliteration": "ma-ní-ach", "root": "נ-ו-ח", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "רֹאשׁוֹ", "word_normalized": "ראשו", "russian_translation": "свою голову", "transliteration": "ro-shó", "root": "ר-א-ש", "category": "noun"},
+              {"word_vocalized": "יָדָהּ", "word_normalized": "ידה", "russian_translation": "ее руку", "transliteration": "ya-dáh", "root": "י-ד-ד", "category": "noun"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "story_dira_chadasha",
+    "title_hebrew": "דִּירָה חֲדָשָׁה עִם מַרְפֶּסֶת",
+    "title_russian": "Новая квартира с балконом",
+    "level": "A2",
+    "reading_time_minutes": 3,
+    "cover_emoji": "🌇",
+    "summary_russian": "Долгожданный переезд в уютную квартиру, обустройство и чай с мятой на закате.",
+    "paragraphs": [
+      {
+        "id": "p5_1",
+        "sentences": [
+          {
+            "id": "s5_1",
+            "hebrew_vocalized": "אַחֲרֵי שָׁבוּעוֹת שֶׁל חִפּוּשִׂים, אִיתַי וְנֹעָה מָצְאוּ דִּירָה חֲדָשָׁה בִּרְחוֹב שָׁקֵט.",
+            "russian_translation": "После недель поисков Итай и Ноа нашли новую квартиру на тихой улице.",
+            "tokens": [
+              {"word_vocalized": "אַחֲרֵי", "word_normalized": "אחרי", "russian_translation": "после (предлог)", "transliteration": "ach-réy", "root": "א-ח-ר", "category": "particle"},
+              {"word_vocalized": "שָׁבוּעוֹת", "word_normalized": "שבועות", "russian_translation": "недели", "transliteration": "sha-vu-ót", "root": "ש-ב-ע", "category": "noun"},
+              {"word_vocalized": "חִפּוּשִׂים", "word_normalized": "חיפושים", "russian_translation": "поиски", "transliteration": "chi-pu-sím", "root": "ח-פ-ש", "category": "noun"},
+              {"word_vocalized": "אִיתַי", "word_normalized": "איתי", "russian_translation": "Итай (имя)", "transliteration": "I-táy", "category": "noun"},
+              {"word_vocalized": "וְנֹעָה", "word_normalized": "ונועה", "russian_translation": "и Ноа (имя)", "transliteration": "ve-No-á", "category": "noun"},
+              {"word_vocalized": "מָצְאוּ", "word_normalized": "מצאו", "russian_translation": "нашли (прош. вр., они)", "transliteration": "mats-ú", "root": "מ-צ-א", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "דִּירָה", "word_normalized": "דירה", "russian_translation": "квартира", "transliteration": "di-rá", "root": "ד-ו-ר", "category": "noun"},
+              {"word_vocalized": "חֲדָשָׁה", "word_normalized": "חדשה", "russian_translation": "новая (ж.р.)", "transliteration": "cha-da-shá", "root": "ח-ד-ש", "category": "adjective"},
+              {"word_vocalized": "בִּרְחוֹב", "word_normalized": "ברחוב", "russian_translation": "на улице", "transliteration": "bir-chóv", "root": "ר-ח-ב", "category": "noun"},
+              {"word_vocalized": "שָׁקֵט", "word_normalized": "שקט", "russian_translation": "тихий", "transliteration": "sha-két", "root": "ש-ק-ט", "category": "adjective"}
+            ]
+          },
+          {
+            "id": "s5_2",
+            "hebrew_vocalized": "הַדִּירָה בַּקּוֹמָה הַשְּׁלִישִׁית, יֵשׁ בָּהּ סָלוֹן רָחָב וּמַרְפֶּסֶת עִם עֲצִיצִים יְרֻקִּים.",
+            "russian_translation": "Квартира на третьем этаже, в ней просторная гостиная и балкон с зелеными растениями.",
+            "tokens": [
+              {"word_vocalized": "בַּקּוֹמָה", "word_normalized": "בקומה", "russian_translation": "на этаже", "transliteration": "ba-ko-má", "root": "ק-ו-ם", "category": "noun"},
+              {"word_vocalized": "הַשְּׁלִישִׁית", "word_normalized": "השלישית", "russian_translation": "третий (ж.р.)", "transliteration": "ha-shli-shít", "root": "ש-ל-ש", "category": "adjective"},
+              {"word_vocalized": "סָלוֹן", "word_normalized": "סלון", "russian_translation": "гостиная, салон", "transliteration": "sa-lón", "category": "noun"},
+              {"word_vocalized": "רָחָב", "word_normalized": "רחב", "russian_translation": "широкий, просторный", "transliteration": "ra-cháv", "root": "ר-ח-ב", "category": "adjective"},
+              {"word_vocalized": "וּמַרְפֶּסֶת", "word_normalized": "ומרפסת", "russian_translation": "и балкон", "transliteration": "u-mar-pé-set", "root": "ר-פ-ס", "category": "noun"},
+              {"word_vocalized": "עֲצִיצִים", "word_normalized": "עציצים", "russian_translation": "комнатные растения, горшки", "transliteration": "atsi-tsím", "root": "ע-צ-ץ", "category": "noun"},
+              {"word_vocalized": "יְרֻקִּים", "word_normalized": "ירוקים", "russian_translation": "зеленые (мн.ч.)", "transliteration": "ye-ru-kím", "root": "י-ר-ק", "category": "adjective"}
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p5_2",
+        "sentences": [
+          {
+            "id": "s5_3",
+            "hebrew_vocalized": "בָּעֶרֶב הֵם פּוֹתְחִים אֶת הַחַלּוֹן, מְכִינִים תֵּה עִם נַעְנַע וּמַבִּיטִים בַּשְּׁקִיעָה הַזְּהֻבָּה.",
+            "russian_translation": "Вечером они открывают окно, готовят чай с мятой и любуются золотым закатом.",
+            "tokens": [
+              {"word_vocalized": "בָּעֶרֶב", "word_normalized": "בערב", "russian_translation": "вечером", "transliteration": "ba-é-rev", "root": "ע-ר-ב", "category": "noun"},
+              {"word_vocalized": "הֵם", "word_normalized": "הם", "russian_translation": "они (м.р.)", "transliteration": "hem", "category": "particle"},
+              {"word_vocalized": "פּוֹתְחִים", "word_normalized": "פותחים", "russian_translation": "открывают (наст. вр., мн.ч.)", "transliteration": "pot-chím", "root": "פ-ת-ח", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "מְכִינִים", "word_normalized": "מכינים", "russian_translation": "готовят, подготавливают", "transliteration": "me-chi-ním", "root": "כ-ו-ן", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "תֵּה", "word_normalized": "תה", "russian_translation": "чай", "transliteration": "te", "category": "noun"},
+              {"word_vocalized": "עִם נַעְנַע", "word_normalized": "עם נענע", "russian_translation": "с мятой", "transliteration": "im ná-na", "category": "phrase"},
+              {"word_vocalized": "וּמַבִּיטִים", "word_normalized": "ומביטים", "russian_translation": "и смотрят, любуются", "transliteration": "u-ma-bi-tím", "root": "נ-ב-ט", "binyan": "hifil", "category": "verb"},
+              {"word_vocalized": "בַּשְּׁקִיעָה", "word_normalized": "בשקיעה", "russian_translation": "на закат", "transliteration": "ba-shki-á", "root": "ש-ק-ע", "category": "noun"},
+              {"word_vocalized": "הַזְּהֻבָּה", "word_normalized": "הזהובה", "russian_translation": "золотой (ж.р.)", "transliteration": "ha-ze-hu-bá", "root": "ז-ה-ב", "category": "adjective"}
+            ]
+          },
+          {
+            "id": "s5_4",
+            "hebrew_vocalized": "נֹעָה מְחַיֶּכֶת וְאוֹמֶרֶת: «סוֹף סוֹף אֲנַחְנוּ בַּבַּיִת».",
+            "russian_translation": "Ноа улыбается и говорит: «Наконец-то мы дома».",
+            "tokens": [
+              {"word_vocalized": "אוֹמֶרֶת", "word_normalized": "אומרת", "russian_translation": "говорит (ж.р.)", "transliteration": "o-mé-ret", "root": "א-מ-ר", "binyan": "paal", "category": "verb"},
+              {"word_vocalized": "סוֹף סוֹף", "word_normalized": "סוף סוף", "russian_translation": "наконец-то", "transliteration": "sof sof", "root": "ס-ו-ף", "category": "phrase"},
+              {"word_vocalized": "אֲנַחְנוּ", "word_normalized": "אנחנו", "russian_translation": "мы", "transliteration": "a-nách-nu", "category": "particle"},
+              {"word_vocalized": "בַּבַּיִת", "word_normalized": "בבית", "russian_translation": "дома / в доме", "transliteration": "ba-bá-yit", "root": "ב-י-ת", "category": "noun"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,870 @@
+[
+  {
+    "id": "node_market_start",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "שָׁלוֹם! מָה תִּרְצֶה לִקְנוֹת הַיּוֹם?",
+    "line_russian": "Привет! Что ты хочешь купить сегодня?",
+    "audio_path": "assets/audio/market_dialogue_1.mp3",
+    "options": [
+      {
+        "id": "opt_coffee",
+        "text_hebrew": "אֲנִי רוֹצֶה קָפֶה בְּבַקָּשָׁה",
+        "text_russian": "Я хочу кофе, пожалуйста",
+        "next_node_id": "node_coffee_order",
+        "binyan": "paal",
+        "root": "ר-צ-ה"
+      },
+      {
+        "id": "opt_water",
+        "text_hebrew": "רַק מַיִם קָרִים, תּוֹדָה",
+        "text_russian": "Только холодную воду, спасибо",
+        "next_node_id": "node_water_order",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_ask_price",
+        "text_hebrew": "סְלִיחָה, כַּמָּה עוֹלֶה מִיצְ מַנְגּוֹ?",
+        "text_russian": "Извините, сколько стоит манговый сок?",
+        "next_node_id": "node_juice_price",
+        "binyan": "paal",
+        "root": "ע-ל-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_coffee_order",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "בְּשִׂמְחָה! אֵיזֶה קָפֶה אַתָּה מַעֲדִיף — הָפוּךְ אוֹ שָׁחוֹר?",
+    "line_russian": "С радостью! Какой кофе ты предпочитаешь — капучино или чёрный?",
+    "audio_path": "assets/audio/market_coffee_1.mp3",
+    "options": [
+      {
+        "id": "opt_hafuch",
+        "text_hebrew": "הָפוּךְ גָּדוֹל עִם חָלָב שִׁבֹּלֶת שׁוּעָל",
+        "text_russian": "Большой капучино с овсяным молоком",
+        "next_node_id": "node_milk_preference",
+        "binyan": "paal",
+        "root": "ה-פ-ך"
+      },
+      {
+        "id": "opt_black",
+        "text_hebrew": "קָפֶה שָׁחוֹר בְּלִי סֻכָּר",
+        "text_russian": "Чёрный кофе без сахара",
+        "next_node_id": "node_checkout",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_milk_preference",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "מְצֻיָּן, אֲנִי מֵכִין לְךָ עַכְשָׁו. מְעַט קִנָּמוֹן מֵעַל?",
+    "line_russian": "Отлично, сейчас приготовлю. Немного корицы сверху?",
+    "audio_path": "assets/audio/dialogue/node_milk_preference.mp3",
+    "options": [
+      {
+        "id": "opt_yes_cinnamon",
+        "text_hebrew": "כֵּן, תּוֹדָה! זֶה נִשְׁמָע מְעֻלֶּה",
+        "text_russian": "Да, спасибо! Звучит отлично",
+        "next_node_id": "node_checkout",
+        "binyan": "nifal",
+        "root": "ש-מ-ע"
+      },
+      {
+        "id": "opt_no_cinnamon",
+        "text_hebrew": "לֹא, תּוֹדָה, הַכֹּל בְּסֵדֶר",
+        "text_russian": "Нет, спасибо, всё отлично",
+        "next_node_id": "node_checkout",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_water_order",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "בְּבַקָּשָׁה, בַּקְבּוּק מַיִם מִינֵרָלִיִּים מֵהַמְּקָרֵר. לְהוֹסִיף קֶרַח?",
+    "line_russian": "Пожалуйста, бутылка минеральной воды из холодильника. Добавить льда?",
+    "audio_path": "assets/audio/dialogue/node_water_order.mp3",
+    "options": [
+      {
+        "id": "opt_with_ice",
+        "text_hebrew": "כֵּן, תּוֹדָה שֶׁהִצַּעְתָּ!",
+        "text_russian": "Да, спасибо, что предложили!",
+        "next_node_id": "node_checkout",
+        "binyan": "hifil",
+        "root": "י-צ-ע"
+      },
+      {
+        "id": "opt_no_ice",
+        "text_hebrew": "לֹא צָרִיךְ קֶרַח, רַק הַבַּקְבּוּק",
+        "text_russian": "Лёд не нужен, только бутылку",
+        "next_node_id": "node_checkout",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_juice_price",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "כּוֹס גְּדוֹלָה עוֹלָה שְׁמוֹנָה עָשָׂר שְׁקָלִים. לִסְחֹט לְךָ טָרִי?",
+    "line_russian": "Большой стакан стоит восемнадцать шекелей. Выжать тебе свежий?",
+    "audio_path": "assets/audio/dialogue/node_juice_price.mp3",
+    "options": [
+      {
+        "id": "opt_squeeze_juice",
+        "text_hebrew": "בֶּטַח! תִּסְחַט לִי כּוֹס גְּדוֹלָה",
+        "text_russian": "Конечно! Выжми мне большой стакан",
+        "next_node_id": "node_checkout",
+        "binyan": "paal",
+        "root": "ס-ח-ט"
+      },
+      {
+        "id": "opt_switch_coffee",
+        "text_hebrew": "אוּלַי אֲנִי אֶשְׁנֶה דַּעְתִּי — תֵּן לִי קָפֶה",
+        "text_russian": "Пожалуй, передумаю — дай мне кофе",
+        "next_node_id": "node_coffee_order",
+        "binyan": "piel",
+        "root": "ש-נ-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_checkout",
+    "speaker_hebrew": "מוֹכֵר",
+    "speaker_russian": "Продавец",
+    "line_hebrew": "בְּבַקָּשָׁה, תֵּהָנֶה! אֶפְשָׁר לְשַׁלֵּם בְּאַשְׁרַאי אוֹ בִּמְזֻמָּן.",
+    "line_russian": "Пожалуйста, наслаждайся! Можно оплатить картой или наличными.",
+    "audio_path": "assets/audio/dialogue/node_checkout.mp3",
+    "options": [
+      {
+        "id": "opt_pay_card",
+        "text_hebrew": "אֲנִי מְשַׁלֵּם בְּכַרְטִיס אַשְׁרַאי. יוֹם טוֹב!",
+        "text_russian": "Я плачу картой. Хорошего дня!",
+        "next_node_id": "node_market_start",
+        "binyan": "piel",
+        "root": "ש-ל-ם"
+      },
+      {
+        "id": "opt_restart",
+        "text_hebrew": "תּוֹדָה רַבָּה! לְהִתְחִיל הַשִּׂיחָה מֵחָדָשׁ",
+        "text_russian": "Большое спасибо! Начать диалог заново",
+        "next_node_id": "node_market_start",
+        "binyan": "hifil",
+        "root": "ת-ח-ל"
+      }
+    ]
+  },
+  {
+    "id": "node_cafe_start",
+    "speaker_hebrew": "מֶלְצָרִית",
+    "speaker_russian": "Официантка",
+    "line_hebrew": "בֹּקֶר טוֹב! תִּרְצוּ לָשֶׁבֶת בִּפְנִים אוֹ בַּמִּרְפֶּסֶת?",
+    "line_russian": "Доброе утро! Вы хотите сесть внутри или на террасе?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_cafe_terrace",
+        "text_hebrew": "בַּמִּרְפֶּסֶת בְּבַקָּשָׁה, יֵשׁ שֶׁמֶשׁ נְעִימָה",
+        "text_russian": "На террасе, пожалуйста, приятное солнце",
+        "next_node_id": "node_cafe_order",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_cafe_inside",
+        "text_hebrew": "בִּפְנִים, לְיַד הַמַּזְגָן בְּבַקָּשָׁה",
+        "text_russian": "Внутри, возле кондиционера, пожалуйста",
+        "next_node_id": "node_cafe_order",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_cafe_order",
+    "speaker_hebrew": "מֶלְצָרִית",
+    "speaker_russian": "Официантка",
+    "line_hebrew": "מְצֻיָּן! יֵשׁ לָנוּ שַׁקְשׁוּקָה טְרִיָּה וְכָרִיךְ אַבוֹקָדוֹ. מָה תִּרְצוּ לֶאֱכֹל?",
+    "line_russian": "Отлично! У нас есть свежая шакшука и сэндвич с авокадо. Что вы хотите поесть?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_shakshuka",
+        "text_hebrew": "שַׁקְשׁוּקָה חֲרִיפָה עִם חַלָּה חַמָּה!",
+        "text_russian": "Острая шакшука с горячей халой!",
+        "next_node_id": "node_cafe_drinks",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_avocado",
+        "text_hebrew": "כָּרִיךְ אַבוֹקָדוֹ וְסָלָט יִשְׂרְאֵלִי קָצוּץ",
+        "text_russian": "Сэндвич с авокадо и мелко нарезанный израильский салат",
+        "next_node_id": "node_cafe_drinks",
+        "binyan": "paal",
+        "root": "ק-צ-ץ"
+      }
+    ]
+  },
+  {
+    "id": "node_cafe_drinks",
+    "speaker_hebrew": "מֶלְצָרִית",
+    "speaker_russian": "Официантка",
+    "line_hebrew": "נִפְלָא. וּמַשֶּׁהוּ לִשְׁתּוֹת? מִיץ תַּפּוּזִים סָחוּט אוֹ קָפֶה?",
+    "line_russian": "Прекрасно. А что-нибудь выпить? Свежевыжатый апельсиновый сок или кофе?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_orange_juice",
+        "text_hebrew": "מִיץ תַּפּוּזִים סָחוּט בְּבַקָּשָׁה",
+        "text_russian": "Свежевыжатый апельсиновый сок, пожалуйста",
+        "next_node_id": "node_cafe_bill",
+        "binyan": "paal",
+        "root": "ס-ח-ט"
+      },
+      {
+        "id": "opt_cafe_latte",
+        "text_hebrew": "קָפֶה הָפוּךְ עִם חָלָב שְׁקֵדִים",
+        "text_russian": "Капучино с миндальным молоком",
+        "next_node_id": "node_cafe_bill",
+        "binyan": "paal",
+        "root": "ה-פ-ך"
+      }
+    ]
+  },
+  {
+    "id": "node_cafe_bill",
+    "speaker_hebrew": "מֶלְצָרִית",
+    "speaker_russian": "Официантка",
+    "line_hebrew": "בְּתֵאָבוֹן! תֵּהָנוּ מֵהָאֲרוּחָה. אֶפְשָׁר לְבַקֵּשׁ חֶשְׁבּוֹן בְּכָל רֶגַע.",
+    "line_russian": "Приятного аппетита! Наслаждайтесь едой. Вы можете попросить счет в любой момент.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_ask_bill",
+        "text_hebrew": "אֶפְשָׁר אֶת הַחֶשְׁבּוֹן בְּבַקָּשָׁה?",
+        "text_russian": "Можно счет, пожалуйста?",
+        "next_node_id": "node_cafe_start",
+        "binyan": "piel",
+        "root": "ב-ק-ש"
+      },
+      {
+        "id": "opt_compliment",
+        "text_hebrew": "הָיָה מְאֹד טָעִים, הַשֵּׁרוּת מְעֻלֶּה!",
+        "text_russian": "Было очень вкусно, обслуживание отличное!",
+        "next_node_id": "node_cafe_start",
+        "binyan": "paal",
+        "root": "ה-י-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_taxi_start",
+    "speaker_hebrew": "נַהָג",
+    "speaker_russian": "Водитель",
+    "line_hebrew": "שָׁלוֹם אָחִי! לְאָן נוֹסְעִים הַיּוֹם?",
+    "line_russian": "Привет, брат! Куда едем сегодня?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_taxi_dizengoff",
+        "text_hebrew": "לִרְחוֹב דִּיזֶנְגּוֹף, לְיַד הַכִּכָּר בְּבַקָּשָׁה",
+        "text_russian": "На улицу Дизенгоф, возле площади, пожалуйста",
+        "next_node_id": "node_taxi_meter",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_taxi_station",
+        "text_hebrew": "לְתַחֲנַת הָרַכֶּבֶת הַהֲגָנָה בְּבַקָּשָׁה",
+        "text_russian": "На железнодорожную станцию Ха-Хагана, пожалуйста",
+        "next_node_id": "node_taxi_meter",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_taxi_meter",
+    "speaker_hebrew": "נַהָג",
+    "speaker_russian": "Водитель",
+    "line_hebrew": "אֵין בְּעָיָה! לְהַפְעִיל מוֹנֶה אוֹ מְחִיר קָבוּעַ מֵרֹאשׁ?",
+    "line_russian": "Без проблем! Включить счетчик или фиксированная цена заранее?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_meter",
+        "text_hebrew": "תַּפְעִיל מוֹנֶה בְּבַקָּשָׁה, כְּמוֹ שֶׁצָּרִיךְ",
+        "text_russian": "Включи счетчик, пожалуйста, как положено",
+        "next_node_id": "node_taxi_arrive",
+        "binyan": "hifil",
+        "root": "פ-ע-ל"
+      },
+      {
+        "id": "opt_fixed_price",
+        "text_hebrew": "כַּמָּה זֶה מְחִיר קָבוּעַ עַד שָׁם?",
+        "text_russian": "Сколько фиксированная цена туда?",
+        "next_node_id": "node_taxi_arrive",
+        "binyan": "paal",
+        "root": "ק-ב-ע"
+      }
+    ]
+  },
+  {
+    "id": "node_taxi_arrive",
+    "speaker_hebrew": "נַהָג",
+    "speaker_russian": "Водитель",
+    "line_hebrew": "הִגַּעְנוּ! יֵשׁ פֹּה קְצָת פְּקָקִים, אֲבָל נָסַעְנוּ מַהֵר. שֶׁיִּהְיֶה יוֹם מְעֻלֶּה!",
+    "line_russian": "Приехали! Тут немного пробок, но доехали быстро. Пусть будет отличный день!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_pay_cash",
+        "text_hebrew": "הִנֵּה הַכֶּסֶף, תִּשְׁמֹר אֶת הָעֹדֶף!",
+        "text_russian": "Вот деньги, оставь сдачу себе!",
+        "next_node_id": "node_taxi_start",
+        "binyan": "paal",
+        "root": "ש-מ-ר"
+      },
+      {
+        "id": "opt_pay_app",
+        "text_hebrew": "אֲנִי מְשַׁלֵּם בָּאַפְּלִיקַצְיָה. תּוֹדָה וְשָׁלוֹם!",
+        "text_russian": "Я плачу через приложение. Спасибо и до свидания!",
+        "next_node_id": "node_taxi_start",
+        "binyan": "piel",
+        "root": "ש-ל-ם"
+      }
+    ]
+  },
+  {
+    "id": "node_pharmacy_start",
+    "speaker_hebrew": "רוֹקֵחַ",
+    "speaker_russian": "Провизор",
+    "line_hebrew": "שָׁלוֹם! בַּמֶּה אֶפְשָׁר לַעֲזֹר לְךָ הַיּוֹם?",
+    "line_russian": "Здравствуйте! Чем я могу помочь вам сегодня?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_pharmacy_headache",
+        "text_hebrew": "יֵשׁ לְךָ מַשֶּׁהוּ טוֹב נֶגֶד כְּאֵב רֹאשׁ חָזָק?",
+        "text_russian": "Есть что-то хорошее от сильной головной боли?",
+        "next_node_id": "node_pharmacy_headache",
+        "binyan": "none",
+        "root": "כ-א-ב"
+      },
+      {
+        "id": "opt_pharmacy_firstaid",
+        "text_hebrew": "אֲנִי צָרִיךְ פְּלַסְטֶרִים וְתַרְסִיס חִטּוּי",
+        "text_russian": "Мне нужны пластыри и антисептический спрей",
+        "next_node_id": "node_pharmacy_firstaid",
+        "binyan": "piel",
+        "root": "ח-ט-א"
+      },
+      {
+        "id": "opt_pharmacy_vitamins",
+        "text_hebrew": "אֶפְשָׁר כַּדּוּרֵי מְצִיצָה לַגָּרוֹן וְוִיטָמִינִים?",
+        "text_russian": "Можно леденцы для горла и витамины?",
+        "next_node_id": "node_pharmacy_instructions",
+        "binyan": "paal",
+        "root": "מ-צ-ץ"
+      }
+    ]
+  },
+  {
+    "id": "node_pharmacy_headache",
+    "speaker_hebrew": "רוֹקֵחַ",
+    "speaker_russian": "Провизор",
+    "line_hebrew": "בֶּטַח! יֵשׁ לָנוּ אָקָמוֹל, נורופן וְאוֹפּטַלְגִּין. אַתָּה רָגִישׁ לִתְרוּפָה כָּלְשֶׁהִי?",
+    "line_russian": "Конечно! У нас есть Акамоль, Нурофен и Оптальгин. У вас есть аллергия на какие-то лекарства?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_headache_acamol",
+        "text_hebrew": "לֹא, אֵין רְגִישׁוּת. אֲנִי אַעֲדִיף אָקָמוֹל. כֵּיצַד לָקַחַת?",
+        "text_russian": "Нет, аллергии нет. Я предпочту Акамоль. Как принимать?",
+        "next_node_id": "node_pharmacy_instructions",
+        "binyan": "hifil",
+        "root": "ע-ד-ף"
+      },
+      {
+        "id": "opt_headache_nurofen",
+        "text_hebrew": "אֶקַּח חֲבִילָה אַחַת שֶׁל נוּרוֹפֶן, תּוֹדָה",
+        "text_russian": "Возьму одну упаковку Нурофена, спасибо",
+        "next_node_id": "node_pharmacy_checkout",
+        "binyan": "paal",
+        "root": "ל-ק-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_pharmacy_firstaid",
+    "speaker_hebrew": "רוֹקֵחַ",
+    "speaker_russian": "Провизор",
+    "line_hebrew": "הִנֵּה פְּלַסְטֶרִים עֲמִידִים בְּמַיִם וְתַרְסִיס אֵיכוּתִי לְחִטּוּי פְּצָעִים.",
+    "line_russian": "Вот водостойкие пластыри и качественный спрей для дезинфекции ран.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_firstaid_accept",
+        "text_hebrew": "מְצֻיָּן, זֶה בְּדִיּוּק מָה שֶׁחִפַּשְׂתִּי. תּוֹדָה רַבָּה!",
+        "text_russian": "Отлично, это ровно то, что я искал. Большое спасибо!",
+        "next_node_id": "node_pharmacy_checkout",
+        "binyan": "piel",
+        "root": "ח-פ-ש"
+      }
+    ]
+  },
+  {
+    "id": "node_pharmacy_instructions",
+    "speaker_hebrew": "רוֹקֵחַ",
+    "speaker_russian": "Провизор",
+    "line_hebrew": "קַח כַּדּוּר אֶחָד כָּל שֵׁשׁ שָׁעוֹת אַחֲרֵי הָאֹכֶל, לֹא יוֹתֵר מֵאַרְבָּעָה בַּיּוֹם.",
+    "line_russian": "Принимайте одну таблетку каждые 6 часов после еды, не больше четырех в день.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_instructions_understood",
+        "text_hebrew": "הֵבַנְתִּי מְצֻיָּן. כַּמָּה הַכֹּל יַחַד?",
+        "text_russian": "Я отлично понял. Сколько все вместе?",
+        "next_node_id": "node_pharmacy_checkout",
+        "binyan": "hifil",
+        "root": "ב-י-ן"
+      }
+    ]
+  },
+  {
+    "id": "node_pharmacy_checkout",
+    "speaker_hebrew": "רוֹקֵחַ",
+    "speaker_russian": "Провизор",
+    "line_hebrew": "סַךְ הַכֹּל שְׁלוֹשִׁים וְשִׁשָּׁה שְׁקָלִים. מְשַׁלֵּם בְּאַשְׁרַאי? שֶׁתִּהְיֶה רְפוּאָה שְׁלֵמָה!",
+    "line_russian": "Всего 36 шекелей. Оплата картой? Скорейшего выздоровления!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_pharmacy_pay",
+        "text_hebrew": "כֵּן, בְּאַשְׁרַאי. תּוֹדָה רַבָּה עַל הַשֵּׁרוּת הַמְּעֻלֶּה!",
+        "text_russian": "Да, картой. Большое спасибо за отличный сервис!",
+        "next_node_id": "node_pharmacy_start",
+        "binyan": "none",
+        "root": "ש-ר-ת"
+      }
+    ]
+  },
+  {
+    "id": "node_hotel_start",
+    "speaker_hebrew": "פְּקִיד קַבָּלָה",
+    "speaker_russian": "Портье на ресепшене",
+    "line_hebrew": "שָׁלוֹם וּבְרוּכִים הַבָּאִים לַמָּלוֹן! יֵשׁ לָכֶם הַזְמָנָה?",
+    "line_russian": "Здравствуйте и добро пожаловать в отель! У вас есть бронь?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_hotel_booked",
+        "text_hebrew": "כֵּן, הַזְמַנְתִּי חֶדֶר לִשְׁלוֹשָׁה לֵילוֹת עַל שֵׁם דָּוִד",
+        "text_russian": "Да, я забронировал номер на 3 ночи на имя Давид",
+        "next_node_id": "node_hotel_checkin",
+        "binyan": "hifil",
+        "root": "ז-מ-ן"
+      },
+      {
+        "id": "opt_hotel_ask_room",
+        "text_hebrew": "אֵין לִי הַזְמָנָה, הַאִם יֵשׁ חֶדֶר פָּנוּי עִם נוֹף לַיָּם?",
+        "text_russian": "У меня нет брони, есть ли свободный номер с видом на море?",
+        "next_node_id": "node_hotel_availability",
+        "binyan": "paal",
+        "root": "פ-נ-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_hotel_checkin",
+    "speaker_hebrew": "פְּקִיד קַבָּלָה",
+    "speaker_russian": "Портье на ресепшене",
+    "line_hebrew": "מָצָאתִי אֶת הַהַזְמָנָה! אֶפְשָׁר דַּרְכּוֹן וְכַרְטִיס אַשְׁרַאי לְפִקָּדוֹן?",
+    "line_russian": "Нашел вашу бронь! Можно паспорт и кредитную карту для залога?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_checkin_passport",
+        "text_hebrew": "בְּוַדַּאי, הִנֵּה הַדַּרְכּוֹן וְהַכַּרְטִיס שֶׁלִּי",
+        "text_russian": "Разумеется, вот мой паспорт и карта",
+        "next_node_id": "node_hotel_key",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_hotel_availability",
+    "speaker_hebrew": "פְּקִיד קַבָּלָה",
+    "speaker_russian": "Портье на ресепшене",
+    "line_hebrew": "יֵשׁ לָנוּ חֶדֶר דֵּלַקְס נִפְלָא בַּקּוֹמָה הַחֲמִישִׁית עִם מִרְפֶּסֶת מוּל הַחוֹף.",
+    "line_russian": "У нас есть замечательный номер делюкс на 5-м этаже с балконом напротив пляжа.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_avail_take",
+        "text_hebrew": "נִשְׁמָע חֲלוֹמִי, אֲנִי לוֹקֵחַ אוֹתוֹ!",
+        "text_russian": "Звучит великолепно, я беру его!",
+        "next_node_id": "node_hotel_key",
+        "binyan": "paal",
+        "root": "ל-ק-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_hotel_key",
+    "speaker_hebrew": "פְּקִיד קַבָּלָה",
+    "speaker_russian": "Портье на ресепшене",
+    "line_hebrew": "הִנֵּה הַכַּרְטִיס לְחֶדֶר 504. סִיסְמַת הָאִינְטֶרְנֶט הִיא Welcome2026. אֲרוּחַת בֹּקֶר בֵּין שֶׁבַע לְעֶשֶׂר.",
+    "line_russian": "Вот ключ-карта от номера 504. Пароль от Wi-Fi — Welcome2026. Завтрак с 7:00 до 10:00.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_key_elevator",
+        "text_hebrew": "תּוֹדָה! מֵאֵיפֹה עוֹלִים לַמַּעֲלִית?",
+        "text_russian": "Спасибо! Откуда подниматься на лифте?",
+        "next_node_id": "node_hotel_finish",
+        "binyan": "paal",
+        "root": "ע-ל-ה"
+      },
+      {
+        "id": "opt_key_pool",
+        "text_hebrew": "עַד אֵיזוֹ שָׁעָה הַבְּרֵכָה פְּתוּחָה?",
+        "text_russian": "До скольки часов открыт бассейн?",
+        "next_node_id": "node_hotel_finish",
+        "binyan": "paal",
+        "root": "פ-ת-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_hotel_finish",
+    "speaker_hebrew": "פְּקִיד קַבָּלָה",
+    "speaker_russian": "Портье на ресепшене",
+    "line_hebrew": "הַמַּעֲלִית מִיָּמִין, וְהַבְּרֵכָה עַד שְׁמוֹנֶה בָּעֶרֶב. שֶׁתִּהְיֶה לָכֶם שְׁהִיָּה נְעִימָה וּמַהֲנָה!",
+    "line_russian": "Лифт справа, а бассейн до 8 вечера. Приятного и радостного вам отдыха!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_hotel_restart",
+        "text_hebrew": "תּוֹדָה רַבָּה עַל כָּל הַהֶסְבֵּרִים, שָׁלוֹם!",
+        "text_russian": "Большое спасибо за все объяснения, до свидания!",
+        "next_node_id": "node_hotel_start",
+        "binyan": "none",
+        "root": "ס-ב-ר"
+      }
+    ]
+  },
+  {
+    "id": "node_meet_start",
+    "speaker_hebrew": "יוֹסִי",
+    "speaker_russian": "Йоси",
+    "line_hebrew": "הַי! נָעִים מְאֹד, אֲנִי יוֹסִי. אַתָּה הַתַּלְמִיד הֶחָדָשׁ בָּאֻלְפָּן?",
+    "line_russian": "Привет! Очень приятно, я Йоси. Ты новый ученик в ульпане?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_meet_newbie",
+        "text_hebrew": "שָׁלוֹם יוֹסִי, נָעִים מְאֹד! כֵּן, הִתְחַלְתִּי לִלְמֹד פֹּה הַשָּׁבוּעַ",
+        "text_russian": "Шалом Йоси, приятно познакомиться! Да, я начал учиться тут на этой неделе",
+        "next_node_id": "node_meet_origin",
+        "binyan": "hitpael",
+        "root": "ת-ח-ל"
+      },
+      {
+        "id": "opt_meet_hebrew_time",
+        "text_hebrew": "נָעִים מְאֹד! אֲנִי לוֹמֵד עִבְרִית כְּבָר חֲצִי שָׁנָה",
+        "text_russian": "Очень приятно! Я учу иврит уже полгода",
+        "next_node_id": "node_meet_hebrew",
+        "binyan": "paal",
+        "root": "ל-מ-ד"
+      }
+    ]
+  },
+  {
+    "id": "node_meet_origin",
+    "speaker_hebrew": "יוֹסִי",
+    "speaker_russian": "Йоси",
+    "line_hebrew": "אֵיזֶה יֹפִי! מֵאֵיזוֹ מְדִינָה הִגַּעְתָּ לְיִשְׂרָאֵל, וְאֵיפֹה אַתָּה גָּר עַכְשָׁו?",
+    "line_russian": "Здорово! Из какой страны ты приехал в Израиль, и где живешь сейчас?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_origin_city",
+        "text_hebrew": "עָלִיתִי מֵאֵירוֹפָּה, וְכַיּוֹם אֲנִי גָּר בְּתֵל אָבִיב לְיַד הַיָּם",
+        "text_russian": "Я репатриировался из Европы, сейчас живу в Тель-Авиве возле моря",
+        "next_node_id": "node_meet_profession",
+        "binyan": "paal",
+        "root": "ע-ל-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_meet_hebrew",
+    "speaker_hebrew": "יוֹסִי",
+    "speaker_russian": "Йоси",
+    "line_hebrew": "וָאוּ, הָעִבְרִית שֶׁלְּךָ מַמָּשׁ טוֹבָה! בַּמֶּה אַתָּה עוֹבֵד?",
+    "line_russian": "Вау, твой иврит прямо хорош! Кем ты работаешь?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_hebrew_job",
+        "text_hebrew": "אֲנִי מְפַתֵּחַ תָּכְנָה בְּחֶבְרַת הַיְטֶק בְּהֶרְצְלִיָּה",
+        "text_russian": "Я разработчик софта в хайтек-компании в Герцлии",
+        "next_node_id": "node_meet_profession",
+        "binyan": "piel",
+        "root": "פ-ת-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_meet_profession",
+    "speaker_hebrew": "יוֹסִי",
+    "speaker_russian": "Йоси",
+    "line_hebrew": "מַגְנִיב לְגַמְרֵי! גַּם אֲנִי אוֹהֵב טֶכְנוֹלוֹגְיָה. בּוֹא נִשְׁתֶּה קָפֶה בַּהַפְסָקָה?",
+    "line_russian": "Круто вообще! Я тоже люблю технологии. Пойдем выпьем кофе на перемене?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_prof_coffee_yes",
+        "text_hebrew": "בְּשִׂמְחָה רַבָּה, קַח אֶת מִסְפַּר הַוּוֹטְסְאַפּ שֶׁלִּי!",
+        "text_russian": "С большой радостью, запиши мой номер WhatsApp!",
+        "next_node_id": "node_meet_finish",
+        "binyan": "paal",
+        "root": "ש-מ-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_meet_finish",
+    "speaker_hebrew": "יוֹסִי",
+    "speaker_russian": "Йоси",
+    "line_hebrew": "שָׁמַרְתִּי אֶת הַמִּסְפָּר. נִפָּגֵשׁ בֶּחָצֵר עוֹד עֶשֶׂר דַּקּוֹת!",
+    "line_russian": "Сохранил номер. Встретимся во дворе через 10 минут!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_meet_restart",
+        "text_hebrew": "סָגוּר, אָחִי! נִתְרָאֶה בְּקָרוֹב",
+        "text_russian": "Договорились, бро! Скоро увидимся",
+        "next_node_id": "node_meet_start",
+        "binyan": "hitpael",
+        "root": "ר-א-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_supermarket_start",
+    "speaker_hebrew": "קוּפָאִית",
+    "speaker_russian": "Кассир",
+    "line_hebrew": "שָׁלוֹם! יֵשׁ לְךָ כַּרְטִיס מוֹעֲדוֹן שֶׁל הָרֶשֶׁת?",
+    "line_russian": "Здравствуйте! У вас есть клубная карта сети?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_super_has_club",
+        "text_hebrew": "כֵּן, הִנֵּה הַכַּרְטִיס. וְאֶפְשָׁר גַּם שַׂקִּיּוֹת?",
+        "text_russian": "Да, вот карточка. И можно также пакеты?",
+        "next_node_id": "node_supermarket_bag",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_super_no_club",
+        "text_hebrew": "אֵין לִי כַּרְטִיס, תּוֹדָה. רַק חֶשְׁבּוֹן",
+        "text_russian": "У меня нет карты, спасибо. Только чек",
+        "next_node_id": "node_supermarket_payment",
+        "binyan": "none",
+        "root": "ח-ש-ב"
+      }
+    ]
+  },
+  {
+    "id": "node_supermarket_bag",
+    "speaker_hebrew": "קוּפָאִית",
+    "speaker_russian": "Кассир",
+    "line_hebrew": "בְּוַדַּאי. כַּמָּה שַׂקִּיּוֹת תִּרְצֶה? כָּל שַׂקִּית עוֹלָה עֲשָׂרָה אַגּוֹרוֹת.",
+    "line_russian": "Конечно. Сколько пакетов вы хотите? Каждый пакет стоит 10 агорот.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_bag_count",
+        "text_hebrew": "שְׁתֵּי שַׂקִּיּוֹת בְּבַקָּשָׁה, יֵשׁ לִי הַרְבֵּה מִצְרָכִים",
+        "text_russian": "Два пакета, пожалуйста, у меня много продуктов",
+        "next_node_id": "node_supermarket_club",
+        "binyan": "none",
+        "root": "צ-ר-ך"
+      }
+    ]
+  },
+  {
+    "id": "node_supermarket_club",
+    "speaker_hebrew": "קוּפָאִית",
+    "speaker_russian": "Кассир",
+    "line_hebrew": "הֶעֱבַרְתִּי אֶת הַכַּרְטִיס, יֵשׁ לְךָ הֲנָחָה שֶׁל עֶשְׂרִים שְׁקָלִים עַל גְּבִינוֹת וְיֵינוֹת.",
+    "line_russian": "Я провела карту, у вас скидка 20 шекелей на сыры и вина.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_club_thanks",
+        "text_hebrew": "אֵיזֶה כֵּיף, מַמָּשׁ תּוֹדָה! כַּמָּה יָצָא הַסַּךְ הַכֹּל?",
+        "text_russian": "Как здорово, спасибо большое! Сколько вышло всего?",
+        "next_node_id": "node_supermarket_payment",
+        "binyan": "paal",
+        "root": "י-צ-א"
+      }
+    ]
+  },
+  {
+    "id": "node_supermarket_payment",
+    "speaker_hebrew": "קוּפָאִית",
+    "speaker_russian": "Кассир",
+    "line_hebrew": "הַסַּךְ הַכֹּל מֵאָה וְאַרְבָּעִים שְׁקָלִים. אֵיךְ תִּרְצֶה לְשַׁלֵּם? בְּתַשְׁלוּם אֶחָד?",
+    "line_russian": "Итого 140 шекелей. Как хотите оплатить? В один платеж?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_pay_one_charge",
+        "text_hebrew": "בְּאַשְׁרַאי בְּבַקָּשָׁה, בְּתַשְׁלוּם אֶחָד",
+        "text_russian": "Картой, пожалуйста, в один платеж",
+        "next_node_id": "node_supermarket_finish",
+        "binyan": "piel",
+        "root": "ש-ל-ם"
+      },
+      {
+        "id": "opt_pay_cash_exact",
+        "text_hebrew": "בִּמְזֻמָּן, הִנֵּה הַסְּכוּם הַמְּדֻיָּק",
+        "text_russian": "Наличными, вот точная сумма",
+        "next_node_id": "node_supermarket_finish",
+        "binyan": "pual",
+        "root": "ד-י-ק"
+      }
+    ]
+  },
+  {
+    "id": "node_supermarket_finish",
+    "speaker_hebrew": "קוּפָאִית",
+    "speaker_russian": "Кассир",
+    "line_hebrew": "הַתַּשְׁלוּם עָבַר בְּהַצְלָחָה! הִנֵּה הַקַּבָּלָה שֶׁלְּךָ. שֶׁיִּהְיֶה יוֹם מְצֻיָּן!",
+    "line_russian": "Оплата прошла успешно! Вот ваш чек. Пусть будет отличный день!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_super_restart",
+        "text_hebrew": "יוֹם נִפְלָא וְתוֹדָה עַל הָעֶזְרָה!",
+        "text_russian": "Замечательного дня и спасибо за помощь!",
+        "next_node_id": "node_supermarket_start",
+        "binyan": "none",
+        "root": "ע-ז-ר"
+      }
+    ]
+  },
+  {
+    "id": "node_clinic_start",
+    "speaker_hebrew": "פְּקִידָה",
+    "speaker_russian": "Регистратор",
+    "line_hebrew": "בֹּקֶר טוֹב! אֶפְשָׁר כַּרְטִיס קֻפַּת חוֹלִים בְּבַקָּשָׁה?",
+    "line_russian": "Доброе утро! Можно карточку больничной кассы, пожалуйста?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_clinic_doctor",
+        "text_hebrew": "הִנֵּה הַכַּרְטִיס. יֵשׁ לִי תּוֹר לְרוֹפֵא מִשְׁפָּחָה בְּעֶשֶׂר",
+        "text_russian": "Вот карта. У меня запись к семейному врачу в 10:00",
+        "next_node_id": "node_clinic_doctor",
+        "binyan": "paal",
+        "root": "ת-ו-ר"
+      },
+      {
+        "id": "opt_clinic_lab",
+        "text_hebrew": "שָׁלוֹם, בָּאתִי לִבְדִיקַת דָּם בַּמַּעְבָּדָה",
+        "text_russian": "Здравствуйте, я пришел на анализ крови в лабораторию",
+        "next_node_id": "node_clinic_lab",
+        "binyan": "paal",
+        "root": "ב-ד-ק"
+      }
+    ]
+  },
+  {
+    "id": "node_clinic_doctor",
+    "speaker_hebrew": "פְּקִידָה",
+    "speaker_russian": "Регистратор",
+    "line_hebrew": "דּוֹקְטוֹר לֵוִי מְקַבֵּל בְּחֶדֶר שְׁתֵּים עֶשְׂרֵה בַּקּוֹמָה הַשְּׁנִיָּה.",
+    "line_russian": "Доктор Леви принимает в кабинете 12 на втором этаже.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_doc_ticket",
+        "text_hebrew": "תּוֹדָה! אֲנִי צָרִיךְ פֶּתֶק עִם מִסְפַּר תּוֹר?",
+        "text_russian": "Спасибо! Мне нужен талончик с номером очереди?",
+        "next_node_id": "node_clinic_ticket",
+        "binyan": "none",
+        "root": "צ-ר-ך"
+      }
+    ]
+  },
+  {
+    "id": "node_clinic_lab",
+    "speaker_hebrew": "פְּקִידָה",
+    "speaker_russian": "Регистратор",
+    "line_hebrew": "הַמַּעְבָּדָה פְּתוּחָה עַד עֶשֶׂר וָחֵצִי בְּחֶדֶר אַרְבַּע בְּסוֹף הַמִּסְדְּרוֹן.",
+    "line_russian": "Лаборатория открыта до 10:30 в кабинете 4 в конце коридора.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_lab_fasting",
+        "text_hebrew": "מְצֻיָּן, אֲנִי בְּצוֹם מֵהַבֹּקֶר כְּפִי שֶׁבִּקְּשׁוּ",
+        "text_russian": "Отлично, я натощак с утра, как просили",
+        "next_node_id": "node_clinic_ticket",
+        "binyan": "piel",
+        "root": "ב-ק-ש"
+      }
+    ]
+  },
+  {
+    "id": "node_clinic_ticket",
+    "speaker_hebrew": "פְּקִידָה",
+    "speaker_russian": "Регистратор",
+    "line_hebrew": "הִנֵּה הַפֶּתֶק עִם מִסְפַּר הַתּוֹר שֶׁלְּךָ: 42. כְּשֶׁיַּגִּיעַ תּוֹרְךָ, הַמִּסְפָּר יֵרָאֶה עַל הַמָּסָךְ.",
+    "line_russian": "Вот талончик с вашим номером очереди: 42. Когда придет ваш черед, номер появится на экране.",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_ticket_wait",
+        "text_hebrew": "הֵבַנְתִּי, אֲנִי אֶמְתִּין בַּחֲדַר הַהַמְתָּנָה",
+        "text_russian": "Понял, я подожду в зале ожидания",
+        "next_node_id": "node_clinic_finish",
+        "binyan": "hifil",
+        "root": "מ-ת-ן"
+      }
+    ]
+  },
+  {
+    "id": "node_clinic_finish",
+    "speaker_hebrew": "פְּקִידָה",
+    "speaker_russian": "Регистратор",
+    "line_hebrew": "בְּשִׂמְחָה! שְׁתֵה מַיִם בַּקּוֹלֶר שָׁם וְתִהְיֶה בָּרִיא!",
+    "line_russian": "С радостью! Попейте воды из кулера вон там и будьте здоровы!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_clinic_restart",
+        "text_hebrew": "תּוֹדָה רַבָּה, יוֹם טוֹב וּבְרִיאוּת לְכֻלָּם!",
+        "text_russian": "Большое спасибо, хорошего дня и здоровья всем!",
+        "next_node_id": "node_clinic_start",
+        "binyan": "none",
+        "root": "ב-ר-א"
+      }
+    ]
+  }
+]

@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+
+PORT=8089
+APP_DIR="$(cd "$(dirname "$0")/../../.." && pwd)"
+WEB_DIR="$APP_DIR/build/web"
+PROFILE_DIR="$HOME/Library/Application Support/NexusHebrewDesktop"
+mkdir -p "$PROFILE_DIR"
+
+# Check if port 8089 is running, if not start background python server
+if ! nc -z 127.0.0.1 $PORT 2>/dev/null; then
+    if [ -d "$WEB_DIR" ]; then
+        python3 -m http.server $PORT -d "$WEB_DIR" > /tmp/nexus_hebrew_server.log 2>&1 &
+        sleep 1
+    fi
+fi
+
+# Launch in standalone application window mode
+CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+BRAVE_BIN="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+EDGE_BIN="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+
+if [ -f "$CHROME_BIN" ]; then
+    exec "$CHROME_BIN" --app="http://127.0.0.1:$PORT" --user-data-dir="$PROFILE_DIR" --window-size=1200,840
+elif [ -f "$BRAVE_BIN" ]; then
+    exec "$BRAVE_BIN" --app="http://127.0.0.1:$PORT" --user-data-dir="$PROFILE_DIR" --window-size=1200,840
+elif [ -f "$EDGE_BIN" ]; then
+    exec "$EDGE_BIN" --app="http://127.0.0.1:$PORT" --user-data-dir="$PROFILE_DIR" --window-size=1200,840
+else
+    open "http://127.0.0.1:$PORT"
+fi

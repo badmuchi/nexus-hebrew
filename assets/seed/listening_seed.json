@@ -1,0 +1,292 @@
+{
+  "exercises": [
+    {
+      "id": "listen_beg_1",
+      "transcript_vocalized": "אֲנִי רוֹצֶה קָפֶה עִם חָלָב בְּבַקָּשָׁה",
+      "russian_translation": "Я хочу кофе с молоком, пожалуйста.",
+      "audio_url": "assets/audio/listening/listen_beg_1.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "רוֹצֶה",
+        "קָפֶה",
+        "חָלָב",
+        "בְּבַקָּשָׁה"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_beg_2",
+      "transcript_vocalized": "אֵיפֹה תַּחֲנַת הָרַכֶּבֶת הַקְּרוֹבָה",
+      "russian_translation": "Где ближайшая железнодорожная станция?",
+      "audio_url": "assets/audio/listening/listen_beg_2.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "אֵיפֹה",
+        "תַּחֲנַת",
+        "רַכֶּבֶת",
+        "הַקְּרוֹבָה"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_beg_3",
+      "transcript_vocalized": "הַיּוֹם אֲנַחְנוּ לוֹמְדִים עִבְרִית בַּבַּיִת",
+      "russian_translation": "Сегодня мы учим иврит дома.",
+      "audio_url": "assets/audio/listening/listen_beg_3.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "הַיּוֹם",
+        "לוֹמְדִים",
+        "עִבְרִית",
+        "בַּבַּיִת"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_1",
+      "transcript_vocalized": "אֶפְשָׁר לְדַבֵּר קְצָת יוֹתֵר לְאַט כְּדֵי שֶׁאָבִין",
+      "russian_translation": "Можно говорить чуть помедленнее, чтобы я понял?",
+      "audio_url": "assets/audio/listening/listen_int_1.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "לְדַבֵּר",
+        "יוֹתֵר לְאַט",
+        "כְּדֵי",
+        "אָבִין"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_2",
+      "transcript_vocalized": "מָחָר בַּבֹּקֶר נִכָּנֵס לַפְּגִישָׁה בְּשָׁעָה תֵּשַׁע",
+      "russian_translation": "Завтра утром мы зайдём на встречу в девять часов.",
+      "audio_url": "assets/audio/listening/listen_int_2.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "מָחָר",
+        "נִכָּנֵס",
+        "פְּגִישָׁה",
+        "בְּשָׁעָה"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_3",
+      "transcript_vocalized": "הוּא הִסְבִּיר לָנוּ אֶת הַכְּלָלִים שֶׁל הַבִּנְיָן הֶחָדָשׁ",
+      "russian_translation": "Он объяснил нам правила нового биньяна.",
+      "audio_url": "assets/audio/listening/listen_int_3.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "הִסְבִּיר",
+        "כְּלָלִים",
+        "בִּנְיָן",
+        "חָדָשׁ"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_1",
+      "transcript_vocalized": "לַמְרוֹת שֶׁהַבִּנְיָן הַזֶּה דּוֹרֵשׁ תִּרְגּוּל אֲנַחְנוּ מִתְקַדְּמִים מַהֵר",
+      "russian_translation": "Несмотря на то что этот биньян требует тренировки, мы быстро продвигаемся.",
+      "audio_url": "assets/audio/listening/listen_adv_1.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "לַמְרוֹת",
+        "תִּרְגּוּל",
+        "מִתְקַדְּמִים",
+        "מַהֵר"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_2",
+      "transcript_vocalized": "כַּאֲשֶׁר הִתְחַלְנוּ לִכְתֹּב מִלִּים בְּלִי נִקּוּד הַקְּרִיאָה הָפְכָה לְטִבְעִית יוֹתֵר",
+      "russian_translation": "Когда мы начали писать слова без огласовок, чтение стало более естественным.",
+      "audio_url": "assets/audio/listening/listen_adv_2.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "כַּאֲשֶׁר",
+        "לִכְתֹּב",
+        "נִקּוּד",
+        "טִבְעִית"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_beg_4",
+      "transcript_vocalized": "בֹּקֶר טוֹב, כַּמָּה עוֹלֶה הַסֵּפֶר הַזֶּה",
+      "russian_translation": "Доброе утро, сколько стоит эта книга?",
+      "audio_url": "assets/audio/listening/listen_beg_4.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "בֹּקֶר",
+        "כַּמָּה",
+        "עוֹלֶה",
+        "הַסֵּפֶר"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_beg_5",
+      "transcript_vocalized": "אֲנִי הוֹלֵךְ עַכְשָׁו לַסּוּפֶּר לִקְנוֹת לֶחֶם וּמַיִם",
+      "russian_translation": "Я сейчас иду в супермаркет купить хлеб и воду.",
+      "audio_url": "assets/audio/listening/listen_beg_5.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "הוֹלֵךְ",
+        "עַכְשָׁו",
+        "לֶחֶם",
+        "וּמַיִם"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_beg_6",
+      "transcript_vocalized": "תּוֹדָה רַבָּה עַל הָעֶזְרָה, נִתְרָאֶה מָחָר",
+      "russian_translation": "Большое спасибо за помощь, увидимся завтра.",
+      "audio_url": "assets/audio/listening/listen_beg_6.mp3",
+      "difficulty": "beginner",
+      "focus_words": [
+        "תּוֹדָה",
+        "הָעֶזְרָה",
+        "נִתְרָאֶה",
+        "מָחָר"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_4",
+      "transcript_vocalized": "אַל תִּשְׁכַּח לָקַחַת מִטְרִיָּה כִּי יוֹרֵד גֶּשֶׁם בַּחוּץ",
+      "russian_translation": "Не забудь взять зонт, потому что на улице идёт дождь.",
+      "audio_url": "assets/audio/listening/listen_int_4.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "תִּשְׁכַּח",
+        "מִטְרִיָּה",
+        "גֶּשֶׁם",
+        "בַּחוּץ"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_5",
+      "transcript_vocalized": "נִפְגַּשְׁנוּ בַּעֲבוֹדָה וְדִבַּרְנוּ עַל הַתָּכְנִית לַשָּׁבוּעַ הַבָּא",
+      "russian_translation": "Мы встретились на работе и поговорили о плане на следующую неделю.",
+      "audio_url": "assets/audio/listening/listen_int_5.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "נִפְגַּשְׁנוּ",
+        "בַּעֲבוֹדָה",
+        "הַתָּכְנִית",
+        "לַשָּׁבוּעַ"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_int_6",
+      "transcript_vocalized": "יָכוֹל לִהְיוֹת שֶׁנַּזְמִין מָקוֹם בַּמִּסְעָדָה לְשָׁעָה שְׁמוֹנֶה בָּעֶרֶב",
+      "russian_translation": "Возможно, мы закажем столик в ресторане на восемь часов вечера.",
+      "audio_url": "assets/audio/listening/listen_int_6.mp3",
+      "difficulty": "intermediate",
+      "focus_words": [
+        "יָכוֹל",
+        "שֶׁנַּזְמִין",
+        "בַּמִּסְעָדָה",
+        "בָּעֶרֶב"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_3",
+      "transcript_vocalized": "אִם תַּמְשִׁיךְ לְתַרְגֵּל עֶשֶׂר דַּקּוֹת בְּיוֹם תַּרְגִּישׁ הֶבְדֵּל גָּדוֹל בַּשֶּׁטֶף",
+      "russian_translation": "Если продолжишь тренироваться по десять минут в день, почувствуешь большую разницу в беглости.",
+      "audio_url": "assets/audio/listening/listen_adv_3.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "תַּמְשִׁיךְ",
+        "לְתַרְגֵּל",
+        "הֶבְדֵּל",
+        "בַּשֶּׁטֶף"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_4",
+      "transcript_vocalized": "לֹא תָּמִיד צָרִיךְ לְתַרְגֵּם כָּל מִלָּה בָּרֹאשׁ כְּדֵי לְהָבִין אֶת הַהֶקְשֵׁר",
+      "russian_translation": "Не всегда нужно переводить каждое слово в голове, чтобы понять контекст.",
+      "audio_url": "assets/audio/listening/listen_adv_4.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "לְתַרְגֵּם",
+        "מִלָּה",
+        "לְהָבִין",
+        "הַהֶקְשֵׁר"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_5",
+      "transcript_vocalized": "הַשֹּׁרֶשׁ שֶׁל הַפֹּעַל עוֹזֵר לָנוּ לְנַחֵשׁ מַשְׁמָעוּת שֶׁל מִלִּים חֲדָשׁוֹת",
+      "russian_translation": "Корень глагола помогает нам угадывать значение новых слов.",
+      "audio_url": "assets/audio/listening/listen_adv_5.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "הַשֹּׁרֶשׁ",
+        "הַפֹּעַל",
+        "לְנַחֵשׁ",
+        "מַשְׁמָעוּת"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    },
+    {
+      "id": "listen_adv_6",
+      "transcript_vocalized": "כְּדֵי לְשַׁפֵּר אֶת הַשְּׁמִיעָה מֻמְלָץ לְהַאֲזִין לְחוֹמֶר אוֹתֶנְטִי בִּמְהִירוּת טִבְעִית",
+      "russian_translation": "Чтобы улучшить восприятие на слух, рекомендуется слушать аутентичный материал в естественном темпе.",
+      "audio_url": "assets/audio/listening/listen_adv_6.mp3",
+      "difficulty": "advanced",
+      "focus_words": [
+        "לְשַׁפֵּר",
+        "הַשְּׁמִיעָה",
+        "לְהַאֲזִין",
+        "טִבְעִית"
+      ],
+      "source_name": "Nexus Curated Ulpan",
+      "license_name": "CC0 1.0",
+      "attribution_text": "Nexus Hebrew App Curated Ulpan Pack (CC0 1.0)"
+    }
+  ]
+}
