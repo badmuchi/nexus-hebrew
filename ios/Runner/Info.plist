@@ -7,7 +7,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nexus Hebrew App</string>
+	<string>Nexus Hebrew</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Требуется для голосовых тренировок и диктантов на иврите.</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>he</string>
+		<string>ru</string>
+		<string>en</string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
