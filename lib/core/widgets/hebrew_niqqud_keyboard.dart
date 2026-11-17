@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// Interactive on-screen Hebrew keyboard supporting all 22 letters, 5 final
-/// forms (sofit), and standard Hebrew vowel points (niqqud diacritics).
+/// forms (sofit), quick-sofit bar, alphabetical & standard layouts, and
+/// vowel points (niqqud diacritics).
 class HebrewNiqqudKeyboard extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback? onSubmitted;
@@ -22,11 +23,36 @@ class HebrewNiqqudKeyboard extends StatefulWidget {
 
 class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
   bool _showAllNiqqud = false;
+  bool _isAlphabeticalLayout = false;
 
   // Standard Israeli layout rows (RTL natural order)
-  static const List<String> _row1 = ['ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ'];
-  static const List<String> _row2 = ['ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף'];
-  static const List<String> _row3 = ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ'];
+  static const List<String> _stdRow1 = ['ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ'];
+  static const List<String> _stdRow2 = ['ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף'];
+  static const List<String> _stdRow3 = ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ'];
+
+  // Balanced Alphabetical layout (9 keys per row, each sofit right next to its base)
+  static const List<String> _alphaRow1 = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+  static const List<String> _alphaRow2 = ['י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס'];
+  static const List<String> _alphaRow3 = ['ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
+
+  // 5 Final Hebrew letters (Sofiot)
+  static const List<String> _sofitLetters = ['ך', 'ם', 'ן', 'ף', 'ץ'];
+
+  // Map of alternate forms accessible via long-press or shown as corner badge
+  static const Map<String, List<String>> _letterVariants = {
+    'מ': ['ם'],
+    'נ': ['ן'],
+    'כ': ['ך', 'כּ'],
+    'פ': ['ף', 'פּ'],
+    'צ': ['ץ'],
+    'ש': ['שׁ', 'שׂ'],
+    'ו': ['וּ', 'וֹ'],
+    'ב': ['בּ'],
+    'ת': ['תּ'],
+    'ד': ['דּ'],
+    'ג': ['גּ'],
+    'י': ['יִ'],
+  };
 
   // Quick primary niqqud bar
   static const List<_NiqqudItem> _primaryNiqqud = [
@@ -90,9 +116,75 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
     widget.controller.clear();
   }
 
+  void _handleLongPress(String letter) {
+    final variants = _letterVariants[letter];
+    if (variants == null || variants.isEmpty) return;
+
+    if (variants.length == 1) {
+      _insert(variants.first);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Вставлена буква: ${variants.first}'),
+          duration: const Duration(milliseconds: 900),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      _showVariantsDialog(letter, variants);
+    }
+  }
+
+  void _showVariantsDialog(String baseLetter, List<String> variants) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogCtx) {
+        final allOptions = [baseLetter, ...variants];
+        return AlertDialog(
+          title: Text(
+            'Варианты буквы $baseLetter',
+            textAlign: TextAlign.center,
+          ),
+          content: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: allOptions.map((opt) {
+              return ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(54, 54),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(dialogCtx).pop();
+                  _insert(opt);
+                },
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(
+                    opt,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final row1 = _isAlphabeticalLayout ? _alphaRow1 : _stdRow1;
+    final row2 = _isAlphabeticalLayout ? _alphaRow2 : _stdRow2;
+    final row3 = _isAlphabeticalLayout ? _alphaRow3 : _stdRow3;
 
     return Container(
       decoration: BoxDecoration(
@@ -126,13 +218,37 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Клавиатура иврита с огласовками',
+                  _isAlphabeticalLayout ? 'Алеф-Бет (А-Я)' : 'Клавиатура (IL)',
                   style: theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const Spacer(),
+                Tooltip(
+                  message: _isAlphabeticalLayout
+                      ? 'Включить стандартную раскладку (IL)'
+                      : 'Включить по порядку Алеф-Бет (א-ת)',
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                    onPressed: () {
+                      setState(() {
+                        _isAlphabeticalLayout = !_isAlphabeticalLayout;
+                      });
+                    },
+                    icon: Icon(
+                      _isAlphabeticalLayout ? Icons.keyboard_alt_outlined : Icons.sort_by_alpha_rounded,
+                      size: 16,
+                    ),
+                    label: Text(
+                      _isAlphabeticalLayout ? 'Стандарт' : 'А-Я',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
+                  style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
                   onPressed: () {
                     setState(() {
                       _showAllNiqqud = !_showAllNiqqud;
@@ -162,6 +278,39 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
             const SizedBox(height: 6),
           ],
 
+          // Dedicated Quick Sofit Bar (конечные буквы крупно и наглядно)
+          Container(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'Конечные (סופיות):',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: _sofitLetters.map((sofit) {
+                        return _buildSofitKey(theme, sofit);
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+
           // Niqqud diacritics bar
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -186,11 +335,11 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
             textDirection: TextDirection.rtl,
             child: Column(
               children: [
-                _buildRow(theme, _row1),
+                _buildRow(theme, row1),
                 const SizedBox(height: 6),
-                _buildRow(theme, _row2),
+                _buildRow(theme, row2),
                 const SizedBox(height: 6),
-                _buildRow(theme, _row3),
+                _buildRow(theme, row3),
               ],
             ),
           ),
@@ -260,7 +409,41 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
     );
   }
 
+  Widget _buildSofitKey(ThemeData theme, String sofit) {
+    return Material(
+      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => _insert(sofit),
+        child: Container(
+          width: 38,
+          height: 32,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Text(
+            sofit,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              fontSize: 18,
+              color: theme.colorScheme.primary,
+              height: 1.25,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildLetterKey(ThemeData theme, String letter) {
+    final variants = _letterVariants[letter];
+    final hasVariants = variants != null && variants.isNotEmpty;
+
     return Material(
       color: theme.colorScheme.surface,
       borderRadius: BorderRadius.circular(8),
@@ -268,22 +451,42 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
         onTap: () => _insert(letter),
+        onLongPress: hasVariants ? () => _handleLongPress(letter) : null,
         child: Container(
           height: 42,
-          alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
             ),
           ),
-          child: Text(
-            letter,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 19,
-              height: 1.35,
-            ),
+          child: Stack(
+            children: [
+              Center(
+                child: Text(
+                  letter,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 19,
+                    height: 1.35,
+                  ),
+                ),
+              ),
+              if (hasVariants)
+                PositionedDirectional(
+                  top: 2,
+                  start: 4,
+                  child: Text(
+                    variants.first,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary.withValues(alpha: 0.75),
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),

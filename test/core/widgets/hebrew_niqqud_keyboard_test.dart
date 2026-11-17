@@ -20,7 +20,7 @@ void main() {
       expect(find.text('ש'), findsOneWidget);
       expect(find.text('ל'), findsOneWidget);
       expect(find.text('ו'), findsOneWidget);
-      expect(find.text('ם'), findsOneWidget);
+      expect(find.text('ם'), findsWidgets);
 
       // Tap 'ש'
       await tester.tap(find.text('ש'));
@@ -31,6 +31,67 @@ void main() {
       await tester.tap(find.text('ל'));
       await tester.pump();
       expect(controller.text, equals('של'));
+    });
+
+    testWidgets('renders quick sofit bar and inserts final letters', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HebrewNiqqudKeyboard(controller: controller),
+          ),
+        ),
+      );
+
+      expect(find.text('Конечные (סופיות):'), findsOneWidget);
+
+      // Tap final mem 'ם' in quick sofit bar
+      final sofitMem = find.text('ם').first;
+      await tester.tap(sofitMem);
+      await tester.pump();
+      expect(controller.text, equals('ם'));
+    });
+
+    testWidgets('long press on base letter inserts final sofit variant', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HebrewNiqqudKeyboard(controller: controller),
+          ),
+        ),
+      );
+
+      // Long press 'מ' to insert 'ם'
+      await tester.longPress(find.text('מ'));
+      await tester.pump();
+      expect(controller.text, equals('ם'));
+    });
+
+    testWidgets('toggles layout between standard and alphabetical (А-Я)', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HebrewNiqqudKeyboard(controller: controller),
+          ),
+        ),
+      );
+
+      expect(find.text('Клавиатура (IL)'), findsOneWidget);
+      expect(find.text('А-Я'), findsOneWidget);
+
+      await tester.tap(find.text('А-Я'));
+      await tester.pump();
+
+      expect(find.text('Алеф-Бет (А-Я)'), findsOneWidget);
+      expect(find.text('Стандарт'), findsOneWidget);
     });
 
     testWidgets('inserts niqqud diacritic mark into controller', (tester) async {
