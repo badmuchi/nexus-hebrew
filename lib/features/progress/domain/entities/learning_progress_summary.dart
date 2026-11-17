@@ -41,6 +41,7 @@ final class LearningProgressSummary extends Equatable {
     required this.listeningAttempts,
     required this.listeningExactMatches,
     required this.averageListeningAccuracy,
+    this.activityByDate = const <String, int>{},
   }) : binyanStats = List<BinyanAccuracyStat>.unmodifiable(binyanStats);
 
   final int totalSrsCards;
@@ -58,6 +59,7 @@ final class LearningProgressSummary extends Equatable {
   final int listeningAttempts;
   final int listeningExactMatches;
   final double averageListeningAccuracy;
+  final Map<String, int> activityByDate;
 
   /// Overall grammar drill accuracy in `[0.0, 1.0]`.
   double get grammarAccuracy =>
@@ -80,6 +82,7 @@ final class LearningProgressSummary extends Equatable {
         listeningAttempts,
         listeningExactMatches,
         averageListeningAccuracy,
+        activityByDate,
       ];
 }
 

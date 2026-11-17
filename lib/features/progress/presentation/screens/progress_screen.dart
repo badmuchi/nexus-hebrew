@@ -255,6 +255,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 12),
           _StreakHeroCard(summary: summary),
           const SizedBox(height: 12),
+          _ActivityHeatmapCard(summary: summary),
+          const SizedBox(height: 12),
           _AchievementsGridCard(summary: summary),
           const SizedBox(height: 12),
           _SrsMasteryCard(summary: summary),
@@ -614,6 +616,223 @@ class _StreakHeroCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ActivityHeatmapCard extends StatelessWidget {
+  const _ActivityHeatmapCard({required this.summary});
+
+  final LearningProgressSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final now = DateTime.now().toUtc();
+    final today = DateTime.utc(now.year, now.month, now.day);
+
+    final currentWeekday = today.weekday;
+    final endDate = today.add(Duration(days: 7 - currentWeekday));
+    const totalWeeks = 12;
+    const totalDays = totalWeeks * 7;
+    final startDate = endDate.subtract(const Duration(days: totalDays - 1));
+
+    int daysWithActivity = 0;
+    for (int i = 0; i < totalDays; i++) {
+      final date = startDate.add(Duration(days: i));
+      if (date.isAfter(today)) continue;
+      final key =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      if ((summary.activityByDate[key] ?? 0) > 0) {
+        daysWithActivity++;
+      }
+    }
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_month_rounded,
+                  size: 20,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Карта активности',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '$daysWithActivity активных дн.',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6, top: 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _buildWeekdayLabel('Пн', theme),
+                        const SizedBox(height: 16),
+                        _buildWeekdayLabel('Ср', theme),
+                        const SizedBox(height: 16),
+                        _buildWeekdayLabel('Пт', theme),
+                      ],
+                    ),
+                  ),
+                  for (int w = 0; w < totalWeeks; w++) ...[
+                    Column(
+                      children: [
+                        for (int d = 0; d < 7; d++) ...[
+                          _buildDayCell(
+                            date: startDate.add(Duration(days: w * 7 + d)),
+                            today: today,
+                            theme: theme,
+                          ),
+                          const SizedBox(height: 3),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(width: 3),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Меньше',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                _buildLegendCell(theme.colorScheme.surfaceContainerHighest),
+                _buildLegendCell(const Color(0xFF81C784)),
+                _buildLegendCell(const Color(0xFF4CAF50)),
+                _buildLegendCell(const Color(0xFF2E7D32)),
+                _buildLegendCell(const Color(0xFF1B5E20)),
+                const SizedBox(width: 4),
+                Text(
+                  'Больше',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeekdayLabel(String text, ThemeData theme) {
+    return SizedBox(
+      height: 13,
+      child: Text(
+        text,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+          fontSize: 9.5,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDayCell({
+    required DateTime date,
+    required DateTime today,
+    required ThemeData theme,
+  }) {
+    final isFuture = date.isAfter(today);
+    final key =
+        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    final count = isFuture ? 0 : (summary.activityByDate[key] ?? 0);
+
+    Color cellColor;
+    if (isFuture) {
+      cellColor = Colors.transparent;
+    } else if (count == 0) {
+      cellColor =
+          theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6);
+    } else if (count <= 2) {
+      cellColor = const Color(0xFF81C784);
+    } else if (count <= 5) {
+      cellColor = const Color(0xFF4CAF50);
+    } else if (count <= 8) {
+      cellColor = const Color(0xFF2E7D32);
+    } else {
+      cellColor = const Color(0xFF1B5E20);
+    }
+
+    final isToday = date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day;
+
+    return Tooltip(
+      message: isFuture
+          ? ''
+          : '${date.day}.${date.month.toString().padLeft(2, '0')}: $count ${count == 1 ? 'действие' : 'действий'}',
+      child: Container(
+        width: 13,
+        height: 13,
+        decoration: BoxDecoration(
+          color: cellColor,
+          borderRadius: BorderRadius.circular(3),
+          border: isToday
+              ? Border.all(color: theme.colorScheme.primary, width: 1.5)
+              : null,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegendCell(Color color) {
+    return Container(
+      width: 10,
+      height: 10,
+      margin: const EdgeInsets.symmetric(horizontal: 1.5),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(2),
       ),
     );
   }

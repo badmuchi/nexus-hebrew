@@ -135,6 +135,14 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
         nowUtc: asOf.toUtc(),
       );
 
+      final activityByDate = <String, int>{};
+      for (final ts in allTimestamps) {
+        final utc = ts.toUtc();
+        final key =
+            '${utc.year}-${utc.month.toString().padLeft(2, '0')}-${utc.day.toString().padLeft(2, '0')}';
+        activityByDate[key] = (activityByDate[key] ?? 0) + 1;
+      }
+
       return Success<LearningProgressSummary, Failure>(
         LearningProgressSummary(
           totalSrsCards: cards.length,
@@ -152,6 +160,7 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
           listeningAttempts: listeningLogs.length,
           listeningExactMatches: listeningExact,
           averageListeningAccuracy: averageListeningAccuracy,
+          activityByDate: activityByDate,
         ),
       );
     } on Object catch (error, stackTrace) {

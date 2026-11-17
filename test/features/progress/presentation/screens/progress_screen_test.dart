@@ -126,9 +126,13 @@ void main() {
 
     expect(find.text('Прогресс · Поиск'), findsOneWidget);
     expect(find.textContaining('XP накоплено'), findsOneWidget);
-    expect(find.text('Достижения и бейджи 🏆'), findsOneWidget);
+    expect(find.text('Карта активности'), findsOneWidget);
     expect(find.text('Серия: 4 дн.'), findsOneWidget);
 
+    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Достижения и бейджи 🏆'), findsOneWidget);
     // Должны быть бейджи
     expect(find.text('Блиц-спринтер ⚡️'), findsOneWidget);
     expect(find.text('Ударный режим 🔥'), findsOneWidget);
@@ -141,6 +145,9 @@ void main() {
     await cubit.loadProgress();
 
     await tester.pumpWidget(createSubject(cubit));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(ListView), const Offset(0, -350));
     await tester.pumpAndSettle();
 
     // Нажимаем на бейдж Ударный режим
@@ -200,7 +207,7 @@ void main() {
     expect(selectedTheme, ThemeMode.dark);
 
     // Скроллим к блоку темы
-    await tester.drag(find.byType(ListView), const Offset(0, -800));
+    await tester.drag(find.byType(ListView), const Offset(0, -1100));
     await tester.pumpAndSettle();
 
     expect(find.text('Тема оформления'), findsOneWidget);

@@ -50,6 +50,15 @@ jobs:
         with:
           path: build/web
 
+      - name: Build Android APK Release
+        run: flutter build apk --release
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-hebrew-android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
   deploy:
     needs: build-and-test
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
