@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../conversation/domain/entities/hebrew_text.dart';
 import '../../domain/entities/verb_conjugation.dart';
+import '../../domain/services/hebrew_conjugation_highlighter.dart';
 
-/// Displays a bilingual, RTL-isolated conjugation table for one [VerbLexeme].
-class ConjugationTableWidget extends StatelessWidget {
+/// Displays a bilingual, RTL-isolated conjugation table for one [VerbLexeme]
+/// with optional color-coded morphological breakdown (root, prefix, suffix, infix).
+class ConjugationTableWidget extends StatefulWidget {
   const ConjugationTableWidget({
     super.key,
     required this.verb,
@@ -27,9 +30,16 @@ class ConjugationTableWidget extends StatelessWidget {
   final ValueChanged<ConjugatedForm>? onSaveFormToSrs;
 
   @override
+  State<ConjugationTableWidget> createState() => _ConjugationTableWidgetState();
+}
+
+class _ConjugationTableWidgetState extends State<ConjugationTableWidget> {
+  bool _colorCoded = true;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final forms = verb.formsForTense(selectedTense);
+    final forms = widget.verb.formsForTense(widget.selectedTense);
 
     return Card(
       elevation: 0,
@@ -42,11 +52,26 @@ class ConjugationTableWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Таблица спряжения',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Таблица спряжения',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                FilterChip(
+                  label: const Text('Анатомия'),
+                  avatar: const Icon(Icons.colorize_rounded, size: 16),
+                  selected: _colorCoded,
+                  onSelected: (val) {
+                    setState(() {
+                      _colorCoded = val;
+                    });
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             SegmentedButton<VerbTense>(
@@ -73,13 +98,19 @@ class ConjugationTableWidget extends StatelessWidget {
                     ),
                   )
                   .toList(growable: false),
-              selected: <VerbTense>{selectedTense},
+              selected: <VerbTense>{widget.selectedTense},
               onSelectionChanged: (Set<VerbTense> selected) {
                 if (selected.isNotEmpty) {
-                  onTenseChanged(selected.first);
+                  widget.onTenseChanged(selected.first);
                 }
               },
             ),
+            if (_colorCoded) ...[
+              const SizedBox(height: 12),
+              _MorphologyLegend(
+                rootHyphenated: widget.verb.root.hyphenated,
+              ),
+            ],
             const SizedBox(height: 14),
             if (forms.isEmpty)
               Padding(
@@ -95,13 +126,15 @@ class ConjugationTableWidget extends StatelessWidget {
               ...forms.map(
                 (ConjugatedForm item) => _ConjugationRow(
                   form: item,
-                  showNikkud: showNikkud,
-                  isPlaying: activeSpokenHebrew == item.form.vocalized &&
-                      audioStatus == AudioPlaybackStatus.playing,
-                  onSpeak: () => onSpeakForm(item.form.vocalized),
-                  onSaveToSrs: onSaveFormToSrs == null
+                  root: widget.verb.root,
+                  colorCoded: _colorCoded,
+                  showNikkud: widget.showNikkud,
+                  isPlaying: widget.activeSpokenHebrew == item.form.vocalized &&
+                      widget.audioStatus == AudioPlaybackStatus.playing,
+                  onSpeak: () => widget.onSpeakForm(item.form.vocalized),
+                  onSaveToSrs: widget.onSaveFormToSrs == null
                       ? null
-                      : () => onSaveFormToSrs!(item),
+                      : () => widget.onSaveFormToSrs!(item),
                 ),
               ),
           ],
@@ -111,9 +144,89 @@ class ConjugationTableWidget extends StatelessWidget {
   }
 }
 
+class _MorphologyLegend extends StatelessWidget {
+  const _MorphologyLegend({
+    required this.rootHyphenated,
+  });
+
+  final String rootHyphenated;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        _LegendChip(
+          color: Colors.green.shade800,
+          label: 'Корень ($rootHyphenated)',
+        ),
+        _LegendChip(
+          color: Colors.blue.shade800,
+          label: 'Приставка',
+        ),
+        _LegendChip(
+          color: Colors.deepOrange.shade800,
+          label: 'Окончание',
+        ),
+        _LegendChip(
+          color: Colors.purple.shade800,
+          label: 'Основа',
+        ),
+      ],
+    );
+  }
+}
+
+class _LegendChip extends StatelessWidget {
+  const _LegendChip({
+    required this.color,
+    required this.label,
+  });
+
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ConjugationRow extends StatelessWidget {
   const _ConjugationRow({
     required this.form,
+    required this.root,
+    required this.colorCoded,
     required this.showNikkud,
     required this.isPlaying,
     required this.onSpeak,
@@ -121,10 +234,14 @@ class _ConjugationRow extends StatelessWidget {
   });
 
   final ConjugatedForm form;
+  final Shoresh root;
+  final bool colorCoded;
   final bool showNikkud;
   final bool isPlaying;
   final VoidCallback onSpeak;
   final VoidCallback? onSaveToSrs;
+
+  static const _highlighter = HebrewConjugationHighlighter();
 
   @override
   Widget build(BuildContext context) {
@@ -181,13 +298,15 @@ class _ConjugationRow extends StatelessWidget {
               children: [
                 Directionality(
                   textDirection: TextDirection.rtl,
-                  child: Text(
-                    displayedHebrew,
-                    textAlign: TextAlign.right,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  child: colorCoded
+                      ? _buildHighlightedHebrew(theme, displayedHebrew)
+                      : Text(
+                          displayedHebrew,
+                          textAlign: TextAlign.right,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                 ),
                 Text(
                   form.transliteration,
@@ -220,6 +339,36 @@ class _ConjugationRow extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHighlightedHebrew(ThemeData theme, String text) {
+    final segments = _highlighter.highlight(
+      vocalizedForm: text,
+      root: root,
+    );
+
+    return Text.rich(
+      TextSpan(
+        children: segments.map((seg) {
+          final color = switch (seg.role) {
+            MorphologicalRole.root => Colors.green.shade800,
+            MorphologicalRole.prefix => Colors.blue.shade800,
+            MorphologicalRole.suffix => Colors.deepOrange.shade800,
+            MorphologicalRole.infix => Colors.purple.shade800,
+            MorphologicalRole.base => theme.colorScheme.onSurface,
+          };
+          return TextSpan(
+            text: seg.text,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          );
+        }).toList(),
+      ),
+      textAlign: TextAlign.right,
     );
   }
 }

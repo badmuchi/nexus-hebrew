@@ -10,9 +10,11 @@ import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../domain/entities/verb_conjugation.dart';
 import '../cubit/grammar_cubit.dart';
 import '../cubit/grammar_state.dart';
+import '../widgets/binyan_interactive_matrix.dart';
 import '../widgets/conjugation_table_widget.dart';
 import '../widgets/preposition_inflection_view.dart';
 import '../widgets/sentence_builder_view.dart';
+import '../widgets/verb_conjugation_quiz_sheet.dart';
 
 /// Grammar workspace covering all 7 Hebrew binyanim, shoresh search, and conjugation drill.
 class GrammarScreen extends StatefulWidget {
@@ -161,6 +163,54 @@ class _GrammarScreenState extends State<GrammarScreen> {
     );
   }
 
+  void _openBinyanMatrix(BuildContext context, GrammarLoaded state) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (ctx) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Атлас 7 биньянов · Корни'),
+          leading: IconButton(
+            icon: const Icon(Icons.close_rounded),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+        ),
+        body: BinyanInteractiveMatrix(
+          allVerbs: state.verbs,
+          showNikkud: state.showNikkud,
+          audioService: widget.audioService,
+          onSelectVerb: (verb) {
+            Navigator.of(ctx).pop();
+            context.read<GrammarCubit>().selectVerb(verb);
+          },
+        ),
+      ),
+    );
+  }
+
+  void _openConjugationQuiz(BuildContext context, GrammarLoaded state) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (ctx) => VerbConjugationQuizSheet(
+        verbs: state.verbs,
+        showNikkud: state.showNikkud,
+        audioService: widget.audioService,
+        onSaveToSrs: (form) {
+          if (state.selectedVerb != null) {
+            unawaited(
+              context
+                  .read<GrammarCubit>()
+                  .saveConjugatedFormToSrs(state.selectedVerb!, form),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   Widget _buildLoadedBody(
     BuildContext context,
     ThemeData theme,
@@ -246,6 +296,38 @@ class _GrammarScreenState extends State<GrammarScreen> {
               ),
             ),
           ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.tonalIcon(
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsetsDirectional.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                icon: const Icon(Icons.hub_outlined, size: 20),
+                label: const Text('Атлас 7 биньянов'),
+                onPressed: () => _openBinyanMatrix(context, state),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsetsDirectional.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                icon: const Icon(Icons.bolt_rounded, size: 20),
+                label: const Text('Блиц-квиз'),
+                onPressed: () => _openConjugationQuiz(context, state),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         TextField(
