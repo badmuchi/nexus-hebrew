@@ -26,6 +26,7 @@ import '../cubit/conversation_cubit.dart';
 import '../cubit/conversation_state.dart';
 import '../widgets/dialogue_bubble.dart';
 import '../widgets/dialogue_history_sheet.dart';
+import '../widgets/pronunciation_practice_sheet.dart';
 import '../widgets/scenario_catalog_sheet.dart';
 
 class ConversationScreen extends StatefulWidget {
@@ -421,6 +422,25 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     audioService: widget.audioService,
                                     addCardToSrsUseCase:
                                         widget.addCardToSrsUseCase,
+                                  ),
+                                );
+                              },
+                              onPronouncePressed: () {
+                                unawaited(
+                                  PronunciationPracticeSheet.show(
+                                    context,
+                                    phraseVocalized:
+                                        activeNode.lineHebrew.vocalized,
+                                    phraseRussian: activeNode.lineRussian,
+                                    audioService: widget.audioService,
+                                    onXpEarned: (int xp) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('+$xp XP за произношение! 🎙️'),
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 );
                               },

@@ -15,6 +15,7 @@ class DialogueBubble extends StatelessWidget {
   final VoidCallback? onSaveNodeToSrs;
   final ValueChanged<DialogueOption>? onSaveOptionToSrs;
   final VoidCallback? onXRayPressed;
+  final VoidCallback? onPronouncePressed;
 
   const DialogueBubble({
     super.key,
@@ -27,6 +28,7 @@ class DialogueBubble extends StatelessWidget {
     this.onSaveNodeToSrs,
     this.onSaveOptionToSrs,
     this.onXRayPressed,
+    this.onPronouncePressed,
   });
 
   String _pickHebrewText(HebrewText text) {
@@ -96,6 +98,14 @@ class DialogueBubble extends StatelessWidget {
                           onPressed: onXRayPressed,
                           tooltip: 'Рентген фразы 🔬',
                           icon: const Icon(Icons.biotech_rounded),
+                        ),
+                      ],
+                      if (onPronouncePressed != null) ...[
+                        const SizedBox(width: 4.0),
+                        IconButton.outlined(
+                          onPressed: onPronouncePressed,
+                          tooltip: 'Потренировать произношение 🎙️',
+                          icon: const Icon(Icons.mic_none_rounded),
                         ),
                       ],
                     ],
