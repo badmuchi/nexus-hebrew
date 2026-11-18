@@ -669,13 +669,17 @@ class _ActivityHeatmapCard extends StatelessWidget {
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Карта активности',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    'Карта активности',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -906,12 +910,15 @@ class _GrammarStatsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Грамматика и биньяны',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    'Грамматика и биньяны',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Text(
                   summary.grammarAttempts == 0
                       ? 'Нет попыток'
@@ -935,9 +942,12 @@ class _GrammarStatsCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '${stat.binyan.hebrewLabel} · ${stat.binyan.transliteration}',
+                          Expanded(
+                            child: Text(
+                              '${stat.binyan.hebrewLabel} · ${stat.binyan.transliteration}',
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           Text('$binyanPercent% (${stat.correctAttempts}/${stat.totalAttempts})'),
                         ],
                       ),
@@ -1463,12 +1473,15 @@ class _AchievementsGridCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Достижения и бейджи 🏆',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    'Достижения и бейджи 🏆',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsetsDirectional.symmetric(
                     horizontal: 8,

@@ -271,7 +271,7 @@ Widget _buildTestApp() {
 
 void main() {
   testWidgets(
-    'NexusHebrewApp renders all six navigation tabs in compact NavigationBar',
+    'NexusHebrewApp renders all seven navigation tabs in compact NavigationBar',
     (WidgetTester tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
@@ -283,15 +283,27 @@ void main() {
 
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(find.byType(NavigationRail), findsNothing);
-      expect(find.text('Диалоги'), findsOneWidget);
-      expect(find.text('FSRS'), findsOneWidget);
-      expect(find.text('Грамматика'), findsOneWidget);
-      expect(find.text('Аудирование'), findsOneWidget);
-      expect(find.text('Словарь'), findsOneWidget);
-      expect(find.text('Прогресс'), findsOneWidget);
+      expect(find.text('Главная'), findsWidgets);
+      expect(find.text('Диалоги'), findsWidgets);
+      expect(find.text('FSRS'), findsWidgets);
+      expect(find.text('Грамматика'), findsWidgets);
+      expect(find.text('Аудирование'), findsWidgets);
+      expect(find.text('Словарь'), findsWidgets);
+      expect(find.text('Прогресс'), findsWidgets);
+
+      final dialogueDest = find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Диалоги'),
+      );
+      await tester.tap(dialogueDest);
+      await tester.pumpAndSettle();
       expect(find.text('בֹּקֶר טוֹב!'), findsOneWidget);
 
-      await tester.tap(find.text('Словарь'));
+      final dictionaryDest = find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Словарь'),
+      );
+      await tester.tap(dictionaryDest);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     },
@@ -310,11 +322,16 @@ void main() {
 
       expect(find.byType(NavigationRail), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
-      expect(find.text('Диалоги'), findsOneWidget);
-      expect(find.text('Словарь'), findsOneWidget);
-      expect(find.text('Прогресс'), findsOneWidget);
+      expect(find.text('Главная'), findsWidgets);
+      expect(find.text('Диалоги'), findsWidgets);
+      expect(find.text('Словарь'), findsWidgets);
+      expect(find.text('Прогресс'), findsWidgets);
 
-      await tester.tap(find.text('Словарь'));
+      final dictionaryDest = find.descendant(
+        of: find.byType(NavigationRail),
+        matching: find.text('Словарь'),
+      );
+      await tester.tap(dictionaryDest);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     },

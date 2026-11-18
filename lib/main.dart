@@ -41,6 +41,7 @@ import 'features/grammar/domain/usecases/get_verbs_by_binyan.dart';
 import 'features/grammar/domain/usecases/record_grammar_practice.dart';
 import 'features/grammar/presentation/cubit/grammar_cubit.dart';
 import 'features/grammar/presentation/screens/grammar_screen.dart';
+import 'features/home/presentation/screens/home_screen.dart';
 import 'features/listening/data/datasources/listening_local_datasource.dart';
 import 'features/listening/data/datasources/listening_seed_datasource.dart';
 import 'features/listening/data/repositories/listening_repository_impl.dart';
@@ -567,11 +568,11 @@ class _MainShellState extends State<_MainShell> {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 1 && context.read<SrsSessionCubit>().state is SrsSessionEmpty) {
+    if (index == 2 && context.read<SrsSessionCubit>().state is SrsSessionEmpty) {
       unawaited(context.read<SrsSessionCubit>().loadDueCards());
-    } else if (index == 4) {
-      unawaited(context.read<DictionaryCubit>().refreshSrsStatus());
     } else if (index == 5) {
+      unawaited(context.read<DictionaryCubit>().refreshSrsStatus());
+    } else if (index == 6) {
       unawaited(context.read<ProgressCubit>().loadProgress());
     }
   }
@@ -579,6 +580,13 @@ class _MainShellState extends State<_MainShell> {
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
+      HomeScreen(
+        audioService: widget.audioService,
+        addCardToSrsUseCase: widget.addCardToSrsUseCase,
+        getDailyWorkoutUseCase: widget.getDailyWorkoutUseCase,
+        settingsStorage: widget.settingsStorage,
+        onNavigateToTab: _onDestinationSelected,
+      ),
       ConversationScreen(
         audioService: widget.audioService,
         addCardToSrsUseCase: widget.addCardToSrsUseCase,
@@ -630,6 +638,11 @@ class _MainShellState extends State<_MainShell> {
                   onDestinationSelected: _onDestinationSelected,
                   destinations: const [
                     NavigationRailDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home_rounded),
+                      label: Text('Главная'),
+                    ),
+                    NavigationRailDestination(
                       icon: Icon(Icons.forum_outlined),
                       selectedIcon: Icon(Icons.forum_rounded),
                       label: Text('Диалоги'),
@@ -675,7 +688,7 @@ class _MainShellState extends State<_MainShell> {
             data: baseTheme.navigationBarTheme.copyWith(
               labelTextStyle: WidgetStatePropertyAll<TextStyle?>(
                 baseTheme.textTheme.labelSmall?.copyWith(
-                  fontSize: compactBottomLabels ? 10.5 : 12.0,
+                  fontSize: compactBottomLabels ? 10.0 : 11.5,
                 ),
               ),
             ),
@@ -683,6 +696,11 @@ class _MainShellState extends State<_MainShell> {
               selectedIndex: _selectedIndex,
               onDestinationSelected: _onDestinationSelected,
               destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home_rounded),
+                  label: 'Главная',
+                ),
                 NavigationDestination(
                   icon: Icon(Icons.forum_outlined),
                   selectedIcon: Icon(Icons.forum_rounded),
