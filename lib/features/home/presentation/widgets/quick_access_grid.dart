@@ -7,6 +7,7 @@ import '../../../slang/data/datasources/slang_seed_datasource.dart';
 import '../../../slang/data/repositories/slang_repository_impl.dart';
 import '../../../slang/domain/usecases/get_slang_expressions.dart';
 import '../../../slang/presentation/screens/slang_screen.dart';
+import '../../../speech_lab/presentation/screens/speech_lab_screen.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../stories/presentation/screens/stories_catalog_view.dart';
 
@@ -149,6 +150,23 @@ class QuickAccessGrid extends StatelessWidget {
         icon: Icons.hub_rounded,
         color: const Color(0xFF6A1B9A),
         onTap: () => onNavigateToTab?.call(3),
+      ),
+      _QuickItem(
+        title: 'Лаборатория речи',
+        hebrewTitle: 'הִגּוּי וְדִבּוּר',
+        description: 'Тренажёр произношения, гортанные звуки и AI-оценка',
+        icon: Icons.record_voice_over_rounded,
+        color: const Color(0xFFE91E63),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => SpeechLabScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
       ),
     ];
 
