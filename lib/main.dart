@@ -527,12 +527,66 @@ class _NexusHebrewAppState extends State<NexusHebrewApp> {
             colorSchemeSeed: const Color(0xFF1565C0),
             brightness: Brightness.light,
             useMaterial3: true,
+            fontFamilyFallback: const [
+              'Noto Sans Hebrew',
+              'Heebo',
+              'Rubik',
+              'Segoe UI',
+              'sans-serif',
+            ],
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+                TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+                TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+                TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+              },
+            ),
+            cardTheme: const CardThemeData(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+            ),
           ),
           darkTheme: ThemeData(
             colorSchemeSeed: const Color(0xFF1565C0),
             brightness: Brightness.dark,
             scaffoldBackgroundColor: const Color(0xFF0F172A),
             useMaterial3: true,
+            fontFamilyFallback: const [
+              'Noto Sans Hebrew',
+              'Heebo',
+              'Rubik',
+              'Segoe UI',
+              'sans-serif',
+            ],
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+                TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+                TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+                TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+              },
+            ),
+            cardTheme: const CardThemeData(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+            ),
           ),
           home: _MainShell(
             database: widget.database,

@@ -98,6 +98,86 @@ class SrsStudyScreen extends StatelessWidget {
     );
   }
 
+  void _openSpeedSprint(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SpeedSprintScreen(
+          audioService: audioService,
+          addCardToSrsUseCase: addCardToSrsUseCase,
+        ),
+      ),
+    );
+  }
+
+  void _openMatchPairs(BuildContext context, SrsSessionState state) {
+    final activeCards =
+        state is SrsSessionActive ? state.queue : <SrsCard>[];
+    List<SrsCard> cardsToUse = activeCards;
+    if (cardsToUse.isEmpty) {
+      final dictState = context.read<DictionaryCubit>().state;
+      if (dictState is DictionaryLoaded) {
+        cardsToUse = dictState.allEntries
+            .map((e) => SrsCard(
+                  id: e.id,
+                  hebrew: e.hebrew,
+                  russianTranslation: e.russianTranslation,
+                  memory: FsrsMemoryState.initial(
+                    now: DateTime.now().toUtc(),
+                  ),
+                  attribution: const ContentAttribution(
+                    sourceName: 'Dictionary',
+                    licenseName: 'CC-BY',
+                  ),
+                ))
+            .toList();
+      }
+    }
+
+    if (cardsToUse.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Слова загружаются, попробуйте через секунду'),
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MatchPairsScreen(
+          cards: cardsToUse,
+          audioService: audioService,
+        ),
+      ),
+    );
+  }
+
+  void _exportToAnki(BuildContext context, SrsSessionState state) {
+    final activeCards =
+        state is SrsSessionActive ? state.queue : <SrsCard>[];
+    if (activeCards.isNotEmpty) {
+      unawaited(
+        AnkiExportDialog.showSrsExport(context, cards: activeCards),
+      );
+    } else {
+      final dictState = context.read<DictionaryCubit>().state;
+      if (dictState is DictionaryLoaded && dictState.allEntries.isNotEmpty) {
+        unawaited(
+          AnkiExportDialog.showDictionaryExport(
+            context,
+            entries: dictState.allEntries,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Нет доступных карточек для экспорта'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SrsSessionCubit, SrsSessionState>(
@@ -168,114 +248,169 @@ class SrsStudyScreen extends StatelessWidget {
                   ),
                 ),
               ],
-              IconButton(
-                onPressed: () => _openHandsFreePlayer(context, state),
-                tooltip: 'Иврит на ходу (Аудио)',
-                icon: const Icon(Icons.headphones_rounded),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => SpeedSprintScreen(
-                        audioService: audioService,
-                        addCardToSrsUseCase: addCardToSrsUseCase,
+              if (isImporting)
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Center(
+                    child: SizedBox(
+                      width: 20.0,
+                      height: 20.0,
+                      child: CircularProgressIndicator(strokeWidth: 2.0),
+                    ),
+                  ),
+                )
+              else
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert_rounded),
+                  tooltip: 'Дополнительные режимы и инструменты',
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'sprint':
+                        _openSpeedSprint(context);
+                        break;
+                      case 'pairs':
+                        _openMatchPairs(context, state);
+                        break;
+                      case 'hands_free':
+                        _openHandsFreePlayer(context, state);
+                        break;
+                      case 'import_tatoeba':
+                        unawaited(_showTatoebaImportDialog(context));
+                        break;
+                      case 'export_anki':
+                        _exportToAnki(context, state);
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'sprint',
+                      child: Row(
+                        children: [
+                          Icon(Icons.bolt_rounded, color: Colors.amber),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Блиц-спринт',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  '60 сек на реакцию',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                tooltip: 'Блиц-спринт (60 сек)',
-                icon: const Icon(Icons.bolt_rounded, color: Colors.amber),
-              ),
-              IconButton(
-                onPressed: () {
-                  final activeCards =
-                      state is SrsSessionActive ? state.queue : <SrsCard>[];
-                  List<SrsCard> cardsToUse = activeCards;
-                  if (cardsToUse.isEmpty) {
-                    final dictState = context.read<DictionaryCubit>().state;
-                    if (dictState is DictionaryLoaded) {
-                      cardsToUse = dictState.allEntries
-                          .map((e) => SrsCard(
-                                id: e.id,
-                                hebrew: e.hebrew,
-                                russianTranslation: e.russianTranslation,
-                                memory: FsrsMemoryState.initial(
-                                  now: DateTime.now().toUtc(),
+                    const PopupMenuItem(
+                      value: 'pairs',
+                      child: Row(
+                        children: [
+                          Icon(Icons.grid_view_rounded, color: Colors.purpleAccent),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Быстрые пары',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
-                                attribution: const ContentAttribution(
-                                  sourceName: 'Dictionary',
-                                  licenseName: 'CC-BY',
+                                Text(
+                                  'Мини-игра на сопоставление',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
                                 ),
-                              ))
-                          .toList();
-                    }
-                  }
-
-                  if (cardsToUse.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Слова загружаются, попробуйте через секунду'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => MatchPairsScreen(
-                        cards: cardsToUse,
-                        audioService: audioService,
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                tooltip: 'Быстрые пары (Мини-игра)',
-                icon: const Icon(Icons.grid_view_rounded, color: Colors.purpleAccent),
-              ),
-              IconButton(
-                onPressed: () {
-                  final activeCards =
-                      state is SrsSessionActive ? state.queue : <SrsCard>[];
-                  if (activeCards.isNotEmpty) {
-                    unawaited(
-                      AnkiExportDialog.showSrsExport(context, cards: activeCards),
-                    );
-                  } else {
-                    final dictState = context.read<DictionaryCubit>().state;
-                    if (dictState is DictionaryLoaded &&
-                        dictState.allEntries.isNotEmpty) {
-                      unawaited(
-                        AnkiExportDialog.showDictionaryExport(
-                          context,
-                          entries: dictState.allEntries,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Нет доступных карточек для экспорта'),
-                        ),
-                      );
-                    }
-                  }
-                },
-                tooltip: 'Экспорт в Anki (TSV/CSV)',
-                icon: const Icon(Icons.download_for_offline_outlined),
-              ),
-              IconButton(
-                onPressed: isImporting
-                    ? null
-                    : () => unawaited(_showTatoebaImportDialog(context)),
-                tooltip: 'Подгрузить фразы из Tatoeba',
-                icon: isImporting
-                    ? const SizedBox(
-                        width: 20.0,
-                        height: 20.0,
-                        child: CircularProgressIndicator(strokeWidth: 2.0),
-                      )
-                    : const Icon(Icons.cloud_download_rounded),
-              ),
+                    const PopupMenuItem(
+                      value: 'hands_free',
+                      child: Row(
+                        children: [
+                          Icon(Icons.headphones_rounded, color: Colors.blueAccent),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Иврит на ходу',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'Аудиоплеер без экрана',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(),
+                    const PopupMenuItem(
+                      value: 'import_tatoeba',
+                      child: Row(
+                        children: [
+                          Icon(Icons.cloud_download_rounded, color: Colors.teal),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Фразы из Tatoeba',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'Импорт живых фраз',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'export_anki',
+                      child: Row(
+                        children: [
+                          Icon(Icons.download_for_offline_outlined, color: Colors.indigo),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Экспорт в Anki',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'TSV/CSV файл колоды',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
           body: SafeArea(

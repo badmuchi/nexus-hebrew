@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Interactive on-screen Hebrew keyboard supporting all 22 letters, 5 final
 /// forms (sofit), quick-sofit bar, alphabetical & standard layouts, and
@@ -78,6 +80,7 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
   ];
 
   void _insert(String textToInsert) {
+    unawaited(HapticFeedback.lightImpact());
     final text = widget.controller.text;
     final selection = widget.controller.selection;
     final start = selection.start >= 0 ? selection.start : text.length;
@@ -93,6 +96,7 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
   }
 
   void _deleteBackward() {
+    unawaited(HapticFeedback.selectionClick());
     final text = widget.controller.text;
     final selection = widget.controller.selection;
     final start = selection.start >= 0 ? selection.start : text.length;
@@ -113,10 +117,12 @@ class _HebrewNiqqudKeyboardState extends State<HebrewNiqqudKeyboard> {
   }
 
   void _clear() {
+    unawaited(HapticFeedback.mediumImpact());
     widget.controller.clear();
   }
 
   void _handleLongPress(String letter) {
+    unawaited(HapticFeedback.mediumImpact());
     final variants = _letterVariants[letter];
     if (variants == null || variants.isEmpty) return;
 

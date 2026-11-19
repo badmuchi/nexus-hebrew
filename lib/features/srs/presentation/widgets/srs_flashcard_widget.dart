@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/widgets/hebrew_niqqud_keyboard.dart';
@@ -326,7 +329,10 @@ class _SrsFlashcardWidgetState extends State<SrsFlashcardWidget> {
           const SizedBox(height: 20.0),
           if (!widget.isAnswerRevealed && !isTypingMode)
             FilledButton.icon(
-              onPressed: widget.onRevealAnswer,
+              onPressed: () {
+                unawaited(HapticFeedback.lightImpact());
+                widget.onRevealAnswer();
+              },
               icon: const Icon(Icons.flip_rounded),
               label: const Text('Показать перевод и разбор'),
             ),
@@ -341,7 +347,10 @@ class _SrsFlashcardWidgetState extends State<SrsFlashcardWidget> {
                     child: FilledButton.tonal(
                       onPressed: widget.isSubmittingReview
                           ? null
-                          : () => widget.onRateCard(rating),
+                          : () {
+                              unawaited(HapticFeedback.selectionClick());
+                              widget.onRateCard(rating);
+                            },
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsetsDirectional.symmetric(
                           vertical: 12.0,
