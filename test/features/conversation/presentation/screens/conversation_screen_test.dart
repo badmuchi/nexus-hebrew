@@ -99,11 +99,11 @@ void main() {
   }
 
   group('DialogueScenarioInfo', () {
-    test('contains 8 rich situational dialogue scenarios', () {
-      expect(DialogueScenarioInfo.allScenarios.length, 8);
+    test('contains 10 rich situational dialogue scenarios', () {
+      expect(DialogueScenarioInfo.allScenarios.length, 10);
 
       final ids = DialogueScenarioInfo.allScenarios.map((s) => s.id).toSet();
-      expect(ids.length, 8);
+      expect(ids.length, 10);
 
       final titles =
           DialogueScenarioInfo.allScenarios.map((s) => s.titleRussian).toList();
@@ -113,6 +113,8 @@ void main() {
       expect(titles, contains('Знакомство в ульпане'));
       expect(titles, contains('Касса в супермаркете'));
       expect(titles, contains('В поликлинике (Купат Холим)'));
+      expect(titles, contains('Кофе в Тель-Авиве'));
+      expect(titles, contains('Шук Кармель: Торг и вкусности'));
     });
   });
 

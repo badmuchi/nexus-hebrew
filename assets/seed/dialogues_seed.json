@@ -866,5 +866,259 @@
         "root": "ב-ר-א"
       }
     ]
+  },
+  {
+    "id": "node_telaviv_coffee_start",
+    "speaker_hebrew": "בָּרִיסְטָה",
+    "speaker_russian": "Бариста",
+    "line_hebrew": "בֹּקֶר טוֹב! מָה לְהָכִין לְךָ הַיּוֹם?",
+    "line_russian": "Доброе утро! Что приготовить тебе сегодня?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_hafuch_large",
+        "text_hebrew": "הָפוּךְ גָּדוֹל, חָלָב שִׁבֹּלֶת שׁוּעָל בְּבַקָּשָׁה",
+        "text_russian": "Большой капучино на овсяном молоке, пожалуйста",
+        "next_node_id": "node_coffee_sit_or_take",
+        "binyan": "paal",
+        "root": "ה-פ-ך"
+      },
+      {
+        "id": "opt_cold_americano",
+        "text_hebrew": "אָמֶרִיקָנוֹ קַר עִם הַרְבֵּה קֶרַח",
+        "text_russian": "Холодный американо с большим количеством льда",
+        "next_node_id": "node_coffee_sit_or_take",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_croissant",
+        "text_hebrew": "יֵשׁ לָכֶם מַאֲפֶה שׁוֹקוֹלָד טָרִי?",
+        "text_russian": "У вас есть свежая шоколадная выпечка?",
+        "next_node_id": "node_coffee_pastry",
+        "binyan": "paal",
+        "root": "א-פ-ה"
+      }
+    ]
+  },
+  {
+    "id": "node_coffee_sit_or_take",
+    "speaker_hebrew": "בָּרִיסְטָה",
+    "speaker_russian": "Бариста",
+    "line_hebrew": "בְּרָצוֹן! לָשֶׁבֶת פֹּה בַּמִּרְפֶּסֶת אוֹ לָקַחַת?",
+    "line_russian": "С удовольствием! Здесь на террасе посидеть или с собой (takeaway)?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_takeaway",
+        "text_hebrew": "לָקַחַת, אֲנִי מְמַהֵר לָעֲבוֹדָה",
+        "text_russian": "С собой, я тороплюсь на работу",
+        "next_node_id": "node_coffee_payment",
+        "binyan": "paal",
+        "root": "ל-ק-ח"
+      },
+      {
+        "id": "opt_sit_here",
+        "text_hebrew": "לָשֶׁבֶת פֹּה בַּשֶּׁמֶשׁ עִם הַלֶּפְּטוֹפּ",
+        "text_russian": "Здесь на солнышке с ноутбуком",
+        "next_node_id": "node_coffee_payment",
+        "binyan": "paal",
+        "root": "י-ש-ב"
+      }
+    ]
+  },
+  {
+    "id": "node_coffee_pastry",
+    "speaker_hebrew": "בָּרִיסְטָה",
+    "speaker_russian": "Бариста",
+    "line_hebrew": "בֶּטַח, הַקְרוּאָסוֹן יָצָא עַכְשָׁו מֵהַתַּנּוּר, חַם וּפָרִיךְ!",
+    "line_russian": "Конечно, круассан только что из печи, горячий и хрустящий!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_take_croissant",
+        "text_hebrew": "מְעֻלֶּה! תּוֹסִיף אֶחָד כָּזֶה וְהָפוּךְ גָּדוֹל",
+        "text_russian": "Супер! Добавь один такой и большой капучино",
+        "next_node_id": "node_coffee_payment",
+        "binyan": "hifil",
+        "root": "י-ס-ף"
+      }
+    ]
+  },
+  {
+    "id": "node_coffee_payment",
+    "speaker_hebrew": "בָּרִיסְטָה",
+    "speaker_russian": "Бариста",
+    "line_hebrew": "הַכֹּל יַחַד עֶשְׂרִים וְאַרְבָּעָה שְׁקָלִים. בְּאַשְׁרַאי אוֹ מְזֻמָּן?",
+    "line_russian": "Все вместе 24 шекеля. Кредитной картой или наличными?",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_pay_card",
+        "text_hebrew": "בְּאַשְׁרַאי עִם הַטֶּלֶפוֹן בְּבַקָּשָׁה",
+        "text_russian": "Картой через телефон, пожалуйста",
+        "next_node_id": "node_coffee_enjoy",
+        "binyan": "none",
+        "root": null
+      },
+      {
+        "id": "opt_pay_cash",
+        "text_hebrew": "בִּמְזֻמָּן, הִנֵּה שְׁלוֹשִׁים שֶׁקֶל, הַשְּׁאָר טִיפּ",
+        "text_russian": "Наличными, вот 30 шекелей, остальное на чай",
+        "next_node_id": "node_coffee_enjoy",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_coffee_enjoy",
+    "speaker_hebrew": "בָּרִיסְטָה",
+    "speaker_russian": "Бариста",
+    "line_hebrew": "תּוֹדָה רַבָּה! יִהְיֶה מוּכָן עוֹד שְׁתֵּי דַּקּוֹת. שֶׁיִּהְיֶה לְךָ יוֹם מֻשְׁלָם!",
+    "line_russian": "Большое спасибо! Будет готово через две минуты. Отличного тебе дня!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_coffee_finish",
+        "text_hebrew": "תּוֹדָה רַבָּה, אַתָּה אַלּוּף! יוֹם מְצֻיָּן!",
+        "text_russian": "Большое спасибо, ты лучший! Отличного дня!",
+        "next_node_id": "node_telaviv_coffee_start",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_carmel_start",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "רַק הַיּוֹם! תּוּתִים מָתוֹקִים כְּמוֹ דְּבַשׁ! בּוֹא תִּטְעַם, גֶּבֶר!",
+    "line_russian": "Только сегодня! Клубника сладкая как мед! Подойди попробуй, дружище!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_shuk_taste",
+        "text_hebrew": "תּוֹדָה, אֶטְעַם. וָאוּ, תַּכְלֶס מָתוֹק מְאֹד! כַּמָּה זֶה לְקִילוֹ?",
+        "text_russian": "Спасибо, попробую. Вау, реально очень сладкая! Сколько стоит килограмм?",
+        "next_node_id": "node_shuk_price",
+        "binyan": "paal",
+        "root": "ט-ע-ם"
+      },
+      {
+        "id": "opt_shuk_halva",
+        "text_hebrew": "אֲנִי מְחַפֵּשׂ חַלְוָה עִם פִּסְטוּקִים וּטְחִינָה גָּלְמִית",
+        "text_russian": "Я ищу халву с фисташками и натуральную тахини",
+        "next_node_id": "node_shuk_halva",
+        "binyan": "piel",
+        "root": "ח-פ-ש"
+      },
+      {
+        "id": "opt_shuk_dates",
+        "text_hebrew": "יֵשׁ לְךָ תְּמָרִים מַגְ'הוּל מֵהָעֲרָבָה?",
+        "text_russian": "У тебя есть финики маджхоль из Аравы?",
+        "next_node_id": "node_shuk_dates",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_price",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "עֶשְׂרִים שֶׁקֶל לְקִילוֹ. אֲבָל בִּשְׁבִילְךָ שְׁנֵי קִילוֹ בִּשְׁלוֹשִׁים!",
+    "line_russian": "20 шекелей за кило. Но для тебя два килограмма за тридцать!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_shuk_deal",
+        "text_hebrew": "סַבָּבָּה, תַּעֲשֶׂה לִי שְׁנֵי קִילוֹ בְּקֻפְסָא",
+        "text_russian": "Договорились, положи мне два кило в коробку",
+        "next_node_id": "node_shuk_checkout",
+        "binyan": "paal",
+        "root": "ע-ש-ה"
+      },
+      {
+        "id": "opt_shuk_haggle",
+        "text_hebrew": "תַּעֲשֶׂה לִי עֶשְׂרִים וַחֲמִשָּׁה שֶׁקֶל וַאֲנִי לוֹקֵחַ שְׁנַיִם עַכְשָׁו",
+        "text_russian": "Сделай за 25, и я забираю два прямо сейчас",
+        "next_node_id": "node_shuk_haggle_accept",
+        "binyan": "paal",
+        "root": "ל-ק-ח"
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_haggle_accept",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "יַאלְלָה, רַק בִּגְלַל הַחִיּוּךְ הַיָּפֶה שֶׁלְּךָ! שְׁנֵי קִילוֹ בְּעֶשְׂרִים וַחֲמִשָּׁה!",
+    "line_russian": "Погнали, только ради твоей улыбки! Два кило за 25!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_shuk_take_bargain",
+        "text_hebrew": "תּוֹדָה רַבָּה, אַתָּה בֶּן אָדָם זָהָב!",
+        "text_russian": "Большое спасибо, ты золотой человек!",
+        "next_node_id": "node_shuk_checkout",
+        "binyan": "none",
+        "root": null
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_halva",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "בֶּטַח! חַלְוָה אֲמִתִּית עִם פִּסְטוּק מֵהַגָּלִיל. הִנֵּה, קַח חֲתִיכָה עַל הַסַּכִּין!",
+    "line_russian": "Конечно! Настоящая халва с фисташками из Галилеи. На, возьми кусочек прямо с ножа!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_halva_buy",
+        "text_hebrew": "חֲבָל עַל הַזְּמַן, כָּל כָּךְ טָעִים! שְׁקוֹל לִי חֲצִי קִילוֹ",
+        "text_russian": "Фантастика, невероятно вкусно! Взвесь мне полкило",
+        "next_node_id": "node_shuk_checkout",
+        "binyan": "paal",
+        "root": "ש-ק-ל"
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_dates",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "הַתְּמָרִים שֶׁלָּנוּ עֲנָקִיִּים, בְּלִי תּוֹסֶפֶת סֻכָּר, בְּדִיּוּק מֵהָעֲרָבָה!",
+    "line_russian": "Наши финики гигантские, без добавления сахара, прямо из Аравы!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_dates_buy",
+        "text_hebrew": "תֶּן לִי קֻפְסָא אַחַת שֶׁל קִילוֹ",
+        "text_russian": "Дай мне одну коробку на килограмм",
+        "next_node_id": "node_shuk_checkout",
+        "binyan": "paal",
+        "root": "נ-ת-ן"
+      }
+    ]
+  },
+  {
+    "id": "node_shuk_checkout",
+    "speaker_hebrew": "רוֹכֵל בַּשּׁוּק",
+    "speaker_russian": "Торговец на рынке",
+    "line_hebrew": "בְּכָבוֹד! שַׂמְתִּי לְךָ גַּם עַגְבָנִיּוֹת שֶׁרִי צַ'פְּרָה מִמֶּנִּי. לְהִתְרָאוֹת וְשַׁבָּת שָׁלוֹם!",
+    "line_russian": "С уважением! Положил тебе ещё помидорки черри в подарок от заведения. До свидания и шабат шалом!",
+    "audio_path": null,
+    "options": [
+      {
+        "id": "opt_shuk_finish",
+        "text_hebrew": "תּוֹדָה רַבָּה, כַּפָּרָה עָלֶיךָ! שַׁבָּת שָׁלוֹם!",
+        "text_russian": "Большое спасибо, дорогой! Шабат шалом!",
+        "next_node_id": "node_shuk_carmel_start",
+        "binyan": "none",
+        "root": null
+      }
+    ]
   }
 ]

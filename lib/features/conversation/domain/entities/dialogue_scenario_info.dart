@@ -93,6 +93,24 @@ class DialogueScenarioInfo extends Equatable {
       category: 'Здоровье',
       description: 'Магнитная карта, запись к семейному врачу, лаборатория и талон',
     ),
+    DialogueScenarioInfo(
+      id: 'node_telaviv_coffee_start',
+      titleRussian: 'Кофе в Тель-Авиве',
+      titleHebrew: 'קָפֶה תֵּל־אָבִיבִי',
+      emoji: '☕',
+      level: 'A1',
+      category: 'Еда и покупки',
+      description: 'Кафе афух, овсяное молоко, выбор на вынос или здесь, оплата картой',
+    ),
+    DialogueScenarioInfo(
+      id: 'node_shuk_carmel_start',
+      titleRussian: 'Шук Кармель: Торг и вкусности',
+      titleHebrew: 'שׂוּק הַכַּרְמֶל',
+      emoji: '🍓',
+      level: 'A2',
+      category: 'Еда и покупки',
+      description: 'Свежая клубника, халва с фисташками, торг за цену и подарки от торговца',
+    ),
   ];
 
   @override

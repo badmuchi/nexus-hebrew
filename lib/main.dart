@@ -75,6 +75,10 @@ import 'features/srs/domain/usecases/review_srs_card.dart';
 import 'features/srs/presentation/cubit/srs_session_cubit.dart';
 import 'features/srs/presentation/cubit/srs_session_state.dart';
 import 'features/srs/presentation/screens/srs_study_screen.dart';
+import 'features/slang/data/datasources/slang_seed_datasource.dart';
+import 'features/slang/data/repositories/slang_repository_impl.dart';
+import 'features/slang/domain/repositories/slang_repository.dart';
+import 'features/slang/domain/usecases/get_slang_expressions.dart';
 import 'features/stories/data/datasources/stories_seed_datasource.dart';
 import 'features/stories/data/repositories/stories_repository_impl.dart';
 import 'features/stories/domain/repositories/stories_repository.dart';
@@ -205,6 +209,11 @@ Future<void> main() async {
     logger: logger,
   );
 
+  final slangSeedDataSource = AssetSlangSeedDataSource(logger: logger);
+  final slangRepo = SlangRepositoryImpl(
+    dataSource: slangSeedDataSource,
+  );
+
   runApp(
     NexusHebrewApp(
       database: database,
@@ -215,6 +224,7 @@ Future<void> main() async {
       dictionaryRepository: dictionaryRepo,
       progressRepository: progressRepo,
       storiesRepository: storiesRepo,
+      slangRepository: slangRepo,
       audioService: audioService,
       settingsStorage: settingsStorage,
       logger: logger,
@@ -296,6 +306,7 @@ class NexusHebrewApp extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
   final ProgressRepository progressRepository;
   final StoriesRepository? storiesRepository;
+  final SlangRepository? slangRepository;
   final AudioPlaybackService audioService;
   final AppSettingsStorage? settingsStorage;
   final AppLogger logger;
@@ -310,6 +321,7 @@ class NexusHebrewApp extends StatefulWidget {
     required this.dictionaryRepository,
     required this.progressRepository,
     this.storiesRepository,
+    this.slangRepository,
     required this.audioService,
     this.settingsStorage,
     required this.logger,
@@ -365,6 +377,10 @@ class _NexusHebrewAppState extends State<NexusHebrewApp> {
     final completeDailyWorkoutUseCase = CompleteDailyWorkoutUseCase(
       settingsStorage: widget.settingsStorage,
     );
+    final slangDataSource = AssetSlangSeedDataSource(logger: widget.logger);
+    final slangRepo = widget.slangRepository ??
+        SlangRepositoryImpl(dataSource: slangDataSource);
+    final getSlangUseCase = GetSlangExpressionsUseCase(slangRepo);
 
     return MultiBlocProvider(
       providers: [
@@ -525,6 +541,7 @@ class _NexusHebrewAppState extends State<NexusHebrewApp> {
             addCardToSrsUseCase: addCardToSrsUseCase,
             getDailyWorkoutUseCase: getDailyWorkoutUseCase,
             completeDailyWorkoutUseCase: completeDailyWorkoutUseCase,
+            getSlangUseCase: getSlangUseCase,
             currentThemeMode: _themeMode,
             onThemeModeChanged: _onThemeModeChanged,
           ),
@@ -540,6 +557,7 @@ class _MainShell extends StatefulWidget {
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final GetDailyWorkoutUseCase? getDailyWorkoutUseCase;
   final CompleteDailyWorkoutUseCase? completeDailyWorkoutUseCase;
+  final GetSlangExpressionsUseCase? getSlangUseCase;
   final ThemeMode currentThemeMode;
   final ValueChanged<ThemeMode>? onThemeModeChanged;
 
@@ -550,6 +568,7 @@ class _MainShell extends StatefulWidget {
     this.addCardToSrsUseCase,
     this.getDailyWorkoutUseCase,
     this.completeDailyWorkoutUseCase,
+    this.getSlangUseCase,
     this.currentThemeMode = ThemeMode.system,
     this.onThemeModeChanged,
   });
@@ -585,6 +604,7 @@ class _MainShellState extends State<_MainShell> {
         addCardToSrsUseCase: widget.addCardToSrsUseCase,
         getDailyWorkoutUseCase: widget.getDailyWorkoutUseCase,
         settingsStorage: widget.settingsStorage,
+        getSlangUseCase: widget.getSlangUseCase,
         onNavigateToTab: _onDestinationSelected,
       ),
       ConversationScreen(

@@ -158,6 +158,8 @@ void main() {
       expect(find.text('Прогресс'), findsOneWidget);
       expect(find.text('Алеф-Бет'), findsOneWidget);
       expect(find.text('Микро-рассказы'), findsOneWidget);
+      expect(find.text('Израильский сленг'), findsOneWidget);
+      expect(find.text('Матрица корней'), findsOneWidget);
     });
 
     testWidgets('навигация по клику на раздел вызывает onNavigateToTab', (tester) async {
@@ -181,6 +183,11 @@ void main() {
       expect(tappedTab, 2);
 
       await tester.tap(find.text('7 Биньянов'));
+      await tester.pumpAndSettle();
+      expect(tappedTab, 3);
+
+      tappedTab = null;
+      await tester.tap(find.text('Матрица корней'));
       await tester.pumpAndSettle();
       expect(tappedTab, 3);
     });

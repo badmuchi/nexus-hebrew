@@ -64,7 +64,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('7 Биньянов'), findsOneWidget);
-      expect(find.text('Трансформация корня'), findsOneWidget);
+      expect(find.text('Матрица корней'), findsOneWidget);
 
       expect(find.text("Pa'al (Qal)"), findsOneWidget);
       expect(find.text("Nif'al"), findsOneWidget);
@@ -74,21 +74,25 @@ void main() {
       expect(find.text("Hif'il"), findsOneWidget);
     });
 
-    testWidgets('переключается в режим трансформации корня и вызывает onSelectVerb',
+    testWidgets('переключается в режим матрицы корня и вызывает onSelectVerb',
         (tester) async {
+      tester.view.physicalSize = const Size(800, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       VerbLexeme? selected;
       await tester.pumpWidget(
         buildWidget(onSelectVerb: (v) => selected = v),
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Трансформация корня'));
+      await tester.tap(find.text('Матрица корней'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Выберите корень (שורש):'), findsOneWidget);
-      expect(find.text('Превращения корня:'), findsOneWidget);
-      expect(find.text('писать'), findsOneWidget);
-      expect(find.text('диктовать'), findsOneWidget);
+      expect(find.text('Популярные корни (שורש):'), findsOneWidget);
+      expect(find.text('Трансформация по Биньянам:'), findsOneWidget);
+      expect(find.text('писал (писать)'), findsOneWidget);
 
       final openConjugationBtn = find.byTooltip('Открыть спряжение').first;
       await tester.tap(openConjugationBtn);

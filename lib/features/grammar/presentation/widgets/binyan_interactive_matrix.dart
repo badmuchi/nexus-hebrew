@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../conversation/domain/entities/binyan.dart';
+import '../../../srs/domain/entities/srs_card.dart';
+import '../../../srs/domain/usecases/add_card_to_srs.dart';
+import '../../domain/entities/root_matrix_paradigm.dart';
 import '../../domain/entities/verb_conjugation.dart';
 
 /// Educational meta-information about one of the 7 Hebrew binyanim.
@@ -107,11 +112,12 @@ class BinyanMetaInfo {
   ];
 }
 
-/// Interactive 7 Binyanim architectural matrix and root transformation explorer.
+/// Interactive 7 Binyanim architectural matrix and live root transformation explorer.
 class BinyanInteractiveMatrix extends StatefulWidget {
   final List<VerbLexeme> allVerbs;
   final bool showNikkud;
   final AudioPlaybackService? audioService;
+  final AddCardToSrsUseCase? addCardToSrsUseCase;
   final ValueChanged<VerbLexeme>? onSelectVerb;
 
   const BinyanInteractiveMatrix({
@@ -119,6 +125,7 @@ class BinyanInteractiveMatrix extends StatefulWidget {
     required this.allVerbs,
     required this.showNikkud,
     this.audioService,
+    this.addCardToSrsUseCase,
     this.onSelectVerb,
   });
 
@@ -127,29 +134,67 @@ class BinyanInteractiveMatrix extends StatefulWidget {
 }
 
 class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
-  int _selectedTabIndex = 0; // 0: Атлас 7 биньянов, 1: Путешествие корней
+  int _selectedTabIndex = 0; // 0: Атлас 7 биньянов, 1: Трансформатор корней
   String? _selectedRootFilter;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Default root filter to a rich multi-binyan root if available
-    final commonRoots = _extractCommonRoots();
-    if (commonRoots.isNotEmpty) {
-      _selectedRootFilter = commonRoots.first;
-    }
+    _selectedRootFilter = 'כ-ת-ב';
   }
 
-  List<String> _extractCommonRoots() {
-    final rootCounts = <String, int>{};
-    for (final verb in widget.allVerbs) {
-      final key = verb.root.hyphenated;
-      rootCounts[key] = (rootCounts[key] ?? 0) + 1;
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _speak(String text) {
+    widget.audioService?.playWithTtsFallback(
+      sourcePath: null,
+      fallbackHebrewText: text,
+    );
+  }
+
+  Future<void> _addToSrs({
+    required BuildContext context,
+    required String frontRussian,
+    required String backHebrew,
+    String? exampleHebrew,
+    String? exampleRussian,
+  }) async {
+    final useCase = widget.addCardToSrsUseCase;
+    if (useCase == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('FSRS сервис недоступен')),
+      );
+      return;
     }
-    // Sort roots with most verbs first
-    final sorted = rootCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    return sorted.map((e) => e.key).toList(growable: false);
+
+    final params = AddCardToSrsParams(
+      id: 'root_${DateTime.now().microsecondsSinceEpoch}',
+      hebrewVocalized: backHebrew,
+      russianTranslation: frontRussian,
+      exampleHebrewVocalized: exampleHebrew,
+      exampleRussian: exampleRussian,
+      category: LexicalCategory.verb,
+    );
+
+    final res = await useCase.call(params);
+    if (mounted) {
+      final isSuccess = res.getOrNull() == true;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isSuccess
+                ? '✅ Добавлено в FSRS: $backHebrew — $frontRussian'
+                : 'Слово уже есть в вашей колоде повторений',
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -170,8 +215,8 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
               ),
               ButtonSegment<int>(
                 value: 1,
-                icon: Icon(Icons.hub_outlined),
-                label: Text('Трансформация корня'),
+                icon: Icon(Icons.hub_rounded),
+                label: Text('Матрица корней'),
               ),
             ],
             selected: {_selectedTabIndex},
@@ -224,7 +269,7 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer,
+                        color: _binyanColor(info.binyan).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Directionality(
@@ -233,7 +278,7 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
                           info.hebrewPattern,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w800,
-                            color: theme.colorScheme.onPrimaryContainer,
+                            color: _binyanColor(info.binyan),
                           ),
                         ),
                       ),
@@ -252,7 +297,7 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
                           Text(
                             info.actionTypeRu,
                             style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.primary,
+                              color: _binyanColor(info.binyan),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -294,7 +339,12 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.volume_up_rounded, size: 20),
+                        tooltip: 'Озвучить пример',
+                        onPressed: () => _speak(info.exampleHebrew),
+                      ),
+                      const SizedBox(width: 4),
                       Text(
                         info.exampleRu,
                         style: theme.textTheme.labelSmall?.copyWith(
@@ -313,53 +363,108 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
   }
 
   Widget _buildRootTransformationLab(ThemeData theme) {
-    final commonRoots = _extractCommonRoots();
+    final query = _searchController.text.trim().toLowerCase();
 
-    if (commonRoots.isEmpty) {
-      return Center(
-        child: Text(
-          'Список корней пока пуст.',
-          style: theme.textTheme.bodyMedium,
-        ),
-      );
-    }
+    // Filter curated paradigms
+    final curatedList = RootMatrixParadigm.curatedCatalog.where((p) {
+      if (query.isEmpty) return true;
+      return p.root.contains(query) ||
+          p.rootLetters.contains(query) ||
+          p.baseMeaningRu.toLowerCase().contains(query) ||
+          p.forms.any((f) =>
+              f.translationRu.toLowerCase().contains(query) ||
+              f.transliteration.toLowerCase().contains(query));
+    }).toList(growable: false);
 
-    final activeRoot = _selectedRootFilter ?? commonRoots.first;
-    final matchingVerbs = widget.allVerbs
-        .where((v) => v.root.hyphenated == activeRoot)
+    final selectedParadigm = RootMatrixParadigm.curatedCatalog.firstWhere(
+      (p) => p.root == _selectedRootFilter,
+      orElse: () => curatedList.isNotEmpty
+          ? curatedList.first
+          : RootMatrixParadigm.curatedCatalog.first,
+    );
+
+    // Matching verbs from database
+    final dbVerbs = widget.allVerbs
+        .where((v) =>
+            v.root.hyphenated == selectedParadigm.root ||
+            v.root.compact == selectedParadigm.rootLetters)
         .toList(growable: false);
 
     return ListView(
+      key: const ValueKey('root_matrix_list'),
       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 24),
       children: [
+        // Search bar
+        TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Поиск корня (например, כתב, שמר, учить, закрыть)...',
+            prefixIcon: const Icon(Icons.search_rounded),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear_rounded),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {});
+                    },
+                  )
+                : null,
+            filled: true,
+            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          ),
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: 12),
+
         Text(
-          'Выберите корень (שורש):',
+          'Популярные корни (שורש):',
           style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 8),
+
+        // Horizontal chips of roots
         SizedBox(
           height: 44,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: commonRoots.length,
+            itemCount: curatedList.length,
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, idx) {
-              final root = commonRoots[idx];
-              final isSelected = root == activeRoot;
+              final paradigm = curatedList[idx];
+              final isSelected = paradigm.root == selectedParadigm.root;
               return ChoiceChip(
-                label: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Text(
-                    root,
-                    style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                label: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Text(
+                        paradigm.root,
+                        style: TextStyle(
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '· ${paradigm.forms.length}',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: isSelected
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.outline,
+                      ),
+                    ),
+                  ],
                 ),
                 selected: isSelected,
                 onSelected: (_) {
                   setState(() {
-                    _selectedRootFilter = root;
+                    _selectedRootFilter = paradigm.root;
                   });
                 },
               );
@@ -367,70 +472,281 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
           ),
         ),
         const SizedBox(height: 16),
+
+        // Header Card for Active Root
         Card(
           elevation: 0,
-          color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.35),
+          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.25),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: theme.colorScheme.secondary.withValues(alpha: 0.3),
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
             ),
           ),
           child: Padding(
-            padding: const EdgeInsetsDirectional.all(16),
+            padding: const EdgeInsetsDirectional.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Превращения корня:',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Корень (שורש):',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            selectedParadigm.baseMeaningRu,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Text(
-                        activeRoot,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: theme.colorScheme.primary,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Text(
+                          selectedParadigm.root,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 12),
                 Text(
-                  'Один и тот же корень в разных биньянах меняет смысл от базового действия до пассива или взаимности:',
+                  selectedParadigm.culturalNoteRu,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.4,
                   ),
                 ),
-                const SizedBox(height: 12),
-                if (matchingVerbs.isEmpty)
-                  Text(
-                    'Для этого корня в текущей выборке нет глаголов.',
-                    style: theme.textTheme.bodySmall,
-                  )
-                else
-                  ...matchingVerbs.map(
-                    (verb) => _RootVerbTile(
-                      verb: verb,
-                      showNikkud: widget.showNikkud,
-                      onTap: widget.onSelectVerb == null
-                          ? null
-                          : () => widget.onSelectVerb!(verb),
-                    ),
-                  ),
               ],
             ),
           ),
         ),
+        const SizedBox(height: 16),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Трансформация по Биньянам:',
+              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${selectedParadigm.forms.length} пород',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        // Forms List
+        ...selectedParadigm.forms.map((form) {
+          final color = _binyanColor(form.binyan);
+          final displayedHebrew = widget.showNikkud ? form.vocalized : form.normalized;
+
+          return Card(
+            elevation: 0,
+            margin: const EdgeInsetsDirectional.only(bottom: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: color.withValues(alpha: 0.25)),
+            ),
+            child: Padding(
+              padding: const EdgeInsetsDirectional.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          form.binyan.transliteration,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          form.nuanceRu,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: 'Озвучить (TTS)',
+                        icon: const Icon(Icons.volume_up_rounded, size: 20),
+                        color: theme.colorScheme.primary,
+                        onPressed: () => _speak(form.vocalized),
+                      ),
+                      IconButton(
+                        tooltip: 'Добавить в FSRS',
+                        icon: const Icon(Icons.bookmark_add_outlined, size: 20),
+                        color: theme.colorScheme.secondary,
+                        onPressed: () => _addToSrs(
+                          context: context,
+                          frontRussian: form.translationRu,
+                          backHebrew: form.vocalized,
+                          exampleHebrew: form.exampleHebrew,
+                          exampleRussian: form.exampleRu,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              form.translationRu,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              form.transliteration,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.outline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Text(
+                          displayedHebrew,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Example container
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text(
+                                  form.exampleHebrew,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Text(
+                                form.exampleRu,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Озвучить пример',
+                          icon: const Icon(Icons.volume_up_outlined, size: 18),
+                          onPressed: () => _speak(form.exampleHebrew),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+
+        if (dbVerbs.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Text(
+            'Спряжения из словаря базы данных:',
+            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ...dbVerbs.map(
+            (verb) => _RootVerbTile(
+              verb: verb,
+              showNikkud: widget.showNikkud,
+              audioService: widget.audioService,
+              onTap: widget.onSelectVerb == null
+                  ? null
+                  : () => widget.onSelectVerb!(verb),
+            ),
+          ),
+        ],
       ],
     );
+  }
+
+  static Color _binyanColor(Binyan binyan) {
+    return switch (binyan) {
+      Binyan.paal => const Color(0xFF1976D2), // Blue
+      Binyan.nifal => const Color(0xFF00897B), // Teal
+      Binyan.piel => const Color(0xFF7B1FA2), // Purple
+      Binyan.pual => const Color(0xFF512DA8), // Deep purple
+      Binyan.hitpael => const Color(0xFFF57C00), // Orange
+      Binyan.hifil => const Color(0xFF283593), // Indigo
+      Binyan.hufal => const Color(0xFF455A64), // Blue-grey
+      Binyan.none => Colors.grey,
+    };
   }
 }
 
@@ -438,11 +754,13 @@ class _RootVerbTile extends StatelessWidget {
   const _RootVerbTile({
     required this.verb,
     required this.showNikkud,
+    this.audioService,
     this.onTap,
   });
 
   final VerbLexeme verb;
   final bool showNikkud;
+  final AudioPlaybackService? audioService;
   final VoidCallback? onTap;
 
   @override
@@ -480,16 +798,11 @@ class _RootVerbTile extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  verb.russianMeaning,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            child: Text(
+              verb.russianMeaning,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -503,14 +816,21 @@ class _RootVerbTile extends StatelessWidget {
               ),
             ),
           ),
-          if (onTap != null) ...[
-            const SizedBox(width: 4),
+          if (audioService != null)
+            IconButton(
+              tooltip: 'Озвучить (TTS)',
+              icon: const Icon(Icons.volume_up_rounded, size: 18),
+              onPressed: () => audioService!.playWithTtsFallback(
+                sourcePath: null,
+                fallbackHebrewText: displayedHebrew,
+              ),
+            ),
+          if (onTap != null)
             IconButton(
               tooltip: 'Открыть спряжение',
               icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
               onPressed: onTap,
             ),
-          ],
         ],
       ),
     );

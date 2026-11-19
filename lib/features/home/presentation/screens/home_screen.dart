@@ -9,6 +9,7 @@ import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
 import '../../../progress/presentation/cubit/progress_state.dart';
+import '../../../slang/domain/usecases/get_slang_expressions.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../srs/presentation/cubit/srs_session_cubit.dart';
 import '../../../srs/presentation/cubit/srs_session_state.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatefulWidget {
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final GetDailyWorkoutUseCase? getDailyWorkoutUseCase;
   final AppSettingsStorage? settingsStorage;
+  final GetSlangExpressionsUseCase? getSlangUseCase;
   final ValueChanged<int>? onNavigateToTab;
 
   const HomeScreen({
@@ -32,6 +34,7 @@ class HomeScreen extends StatefulWidget {
     this.addCardToSrsUseCase,
     this.getDailyWorkoutUseCase,
     this.settingsStorage,
+    this.getSlangUseCase,
     this.onNavigateToTab,
   });
 
@@ -382,6 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onNavigateToTab: widget.onNavigateToTab,
             audioService: widget.audioService,
             addCardToSrsUseCase: widget.addCardToSrsUseCase,
+            getSlangUseCase: widget.getSlangUseCase,
           ),
           const SizedBox(height: 24),
 

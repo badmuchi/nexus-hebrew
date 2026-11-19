@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/logging/app_logger.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../slang/data/datasources/slang_seed_datasource.dart';
+import '../../../slang/data/repositories/slang_repository_impl.dart';
+import '../../../slang/domain/usecases/get_slang_expressions.dart';
+import '../../../slang/presentation/screens/slang_screen.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../stories/presentation/screens/stories_catalog_view.dart';
 
@@ -10,12 +15,14 @@ class QuickAccessGrid extends StatelessWidget {
   final ValueChanged<int>? onNavigateToTab;
   final AudioPlaybackService? audioService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
+  final GetSlangExpressionsUseCase? getSlangUseCase;
 
   const QuickAccessGrid({
     super.key,
     this.onNavigateToTab,
     this.audioService,
     this.addCardToSrsUseCase,
+    this.getSlangUseCase,
   });
 
   @override
@@ -108,6 +115,40 @@ class QuickAccessGrid extends StatelessWidget {
             );
           }
         },
+      ),
+      _QuickItem(
+        title: 'Израильский сленг',
+        hebrewTitle: 'סְלֶנְג',
+        description: 'Улица, кафе, Тель-Авив, армия и эмоции',
+        icon: Icons.chat_bubble_outline_rounded,
+        color: const Color(0xFFD81B60),
+        onTap: () {
+          final useCase = getSlangUseCase ??
+              GetSlangExpressionsUseCase(
+                SlangRepositoryImpl(
+                  dataSource: AssetSlangSeedDataSource(
+                    logger: const DeveloperAppLogger(),
+                  ),
+                ),
+              );
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => SlangScreen(
+                getSlangUseCase: useCase,
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Матрица корней',
+        hebrewTitle: 'שָׁרָשִׁים',
+        description: 'Трансформатор корня в 7 пород (Биньяним)',
+        icon: Icons.hub_rounded,
+        color: const Color(0xFF6A1B9A),
+        onTap: () => onNavigateToTab?.call(3),
       ),
     ];
 

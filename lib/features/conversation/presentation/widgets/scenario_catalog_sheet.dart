@@ -25,15 +25,16 @@ class _ScenarioCatalogSheetState extends State<ScenarioCatalogSheet> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final allLabel = 'Все (${DialogueScenarioInfo.allScenarios.length})';
     final categories = [
-      'Все (8)',
+      allLabel,
       'Еда и покупки',
       'Город и быт',
       'Здоровье',
       'Общение',
     ];
 
-    final filtered = _selectedCategory == null || _selectedCategory == 'Все (8)'
+    final filtered = _selectedCategory == null || _selectedCategory == allLabel
         ? DialogueScenarioInfo.allScenarios
         : DialogueScenarioInfo.allScenarios
             .where((s) => s.category == _selectedCategory)

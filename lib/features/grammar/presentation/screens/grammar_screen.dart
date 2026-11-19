@@ -180,6 +180,7 @@ class _GrammarScreenState extends State<GrammarScreen> {
           allVerbs: state.verbs,
           showNikkud: state.showNikkud,
           audioService: widget.audioService,
+          addCardToSrsUseCase: widget.addCardToSrsUseCase,
           onSelectVerb: (verb) {
             Navigator.of(ctx).pop();
             context.read<GrammarCubit>().selectVerb(verb);
