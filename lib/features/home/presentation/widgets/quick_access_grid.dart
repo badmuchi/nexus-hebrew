@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../slang/data/datasources/slang_seed_datasource.dart';
 import '../../../slang/data/repositories/slang_repository_impl.dart';
 import '../../../slang/domain/usecases/get_slang_expressions.dart';
@@ -163,6 +164,26 @@ class QuickAccessGrid extends StatelessWidget {
               builder: (_) => SpeechLabScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Конструктор фраз',
+        hebrewTitle: 'מִבְנֶה מִשְׁפָּט',
+        description: 'Сборка предложений, синтаксис и порядок слов',
+        icon: Icons.construction_rounded,
+        color: const Color(0xFF00796B),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => Scaffold(
+                appBar: AppBar(title: const Text('Конструктор предложений')),
+                body: SentenceBuilderView(
+                  audioService: audioService,
+                  addCardToSrsUseCase: addCardToSrsUseCase,
+                ),
               ),
             ),
           );

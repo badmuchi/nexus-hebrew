@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
+import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
 import '../../domain/entities/daily_workout_plan.dart';
 import '../../domain/entities/learning_progress_summary.dart';
@@ -251,6 +252,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             const SizedBox(height: 12),
           ],
+          _LevelAssessmentBannerCard(
+            onStartAssessment: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => LevelAssessmentScreen(
+                    audioService: widget.audioService,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
           _LevelAndXpHeroCard(summary: summary),
           const SizedBox(height: 12),
           _StreakHeroCard(summary: summary),
@@ -289,6 +302,76 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _LevelAssessmentBannerCard extends StatelessWidget {
+  final VoidCallback onStartAssessment;
+
+  const _LevelAssessmentBannerCard({required this.onStartAssessment});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(
+          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsetsDirectional.all(12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Icon(
+                Icons.military_tech_rounded,
+                color: Colors.white,
+                size: 26,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Определить уровень иврита',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Диагностика A1 ➔ B1 с дипломом и разбором',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+              ),
+              onPressed: onStartAssessment,
+              child: const Text('Пройти'),
+            ),
+          ],
+        ),
       ),
     );
   }

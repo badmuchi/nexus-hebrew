@@ -172,7 +172,11 @@ void main() {
     await tester.pumpWidget(createSubject(cubit));
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ListView), const Offset(0, -1400));
+    await tester.scrollUntilVisible(
+      find.text('Настройки озвучки и темпа речи'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Настройки озвучки и темпа речи'), findsOneWidget);
@@ -207,7 +211,11 @@ void main() {
     expect(selectedTheme, ThemeMode.dark);
 
     // Скроллим к блоку темы
-    await tester.drag(find.byType(ListView), const Offset(0, -1100));
+    await tester.scrollUntilVisible(
+      find.text('Тема оформления'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Тема оформления'), findsOneWidget);
@@ -289,7 +297,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ListView), const Offset(0, -1400));
+    await tester.scrollUntilVisible(
+      find.text('Резервная копия прогресса'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Резервная копия прогресса'), findsOneWidget);
