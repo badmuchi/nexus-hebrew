@@ -9,6 +9,8 @@ import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
 import '../../../progress/presentation/cubit/progress_state.dart';
+import '../../../search/domain/services/omni_search_engine.dart';
+import '../../../search/presentation/widgets/omni_search_sheet.dart';
 import '../../../slang/domain/usecases/get_slang_expressions.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../srs/presentation/cubit/srs_session_cubit.dart';
@@ -46,11 +48,33 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showNikkud = true;
   DailyWorkoutPlan? _dailyWorkout;
   bool _isLoadingWorkout = false;
+  late final OmniSearchEngine _searchEngine = OmniSearchEngine.withStaticDefaults();
 
   @override
   void initState() {
     super.initState();
     _loadWorkoutPlan();
+    _populateSearchEngine();
+  }
+
+  void _populateSearchEngine() {
+    if (widget.getSlangUseCase != null) {
+      widget.getSlangUseCase!().then((res) {
+        if (mounted && res.isSuccess) {
+          _searchEngine.addSlangExpressions(res.getOrNull()!);
+        }
+      });
+    }
+  }
+
+  void _openOmniSearch() {
+    OmniSearchSheet.show(
+      context,
+      engine: _searchEngine,
+      audioService: widget.audioService,
+      addCardToSrsUseCase: widget.addCardToSrsUseCase,
+      onNavigateToTab: widget.onNavigateToTab,
+    );
   }
 
   Future<void> _loadWorkoutPlan() async {
@@ -126,6 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            tooltip: 'Быстрый поиск (Omni-Search)',
+            icon: const Icon(Icons.search_rounded),
+            onPressed: _openOmniSearch,
+          ),
           IconButton(
             tooltip: _showNikkud ? 'Огласовки включены' : 'Огласовки выключены',
             icon: Icon(
@@ -357,6 +386,59 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Spotlight Search Bar Trigger
+          InkWell(
+            onTap: _openOmniSearch,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.15),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search_rounded,
+                    color: theme.colorScheme.primary,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Поиск по словарю, сленгу, корням и алфавиту...',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Text(
+                      '⌘K / 🔍',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ],
               ),

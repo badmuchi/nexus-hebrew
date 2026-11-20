@@ -10,6 +10,7 @@ import 'package:nexus_hebrew_app/core/result/result.dart';
 import 'package:nexus_hebrew_app/features/conversation/domain/entities/binyan.dart';
 import 'package:nexus_hebrew_app/features/home/presentation/screens/home_screen.dart';
 import 'package:nexus_hebrew_app/features/home/presentation/widgets/contacts_about_sheet.dart';
+import 'package:nexus_hebrew_app/features/search/presentation/widgets/omni_search_sheet.dart';
 import 'package:nexus_hebrew_app/features/progress/domain/entities/learning_progress_summary.dart';
 import 'package:nexus_hebrew_app/features/progress/domain/usecases/get_learning_progress.dart';
 import 'package:nexus_hebrew_app/features/progress/domain/usecases/search_hebrew_library.dart';
@@ -205,6 +206,31 @@ void main() {
       expect(find.text('badmuchi'), findsOneWidget);
       expect(find.text('GitHub Репозиторий'), findsOneWidget);
       expect(find.text('Живая Web-версия (GitHub Pages)'), findsOneWidget);
+    });
+
+    testWidgets('открывает OmniSearchSheet по нажатию на иконку поиска в AppBar', (tester) async {
+      await tester.pumpWidget(buildWidget());
+      await tester.pumpAndSettle();
+
+      final searchBtn = find.byTooltip('Быстрый поиск (Omni-Search)');
+      expect(searchBtn, findsOneWidget);
+      await tester.tap(searchBtn);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OmniSearchSheet), findsOneWidget);
+      expect(find.text('Быстрый поиск (Omni-Search)'), findsOneWidget);
+    });
+
+    testWidgets('открывает OmniSearchSheet по нажатию на строку поиска в дашборде', (tester) async {
+      await tester.pumpWidget(buildWidget());
+      await tester.pumpAndSettle();
+
+      final searchBar = find.text('Поиск по словарю, сленгу, корням и алфавиту...');
+      expect(searchBar, findsOneWidget);
+      await tester.tap(searchBar);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OmniSearchSheet), findsOneWidget);
     });
   });
 }
