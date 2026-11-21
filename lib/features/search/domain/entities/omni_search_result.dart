@@ -6,7 +6,8 @@ enum OmniResultCategory {
   slang(id: 'slang', labelRu: 'Сленг'),
   grammar(id: 'grammar', labelRu: 'Грамматика'),
   alphabet(id: 'alphabet', labelRu: 'Алфавит'),
-  preposition(id: 'preposition', labelRu: 'Предлоги');
+  preposition(id: 'preposition', labelRu: 'Предлоги'),
+  shoresh(id: 'shoresh', labelRu: 'Корни');
 
   const OmniResultCategory({required this.id, required this.labelRu});
 

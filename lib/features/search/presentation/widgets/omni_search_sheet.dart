@@ -380,6 +380,7 @@ class _OmniSearchSheetState extends State<OmniSearchSheet> {
         widget.onNavigateToTab!(2); // Dictionary tab
       case OmniResultCategory.grammar:
       case OmniResultCategory.preposition:
+      case OmniResultCategory.shoresh:
         widget.onNavigateToTab!(3); // Grammar tab
       case OmniResultCategory.slang:
         widget.onNavigateToTab!(4); // Slang / Conversation tab

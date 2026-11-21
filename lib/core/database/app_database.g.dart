@@ -5425,6 +5425,385 @@ class SceneProgressEntriesCompanion extends UpdateCompanion<SceneProgressRow> {
   }
 }
 
+class $ShoreshProgressEntriesTable extends ShoreshProgressEntries
+    with TableInfo<$ShoreshProgressEntriesTable, ShoreshProgressRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ShoreshProgressEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rootIdMeta = const VerificationMeta('rootId');
+  @override
+  late final GeneratedColumn<String> rootId = GeneratedColumn<String>(
+      'root_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _masteryLevelMeta =
+      const VerificationMeta('masteryLevel');
+  @override
+  late final GeneratedColumn<double> masteryLevel = GeneratedColumn<double>(
+      'mastery_level', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _cardsPracticedCountMeta =
+      const VerificationMeta('cardsPracticedCount');
+  @override
+  late final GeneratedColumn<int> cardsPracticedCount = GeneratedColumn<int>(
+      'cards_practiced_count', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _quizCorrectCountMeta =
+      const VerificationMeta('quizCorrectCount');
+  @override
+  late final GeneratedColumn<int> quizCorrectCount = GeneratedColumn<int>(
+      'quiz_correct_count', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastPracticedAtMeta =
+      const VerificationMeta('lastPracticedAt');
+  @override
+  late final GeneratedColumn<DateTime> lastPracticedAt =
+      GeneratedColumn<DateTime>('last_practiced_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _isBookmarkedMeta =
+      const VerificationMeta('isBookmarked');
+  @override
+  late final GeneratedColumn<bool> isBookmarked = GeneratedColumn<bool>(
+      'is_bookmarked', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_bookmarked" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        rootId,
+        masteryLevel,
+        cardsPracticedCount,
+        quizCorrectCount,
+        lastPracticedAt,
+        isBookmarked
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'shoresh_progress_entries';
+  @override
+  VerificationContext validateIntegrity(Insertable<ShoreshProgressRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('root_id')) {
+      context.handle(_rootIdMeta,
+          rootId.isAcceptableOrUnknown(data['root_id']!, _rootIdMeta));
+    } else if (isInserting) {
+      context.missing(_rootIdMeta);
+    }
+    if (data.containsKey('mastery_level')) {
+      context.handle(
+          _masteryLevelMeta,
+          masteryLevel.isAcceptableOrUnknown(
+              data['mastery_level']!, _masteryLevelMeta));
+    }
+    if (data.containsKey('cards_practiced_count')) {
+      context.handle(
+          _cardsPracticedCountMeta,
+          cardsPracticedCount.isAcceptableOrUnknown(
+              data['cards_practiced_count']!, _cardsPracticedCountMeta));
+    }
+    if (data.containsKey('quiz_correct_count')) {
+      context.handle(
+          _quizCorrectCountMeta,
+          quizCorrectCount.isAcceptableOrUnknown(
+              data['quiz_correct_count']!, _quizCorrectCountMeta));
+    }
+    if (data.containsKey('last_practiced_at')) {
+      context.handle(
+          _lastPracticedAtMeta,
+          lastPracticedAt.isAcceptableOrUnknown(
+              data['last_practiced_at']!, _lastPracticedAtMeta));
+    }
+    if (data.containsKey('is_bookmarked')) {
+      context.handle(
+          _isBookmarkedMeta,
+          isBookmarked.isAcceptableOrUnknown(
+              data['is_bookmarked']!, _isBookmarkedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rootId};
+  @override
+  ShoreshProgressRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ShoreshProgressRow(
+      rootId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}root_id'])!,
+      masteryLevel: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}mastery_level'])!,
+      cardsPracticedCount: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}cards_practiced_count'])!,
+      quizCorrectCount: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}quiz_correct_count'])!,
+      lastPracticedAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_practiced_at']),
+      isBookmarked: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_bookmarked'])!,
+    );
+  }
+
+  @override
+  $ShoreshProgressEntriesTable createAlias(String alias) {
+    return $ShoreshProgressEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class ShoreshProgressRow extends DataClass
+    implements Insertable<ShoreshProgressRow> {
+  final String rootId;
+  final double masteryLevel;
+  final int cardsPracticedCount;
+  final int quizCorrectCount;
+  final DateTime? lastPracticedAt;
+  final bool isBookmarked;
+  const ShoreshProgressRow(
+      {required this.rootId,
+      required this.masteryLevel,
+      required this.cardsPracticedCount,
+      required this.quizCorrectCount,
+      this.lastPracticedAt,
+      required this.isBookmarked});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['root_id'] = Variable<String>(rootId);
+    map['mastery_level'] = Variable<double>(masteryLevel);
+    map['cards_practiced_count'] = Variable<int>(cardsPracticedCount);
+    map['quiz_correct_count'] = Variable<int>(quizCorrectCount);
+    if (!nullToAbsent || lastPracticedAt != null) {
+      map['last_practiced_at'] = Variable<DateTime>(lastPracticedAt);
+    }
+    map['is_bookmarked'] = Variable<bool>(isBookmarked);
+    return map;
+  }
+
+  ShoreshProgressEntriesCompanion toCompanion(bool nullToAbsent) {
+    return ShoreshProgressEntriesCompanion(
+      rootId: Value(rootId),
+      masteryLevel: Value(masteryLevel),
+      cardsPracticedCount: Value(cardsPracticedCount),
+      quizCorrectCount: Value(quizCorrectCount),
+      lastPracticedAt: lastPracticedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastPracticedAt),
+      isBookmarked: Value(isBookmarked),
+    );
+  }
+
+  factory ShoreshProgressRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ShoreshProgressRow(
+      rootId: serializer.fromJson<String>(json['rootId']),
+      masteryLevel: serializer.fromJson<double>(json['masteryLevel']),
+      cardsPracticedCount:
+          serializer.fromJson<int>(json['cardsPracticedCount']),
+      quizCorrectCount: serializer.fromJson<int>(json['quizCorrectCount']),
+      lastPracticedAt: serializer.fromJson<DateTime?>(json['lastPracticedAt']),
+      isBookmarked: serializer.fromJson<bool>(json['isBookmarked']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rootId': serializer.toJson<String>(rootId),
+      'masteryLevel': serializer.toJson<double>(masteryLevel),
+      'cardsPracticedCount': serializer.toJson<int>(cardsPracticedCount),
+      'quizCorrectCount': serializer.toJson<int>(quizCorrectCount),
+      'lastPracticedAt': serializer.toJson<DateTime?>(lastPracticedAt),
+      'isBookmarked': serializer.toJson<bool>(isBookmarked),
+    };
+  }
+
+  ShoreshProgressRow copyWith(
+          {String? rootId,
+          double? masteryLevel,
+          int? cardsPracticedCount,
+          int? quizCorrectCount,
+          Value<DateTime?> lastPracticedAt = const Value.absent(),
+          bool? isBookmarked}) =>
+      ShoreshProgressRow(
+        rootId: rootId ?? this.rootId,
+        masteryLevel: masteryLevel ?? this.masteryLevel,
+        cardsPracticedCount: cardsPracticedCount ?? this.cardsPracticedCount,
+        quizCorrectCount: quizCorrectCount ?? this.quizCorrectCount,
+        lastPracticedAt: lastPracticedAt.present
+            ? lastPracticedAt.value
+            : this.lastPracticedAt,
+        isBookmarked: isBookmarked ?? this.isBookmarked,
+      );
+  ShoreshProgressRow copyWithCompanion(ShoreshProgressEntriesCompanion data) {
+    return ShoreshProgressRow(
+      rootId: data.rootId.present ? data.rootId.value : this.rootId,
+      masteryLevel: data.masteryLevel.present
+          ? data.masteryLevel.value
+          : this.masteryLevel,
+      cardsPracticedCount: data.cardsPracticedCount.present
+          ? data.cardsPracticedCount.value
+          : this.cardsPracticedCount,
+      quizCorrectCount: data.quizCorrectCount.present
+          ? data.quizCorrectCount.value
+          : this.quizCorrectCount,
+      lastPracticedAt: data.lastPracticedAt.present
+          ? data.lastPracticedAt.value
+          : this.lastPracticedAt,
+      isBookmarked: data.isBookmarked.present
+          ? data.isBookmarked.value
+          : this.isBookmarked,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShoreshProgressRow(')
+          ..write('rootId: $rootId, ')
+          ..write('masteryLevel: $masteryLevel, ')
+          ..write('cardsPracticedCount: $cardsPracticedCount, ')
+          ..write('quizCorrectCount: $quizCorrectCount, ')
+          ..write('lastPracticedAt: $lastPracticedAt, ')
+          ..write('isBookmarked: $isBookmarked')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rootId, masteryLevel, cardsPracticedCount,
+      quizCorrectCount, lastPracticedAt, isBookmarked);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ShoreshProgressRow &&
+          other.rootId == this.rootId &&
+          other.masteryLevel == this.masteryLevel &&
+          other.cardsPracticedCount == this.cardsPracticedCount &&
+          other.quizCorrectCount == this.quizCorrectCount &&
+          other.lastPracticedAt == this.lastPracticedAt &&
+          other.isBookmarked == this.isBookmarked);
+}
+
+class ShoreshProgressEntriesCompanion
+    extends UpdateCompanion<ShoreshProgressRow> {
+  final Value<String> rootId;
+  final Value<double> masteryLevel;
+  final Value<int> cardsPracticedCount;
+  final Value<int> quizCorrectCount;
+  final Value<DateTime?> lastPracticedAt;
+  final Value<bool> isBookmarked;
+  final Value<int> rowid;
+  const ShoreshProgressEntriesCompanion({
+    this.rootId = const Value.absent(),
+    this.masteryLevel = const Value.absent(),
+    this.cardsPracticedCount = const Value.absent(),
+    this.quizCorrectCount = const Value.absent(),
+    this.lastPracticedAt = const Value.absent(),
+    this.isBookmarked = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ShoreshProgressEntriesCompanion.insert({
+    required String rootId,
+    this.masteryLevel = const Value.absent(),
+    this.cardsPracticedCount = const Value.absent(),
+    this.quizCorrectCount = const Value.absent(),
+    this.lastPracticedAt = const Value.absent(),
+    this.isBookmarked = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : rootId = Value(rootId);
+  static Insertable<ShoreshProgressRow> custom({
+    Expression<String>? rootId,
+    Expression<double>? masteryLevel,
+    Expression<int>? cardsPracticedCount,
+    Expression<int>? quizCorrectCount,
+    Expression<DateTime>? lastPracticedAt,
+    Expression<bool>? isBookmarked,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (rootId != null) 'root_id': rootId,
+      if (masteryLevel != null) 'mastery_level': masteryLevel,
+      if (cardsPracticedCount != null)
+        'cards_practiced_count': cardsPracticedCount,
+      if (quizCorrectCount != null) 'quiz_correct_count': quizCorrectCount,
+      if (lastPracticedAt != null) 'last_practiced_at': lastPracticedAt,
+      if (isBookmarked != null) 'is_bookmarked': isBookmarked,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ShoreshProgressEntriesCompanion copyWith(
+      {Value<String>? rootId,
+      Value<double>? masteryLevel,
+      Value<int>? cardsPracticedCount,
+      Value<int>? quizCorrectCount,
+      Value<DateTime?>? lastPracticedAt,
+      Value<bool>? isBookmarked,
+      Value<int>? rowid}) {
+    return ShoreshProgressEntriesCompanion(
+      rootId: rootId ?? this.rootId,
+      masteryLevel: masteryLevel ?? this.masteryLevel,
+      cardsPracticedCount: cardsPracticedCount ?? this.cardsPracticedCount,
+      quizCorrectCount: quizCorrectCount ?? this.quizCorrectCount,
+      lastPracticedAt: lastPracticedAt ?? this.lastPracticedAt,
+      isBookmarked: isBookmarked ?? this.isBookmarked,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rootId.present) {
+      map['root_id'] = Variable<String>(rootId.value);
+    }
+    if (masteryLevel.present) {
+      map['mastery_level'] = Variable<double>(masteryLevel.value);
+    }
+    if (cardsPracticedCount.present) {
+      map['cards_practiced_count'] = Variable<int>(cardsPracticedCount.value);
+    }
+    if (quizCorrectCount.present) {
+      map['quiz_correct_count'] = Variable<int>(quizCorrectCount.value);
+    }
+    if (lastPracticedAt.present) {
+      map['last_practiced_at'] = Variable<DateTime>(lastPracticedAt.value);
+    }
+    if (isBookmarked.present) {
+      map['is_bookmarked'] = Variable<bool>(isBookmarked.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShoreshProgressEntriesCompanion(')
+          ..write('rootId: $rootId, ')
+          ..write('masteryLevel: $masteryLevel, ')
+          ..write('cardsPracticedCount: $cardsPracticedCount, ')
+          ..write('quizCorrectCount: $quizCorrectCount, ')
+          ..write('lastPracticedAt: $lastPracticedAt, ')
+          ..write('isBookmarked: $isBookmarked, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5444,6 +5823,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $DictionaryEntriesTable(this);
   late final $SceneProgressEntriesTable sceneProgressEntries =
       $SceneProgressEntriesTable(this);
+  late final $ShoreshProgressEntriesTable shoreshProgressEntries =
+      $ShoreshProgressEntriesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5458,7 +5839,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         listeningExercises,
         listeningAttemptLogs,
         dictionaryEntries,
-        sceneProgressEntries
+        sceneProgressEntries,
+        shoreshProgressEntries
       ];
 }
 
@@ -8082,6 +8464,214 @@ typedef $$SceneProgressEntriesTableProcessedTableManager
         ),
         SceneProgressRow,
         PrefetchHooks Function()>;
+typedef $$ShoreshProgressEntriesTableCreateCompanionBuilder
+    = ShoreshProgressEntriesCompanion Function({
+  required String rootId,
+  Value<double> masteryLevel,
+  Value<int> cardsPracticedCount,
+  Value<int> quizCorrectCount,
+  Value<DateTime?> lastPracticedAt,
+  Value<bool> isBookmarked,
+  Value<int> rowid,
+});
+typedef $$ShoreshProgressEntriesTableUpdateCompanionBuilder
+    = ShoreshProgressEntriesCompanion Function({
+  Value<String> rootId,
+  Value<double> masteryLevel,
+  Value<int> cardsPracticedCount,
+  Value<int> quizCorrectCount,
+  Value<DateTime?> lastPracticedAt,
+  Value<bool> isBookmarked,
+  Value<int> rowid,
+});
+
+class $$ShoreshProgressEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $ShoreshProgressEntriesTable> {
+  $$ShoreshProgressEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get rootId => $composableBuilder(
+      column: $table.rootId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get masteryLevel => $composableBuilder(
+      column: $table.masteryLevel, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get cardsPracticedCount => $composableBuilder(
+      column: $table.cardsPracticedCount,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get quizCorrectCount => $composableBuilder(
+      column: $table.quizCorrectCount,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastPracticedAt => $composableBuilder(
+      column: $table.lastPracticedAt,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isBookmarked => $composableBuilder(
+      column: $table.isBookmarked, builder: (column) => ColumnFilters(column));
+}
+
+class $$ShoreshProgressEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ShoreshProgressEntriesTable> {
+  $$ShoreshProgressEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get rootId => $composableBuilder(
+      column: $table.rootId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get masteryLevel => $composableBuilder(
+      column: $table.masteryLevel,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get cardsPracticedCount => $composableBuilder(
+      column: $table.cardsPracticedCount,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get quizCorrectCount => $composableBuilder(
+      column: $table.quizCorrectCount,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastPracticedAt => $composableBuilder(
+      column: $table.lastPracticedAt,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isBookmarked => $composableBuilder(
+      column: $table.isBookmarked,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$ShoreshProgressEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ShoreshProgressEntriesTable> {
+  $$ShoreshProgressEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get rootId =>
+      $composableBuilder(column: $table.rootId, builder: (column) => column);
+
+  GeneratedColumn<double> get masteryLevel => $composableBuilder(
+      column: $table.masteryLevel, builder: (column) => column);
+
+  GeneratedColumn<int> get cardsPracticedCount => $composableBuilder(
+      column: $table.cardsPracticedCount, builder: (column) => column);
+
+  GeneratedColumn<int> get quizCorrectCount => $composableBuilder(
+      column: $table.quizCorrectCount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastPracticedAt => $composableBuilder(
+      column: $table.lastPracticedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isBookmarked => $composableBuilder(
+      column: $table.isBookmarked, builder: (column) => column);
+}
+
+class $$ShoreshProgressEntriesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ShoreshProgressEntriesTable,
+    ShoreshProgressRow,
+    $$ShoreshProgressEntriesTableFilterComposer,
+    $$ShoreshProgressEntriesTableOrderingComposer,
+    $$ShoreshProgressEntriesTableAnnotationComposer,
+    $$ShoreshProgressEntriesTableCreateCompanionBuilder,
+    $$ShoreshProgressEntriesTableUpdateCompanionBuilder,
+    (
+      ShoreshProgressRow,
+      BaseReferences<_$AppDatabase, $ShoreshProgressEntriesTable,
+          ShoreshProgressRow>
+    ),
+    ShoreshProgressRow,
+    PrefetchHooks Function()> {
+  $$ShoreshProgressEntriesTableTableManager(
+      _$AppDatabase db, $ShoreshProgressEntriesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ShoreshProgressEntriesTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ShoreshProgressEntriesTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ShoreshProgressEntriesTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> rootId = const Value.absent(),
+            Value<double> masteryLevel = const Value.absent(),
+            Value<int> cardsPracticedCount = const Value.absent(),
+            Value<int> quizCorrectCount = const Value.absent(),
+            Value<DateTime?> lastPracticedAt = const Value.absent(),
+            Value<bool> isBookmarked = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ShoreshProgressEntriesCompanion(
+            rootId: rootId,
+            masteryLevel: masteryLevel,
+            cardsPracticedCount: cardsPracticedCount,
+            quizCorrectCount: quizCorrectCount,
+            lastPracticedAt: lastPracticedAt,
+            isBookmarked: isBookmarked,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String rootId,
+            Value<double> masteryLevel = const Value.absent(),
+            Value<int> cardsPracticedCount = const Value.absent(),
+            Value<int> quizCorrectCount = const Value.absent(),
+            Value<DateTime?> lastPracticedAt = const Value.absent(),
+            Value<bool> isBookmarked = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ShoreshProgressEntriesCompanion.insert(
+            rootId: rootId,
+            masteryLevel: masteryLevel,
+            cardsPracticedCount: cardsPracticedCount,
+            quizCorrectCount: quizCorrectCount,
+            lastPracticedAt: lastPracticedAt,
+            isBookmarked: isBookmarked,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable<$ShoreshProgressEntriesTable,
+                        ShoreshProgressRow>(table),
+                    BaseReferences<_$AppDatabase, $ShoreshProgressEntriesTable,
+                        ShoreshProgressRow>(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$ShoreshProgressEntriesTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $ShoreshProgressEntriesTable,
+        ShoreshProgressRow,
+        $$ShoreshProgressEntriesTableFilterComposer,
+        $$ShoreshProgressEntriesTableOrderingComposer,
+        $$ShoreshProgressEntriesTableAnnotationComposer,
+        $$ShoreshProgressEntriesTableCreateCompanionBuilder,
+        $$ShoreshProgressEntriesTableUpdateCompanionBuilder,
+        (
+          ShoreshProgressRow,
+          BaseReferences<_$AppDatabase, $ShoreshProgressEntriesTable,
+              ShoreshProgressRow>
+        ),
+        ShoreshProgressRow,
+        PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8107,4 +8697,7 @@ class $AppDatabaseManager {
       $$DictionaryEntriesTableTableManager(_db, _db.dictionaryEntries);
   $$SceneProgressEntriesTableTableManager get sceneProgressEntries =>
       $$SceneProgressEntriesTableTableManager(_db, _db.sceneProgressEntries);
+  $$ShoreshProgressEntriesTableTableManager get shoreshProgressEntries =>
+      $$ShoreshProgressEntriesTableTableManager(
+          _db, _db.shoreshProgressEntries);
 }

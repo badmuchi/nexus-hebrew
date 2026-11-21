@@ -54,6 +54,11 @@ class _OmniSearchResultTileState extends State<OmniSearchResultTile> {
           const Color(0xFF00796B),
           'Предлог'
         ),
+      OmniResultCategory.shoresh => (
+          Icons.biotech_rounded,
+          const Color(0xFF00897B),
+          'Корень'
+        ),
     };
   }
 

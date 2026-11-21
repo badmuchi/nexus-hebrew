@@ -162,6 +162,19 @@ class SceneProgressEntries extends Table {
   Set<Column> get primaryKey => {sceneId};
 }
 
+@DataClassName('ShoreshProgressRow')
+class ShoreshProgressEntries extends Table {
+  TextColumn get rootId => text()();
+  RealColumn get masteryLevel => real().withDefault(const Constant(0.0))();
+  IntColumn get cardsPracticedCount => integer().withDefault(const Constant(0))();
+  IntColumn get quizCorrectCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastPracticedAt => dateTime().nullable()();
+  BoolColumn get isBookmarked => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {rootId};
+}
+
 @DriftDatabase(
   tables: [
     DialogueNodes,
@@ -174,6 +187,7 @@ class SceneProgressEntries extends Table {
     ListeningAttemptLogs,
     DictionaryEntries,
     SceneProgressEntries,
+    ShoreshProgressEntries,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -190,7 +204,7 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -211,6 +225,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 5) {
             await m.createTable(sceneProgressEntries);
+          }
+          if (from < 6) {
+            await m.createTable(shoreshProgressEntries);
           }
         },
       );
@@ -542,6 +559,35 @@ class AppDatabase extends _$AppDatabase {
           wordsMasteredCount: Value(wordsMasteredCount),
           challengeScore: Value(challengeScore),
           lastVisitedAt: Value(lastVisitedAt),
+        ),
+      );
+
+  // --- Shoresh Detective queries ---
+  Future<List<ShoreshProgressRow>> getAllShoreshProgress() =>
+      select(shoreshProgressEntries).get();
+
+  Future<ShoreshProgressRow?> getShoreshProgress(String rootId) =>
+      (select(shoreshProgressEntries)..where((tbl) => tbl.rootId.equals(rootId)))
+          .getSingleOrNull();
+
+  Future<void> upsertShoreshProgress({
+    required String rootId,
+    required double masteryLevel,
+    required int cardsPracticedCount,
+    required int quizCorrectCount,
+    DateTime? lastPracticedAt,
+    bool? isBookmarked,
+  }) =>
+      into(shoreshProgressEntries).insertOnConflictUpdate(
+        ShoreshProgressEntriesCompanion(
+          rootId: Value(rootId),
+          masteryLevel: Value(masteryLevel),
+          cardsPracticedCount: Value(cardsPracticedCount),
+          quizCorrectCount: Value(quizCorrectCount),
+          lastPracticedAt: Value(lastPracticedAt),
+          isBookmarked: isBookmarked != null
+              ? Value(isBookmarked)
+              : const Value.absent(),
         ),
       );
 }

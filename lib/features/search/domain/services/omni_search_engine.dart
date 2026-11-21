@@ -7,6 +7,8 @@ import 'package:nexus_hebrew_app/features/grammar/data/datasources/hebrew_prepos
 import 'package:nexus_hebrew_app/features/grammar/domain/entities/preposition_inflection.dart';
 import 'package:nexus_hebrew_app/features/scenes/data/datasources/israeli_scenes_seed_data.dart';
 import 'package:nexus_hebrew_app/features/scenes/domain/entities/israeli_life_scene.dart';
+import 'package:nexus_hebrew_app/features/shoresh/data/datasources/shoresh_seed_data.dart';
+import 'package:nexus_hebrew_app/features/shoresh/domain/entities/shoresh_entity.dart';
 import 'package:nexus_hebrew_app/features/slang/domain/entities/slang_expression.dart';
 import '../entities/omni_search_result.dart';
 
@@ -27,6 +29,7 @@ class OmniSearchEngine {
     engine.addNikkudMarks(HebrewAlphabetSeedData.nikkudMarks);
     engine.addPrepositions(HebrewPrepositionsSeedData.prepositions);
     engine.addSceneContent(IsraeliScenesSeedData.scenes);
+    engine.addShoreshRoots(ShoreshSeedData.roots);
     return engine;
   }
 
@@ -184,6 +187,43 @@ class OmniSearchEngine {
             details: '${s.emoji} ${p.role.labelRu} • ${p.culturalTip ?? ""}',
             audioText: p.hebrewVocalized,
             originalObject: p,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Indexes Hebrew Root Families (Shoreshim) and their morphological derivatives.
+  void addShoreshRoots(Iterable<ShoreshRoot> roots) {
+    for (final r in roots) {
+      _items.add(
+        OmniSearchResult(
+          id: 'shoresh_${r.id}',
+          category: OmniResultCategory.shoresh,
+          hebrewWithNikkud: r.lettersDisplay,
+          hebrewWithoutNikkud: r.letters.join(''),
+          translationRu: '${r.primaryMeaningRu} (${r.categoryRu})',
+          root: r.lettersDisplay,
+          details:
+              'Корень ${r.lettersDisplay} • ${r.derivatives.length} производных • ${r.culturalNoteRu}',
+          audioText: r.letters.join(' '),
+          originalObject: r,
+        ),
+      );
+      for (final d in r.derivatives) {
+        _items.add(
+          OmniSearchResult(
+            id: 'shoresh_derivative_${d.id}',
+            category: OmniResultCategory.shoresh,
+            hebrewWithNikkud: d.hebrewVocalized,
+            hebrewWithoutNikkud: d.hebrewNormalized,
+            translationRu: d.russianMeaning,
+            transliteration: d.transliteration,
+            root: r.lettersDisplay,
+            details:
+                'Корень ${r.lettersDisplay} • ${d.partOfSpeech.labelRu} • ${d.patternOrBinyan}',
+            audioText: d.hebrewVocalized,
+            originalObject: d,
           ),
         );
       }
