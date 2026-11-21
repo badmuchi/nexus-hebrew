@@ -182,19 +182,18 @@ class _BinyanInteractiveMatrixState extends State<BinyanInteractiveMatrix> {
     );
 
     final res = await useCase.call(params);
-    if (mounted) {
-      final isSuccess = res.getOrNull() == true;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            isSuccess
-                ? '✅ Добавлено в FSRS: $backHebrew — $frontRussian'
-                : 'Слово уже есть в вашей колоде повторений',
-          ),
-          duration: const Duration(seconds: 2),
+    if (!context.mounted) return;
+    final isSuccess = res.getOrNull() == true;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          isSuccess
+              ? '✅ Добавлено в FSRS: $backHebrew — $frontRussian'
+              : 'Слово уже есть в вашей колоде повторений',
         ),
-      );
-    }
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override

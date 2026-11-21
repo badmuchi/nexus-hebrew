@@ -388,23 +388,23 @@ class _SpeedSprintScreenState extends State<SpeedSprintScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            Wrap(
+            const Wrap(
               spacing: 12,
               runSpacing: 8,
               alignment: WrapAlignment.center,
               children: [
                 Chip(
-                  avatar: const Icon(Icons.timer_rounded, size: 16),
-                  label: const Text('60 секунд'),
+                  avatar: Icon(Icons.timer_rounded, size: 16),
+                  label: Text('60 секунд'),
                 ),
                 Chip(
-                  avatar: const Icon(Icons.local_fire_department_rounded,
+                  avatar: Icon(Icons.local_fire_department_rounded,
                       size: 16),
-                  label: const Text('Комбо x3'),
+                  label: Text('Комбо x3'),
                 ),
                 Chip(
-                  avatar: const Icon(Icons.volume_up_rounded, size: 16),
-                  label: const Text('Озвучка слов'),
+                  avatar: Icon(Icons.volume_up_rounded, size: 16),
+                  label: Text('Озвучка слов'),
                 ),
               ],
             ),

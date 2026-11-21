@@ -150,6 +150,18 @@ class DictionaryEntries extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName('SceneProgressRow')
+class SceneProgressEntries extends Table {
+  TextColumn get sceneId => text()();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  IntColumn get wordsMasteredCount => integer().withDefault(const Constant(0))();
+  IntColumn get challengeScore => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastVisitedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {sceneId};
+}
+
 @DriftDatabase(
   tables: [
     DialogueNodes,
@@ -161,6 +173,7 @@ class DictionaryEntries extends Table {
     ListeningExercises,
     ListeningAttemptLogs,
     DictionaryEntries,
+    SceneProgressEntries,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -177,7 +190,7 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -195,6 +208,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.createTable(dictionaryEntries);
+          }
+          if (from < 5) {
+            await m.createTable(sceneProgressEntries);
           }
         },
       );
@@ -503,4 +519,29 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
+
+  // --- Israeli Life Scenes queries ---
+  Future<List<SceneProgressRow>> getAllSceneProgress() =>
+      select(sceneProgressEntries).get();
+
+  Future<SceneProgressRow?> getSceneProgress(String sceneId) =>
+      (select(sceneProgressEntries)..where((tbl) => tbl.sceneId.equals(sceneId)))
+          .getSingleOrNull();
+
+  Future<void> upsertSceneProgress({
+    required String sceneId,
+    required bool isCompleted,
+    required int wordsMasteredCount,
+    required int challengeScore,
+    required DateTime lastVisitedAt,
+  }) =>
+      into(sceneProgressEntries).insertOnConflictUpdate(
+        SceneProgressEntriesCompanion(
+          sceneId: Value(sceneId),
+          isCompleted: Value(isCompleted),
+          wordsMasteredCount: Value(wordsMasteredCount),
+          challengeScore: Value(challengeScore),
+          lastVisitedAt: Value(lastVisitedAt),
+        ),
+      );
 }

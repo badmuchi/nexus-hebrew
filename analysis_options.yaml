@@ -10,6 +10,7 @@ analyzer:
     avoid_print: error
     unawaited_futures: warning
     always_declare_return_types: error
+    deprecated_member_use: ignore
   exclude:
     - build/**
     - android/**

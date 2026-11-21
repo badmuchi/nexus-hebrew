@@ -90,7 +90,7 @@ class _PrepositionInflectionViewState extends State<PrepositionInflectionView> {
   }
 
   _PrepositionQuizQuestion _generateDrillQuestion() {
-    final prepositions = HebrewPrepositionsSeedData.prepositions;
+    const prepositions = HebrewPrepositionsSeedData.prepositions;
     final random = Random();
     final prep = prepositions[random.nextInt(prepositions.length)];
     final form = prep.forms[random.nextInt(prep.forms.length)];

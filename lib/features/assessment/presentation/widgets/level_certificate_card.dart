@@ -89,7 +89,7 @@ class _LevelCertificateCardState extends State<LevelCertificateCard> {
       setState(() => _isSavingAll = false);
       unawaited(HapticFeedback.mediumImpact());
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Все сложные слова сохранены в колоду FSRS!'),
           behavior: SnackBarBehavior.floating,
         ),

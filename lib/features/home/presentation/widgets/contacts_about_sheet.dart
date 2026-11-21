@@ -269,10 +269,10 @@ class ContactsAboutSheet extends StatelessWidget {
             style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
-          Wrap(
+          const Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: const [
+            children: [
               _TechChip(label: 'Flutter 3 (Multi-platform)'),
               _TechChip(label: 'Clean Architecture & DDD'),
               _TechChip(label: 'Drift / SQLite Offline DB'),

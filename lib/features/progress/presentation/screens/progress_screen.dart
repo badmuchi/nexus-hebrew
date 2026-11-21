@@ -83,8 +83,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           },
         ),
       ),
-    )
-        .then((_) {
+    ).then((_) {
+      if (!mounted) return;
       unawaited(_loadDailyWorkout());
       unawaited(context.read<ProgressCubit>().loadProgress());
     });

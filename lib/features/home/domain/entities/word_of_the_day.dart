@@ -47,13 +47,13 @@ final class WordOfTheDay extends Equatable {
     return catalog[positiveIndex];
   }
 
-  static final List<WordOfTheDay> catalog = [
+  static const List<WordOfTheDay> catalog = [
     WordOfTheDay(
       id: 'wotd_tikva',
-      word: const HebrewText.fixture(vocalized: 'תִּקְוָה', normalized: 'תקוה'),
+      word: HebrewText.fixture(vocalized: 'תִּקְוָה', normalized: 'תקוה'),
       transliteration: 'tikva',
       russianMeaning: 'надежда',
-      root: const Shoresh.fixture(['ק', 'ו', 'ה']),
+      root: Shoresh.fixture(['ק', 'ו', 'ה']),
       exampleSentenceHebrew: 'הַתִּקְוָה לֹא אָבְדָה.',
       exampleSentenceRussian: 'Надежда не потеряна.',
       sabraCulturalNote:
@@ -61,10 +61,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_savlanut',
-      word: const HebrewText.fixture(vocalized: 'סַבְלָנוּת', normalized: 'סבלנות'),
+      word: HebrewText.fixture(vocalized: 'סַבְלָנוּת', normalized: 'סבלנות'),
       transliteration: 'savlanut',
       russianMeaning: 'терпение',
-      root: const Shoresh.fixture(['ס', 'ב', 'ל']),
+      root: Shoresh.fixture(['ס', 'ב', 'ל']),
       exampleSentenceHebrew: 'קְצָת סַבְלָנוּת, הַכֹּל יִהְיֶה בְּסֵדֶר.',
       exampleSentenceRussian: 'Немного терпения, всё будет в порядке.',
       sabraCulturalNote:
@@ -72,10 +72,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_haverut',
-      word: const HebrewText.fixture(vocalized: 'חֲבֵרוּת', normalized: 'חברות'),
+      word: HebrewText.fixture(vocalized: 'חֲבֵרוּת', normalized: 'חברות'),
       transliteration: 'haverut',
       russianMeaning: 'дружба',
-      root: const Shoresh.fixture(['ח', 'ב', 'ר']),
+      root: Shoresh.fixture(['ח', 'ב', 'ר']),
       exampleSentenceHebrew: 'חֲבֵרוּת אֲמִתִּית נִמְדֶּדֶת בְּרְגָעִים קָשִׁים.',
       exampleSentenceRussian: 'Настоящая дружба измеряется в трудные моменты.',
       sabraCulturalNote:
@@ -83,10 +83,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_shalom',
-      word: const HebrewText.fixture(vocalized: 'שָׁלוֹם', normalized: 'שלום'),
+      word: HebrewText.fixture(vocalized: 'שָׁלוֹם', normalized: 'שלום'),
       transliteration: 'shalom',
       russianMeaning: 'мир, приветствие, благополучие',
-      root: const Shoresh.fixture(['ש', 'ל', 'ם']),
+      root: Shoresh.fixture(['ש', 'ל', 'ם']),
       exampleSentenceHebrew: 'שָׁלוֹם עֲלֵיכֶם וּבְרוּכִים הַבָּאִים!',
       exampleSentenceRussian: 'Мир вам и добро пожаловать!',
       sabraCulturalNote:
@@ -94,10 +94,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_hatzlaha',
-      word: const HebrewText.fixture(vocalized: 'הַצְלָחָה', normalized: 'הצלחה'),
+      word: HebrewText.fixture(vocalized: 'הַצְלָחָה', normalized: 'הצלחה'),
       transliteration: 'hatzlaha',
       russianMeaning: 'успех, удача',
-      root: const Shoresh.fixture(['צ', 'ל', 'ח']),
+      root: Shoresh.fixture(['צ', 'ל', 'ח']),
       exampleSentenceHebrew: 'בְּהַצְלָחָה רַבָּה בַּלִּמּוּדִים!',
       exampleSentenceRussian: 'Больших успехов в учёбе!',
       sabraCulturalNote:
@@ -105,10 +105,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_hiyukh',
-      word: const HebrewText.fixture(vocalized: 'חִיּוּךְ', normalized: 'חיוך'),
+      word: HebrewText.fixture(vocalized: 'חִיּוּךְ', normalized: 'חיוך'),
       transliteration: 'hiyukh',
       russianMeaning: 'улыбка',
-      root: const Shoresh.fixture(['ח', 'י', 'ך']),
+      root: Shoresh.fixture(['ח', 'י', 'ך']),
       exampleSentenceHebrew: 'חִיּוּךְ אֶחָד שׁוֹוֶה אֶלֶף מִלִּים.',
       exampleSentenceRussian: 'Одна улыбка стоит тысячи слов.',
       sabraCulturalNote:
@@ -116,10 +116,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_sakranut',
-      word: const HebrewText.fixture(vocalized: 'סַקְרָנוּת', normalized: 'סקרנות'),
+      word: HebrewText.fixture(vocalized: 'סַקְרָנוּת', normalized: 'סקרנות'),
       transliteration: 'sakranut',
       russianMeaning: 'любознательность, интерес',
-      root: const Shoresh.fixture(['ס', 'ק', 'ר']),
+      root: Shoresh.fixture(['ס', 'ק', 'ר']),
       exampleSentenceHebrew: 'הַסַּקְרָנוּת הִיא הַמַּנְוֵעַ שֶׁל הַלְּמִידָה.',
       exampleSentenceRussian: 'Любознательность — двигатель обучения.',
       sabraCulturalNote:
@@ -127,10 +127,10 @@ final class WordOfTheDay extends Equatable {
     ),
     WordOfTheDay(
       id: 'wotd_simha',
-      word: const HebrewText.fixture(vocalized: 'שִׂמְחָה', normalized: 'שמחה'),
+      word: HebrewText.fixture(vocalized: 'שִׂמְחָה', normalized: 'שמחה'),
       transliteration: 'simha',
       russianMeaning: 'радость, веселье, торжество',
-      root: const Shoresh.fixture(['ש', 'מ', 'ח']),
+      root: Shoresh.fixture(['ש', 'מ', 'ח']),
       exampleSentenceHebrew: 'אֵין שִׂמְחָה כְּשִׂמְחַת הַלֵּב.',
       exampleSentenceRussian: 'Нет радости превыше радости сердца.',
       sabraCulturalNote:

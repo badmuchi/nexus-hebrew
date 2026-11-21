@@ -5,6 +5,8 @@ import 'package:nexus_hebrew_app/features/alphabet/domain/entities/nikkud_mark.d
 import 'package:nexus_hebrew_app/features/dictionary/domain/entities/dictionary_entry.dart';
 import 'package:nexus_hebrew_app/features/grammar/data/datasources/hebrew_prepositions_seed_data.dart';
 import 'package:nexus_hebrew_app/features/grammar/domain/entities/preposition_inflection.dart';
+import 'package:nexus_hebrew_app/features/scenes/data/datasources/israeli_scenes_seed_data.dart';
+import 'package:nexus_hebrew_app/features/scenes/domain/entities/israeli_life_scene.dart';
 import 'package:nexus_hebrew_app/features/slang/domain/entities/slang_expression.dart';
 import '../entities/omni_search_result.dart';
 
@@ -24,6 +26,7 @@ class OmniSearchEngine {
     engine.addAlphabetLetters(HebrewAlphabetSeedData.letters);
     engine.addNikkudMarks(HebrewAlphabetSeedData.nikkudMarks);
     engine.addPrepositions(HebrewPrepositionsSeedData.prepositions);
+    engine.addSceneContent(IsraeliScenesSeedData.scenes);
     return engine;
   }
 
@@ -144,6 +147,43 @@ class OmniSearchEngine {
             details: 'Форма предлога ${p.baseHebrew} (${f.person.labelRu})',
             audioText: f.exampleSentenceHebrew.isNotEmpty ? f.exampleSentenceHebrew : f.hebrewVocalized,
             originalObject: f,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Indexes Israeli real-life scene vocabulary and phrases.
+  void addSceneContent(Iterable<IsraeliLifeScene> scenes) {
+    for (final s in scenes) {
+      for (final w in s.words) {
+        _items.add(
+          OmniSearchResult(
+            id: 'scene_word_${w.id}',
+            category: OmniResultCategory.dictionary,
+            hebrewWithNikkud: w.hebrewVocalized,
+            hebrewWithoutNikkud: w.hebrewNormalized,
+            translationRu: '${w.russianMeaning} (${s.titleRussian})',
+            transliteration: w.transliteration,
+            root: w.root,
+            details: '${s.emoji} ${s.titleRussian} • ${w.contextNote ?? ""}',
+            audioText: w.hebrewVocalized,
+            originalObject: w,
+          ),
+        );
+      }
+      for (final p in s.phrases) {
+        _items.add(
+          OmniSearchResult(
+            id: 'scene_phrase_${p.id}',
+            category: OmniResultCategory.slang,
+            hebrewWithNikkud: p.hebrewVocalized,
+            hebrewWithoutNikkud: p.hebrewNormalized,
+            translationRu: '${p.russianTranslation} (${s.titleRussian})',
+            transliteration: p.transliteration,
+            details: '${s.emoji} ${p.role.labelRu} • ${p.culturalTip ?? ""}',
+            audioText: p.hebrewVocalized,
+            originalObject: p,
           ),
         );
       }

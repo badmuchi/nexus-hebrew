@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
 import '../../../progress/presentation/cubit/progress_state.dart';
+import '../../../scenes/data/repositories/scenes_repository_impl.dart';
+import '../../../scenes/domain/repositories/scenes_repository.dart';
+import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
 import '../../../search/domain/services/omni_search_engine.dart';
 import '../../../search/presentation/widgets/omni_search_sheet.dart';
 import '../../../slang/domain/usecases/get_slang_expressions.dart';
@@ -29,6 +33,7 @@ class HomeScreen extends StatefulWidget {
   final AppSettingsStorage? settingsStorage;
   final GetSlangExpressionsUseCase? getSlangUseCase;
   final ValueChanged<int>? onNavigateToTab;
+  final AppDatabase? database;
 
   const HomeScreen({
     super.key,
@@ -38,6 +43,7 @@ class HomeScreen extends StatefulWidget {
     this.settingsStorage,
     this.getSlangUseCase,
     this.onNavigateToTab,
+    this.database,
   });
 
   @override
@@ -49,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DailyWorkoutPlan? _dailyWorkout;
   bool _isLoadingWorkout = false;
   late final OmniSearchEngine _searchEngine = OmniSearchEngine.withStaticDefaults();
+  late final ScenesRepository _scenesRepository = ScenesRepositoryImpl(database: widget.database);
 
   @override
   void initState() {
@@ -65,6 +72,18 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     }
+  }
+
+  void _openScenesCatalog() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ScenesCatalogScreen(
+          repository: _scenesRepository,
+          audioService: widget.audioService,
+          addCardToSrsUseCase: widget.addCardToSrsUseCase,
+        ),
+      ),
+    );
   }
 
   void _openOmniSearch() {
@@ -115,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final (greetingHebrew, greetingRussian) = _getGreeting();
     final todayWord = WordOfTheDay.getForDate();
 
@@ -452,6 +472,86 @@ class _HomeScreenState extends State<HomeScreen> {
             showNikkud: _showNikkud,
             audioService: widget.audioService,
             addCardToSrsUseCase: widget.addCardToSrsUseCase,
+          ),
+          const SizedBox(height: 16),
+
+          // Real Israel Scenes Banner
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              ),
+            ),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),
+            child: InkWell(
+              onTap: _openScenesCatalog,
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Text('🏙️', style: TextStyle(fontSize: 26)),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Реальный Израиль',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  'НОВОЕ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Шуферсаль, Рав-Кав, Поликлиника, Кафе • 6 сцен',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 16,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 20),
 

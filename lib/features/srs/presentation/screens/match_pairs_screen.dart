@@ -290,7 +290,7 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '${_secondsLeft}с',
+                          '$_secondsLeftс',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: _secondsLeft <= 10

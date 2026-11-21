@@ -62,6 +62,10 @@ import 'features/progress/domain/usecases/get_learning_progress.dart';
 import 'features/progress/domain/usecases/search_hebrew_library.dart';
 import 'features/progress/presentation/cubit/progress_cubit.dart';
 import 'features/progress/presentation/screens/progress_screen.dart';
+import 'features/slang/data/datasources/slang_seed_datasource.dart';
+import 'features/slang/data/repositories/slang_repository_impl.dart';
+import 'features/slang/domain/repositories/slang_repository.dart';
+import 'features/slang/domain/usecases/get_slang_expressions.dart';
 import 'features/srs/data/datasources/srs_local_datasource.dart';
 import 'features/srs/data/datasources/srs_seed_datasource.dart';
 import 'features/srs/data/datasources/tatoeba_remote_datasource.dart';
@@ -75,10 +79,6 @@ import 'features/srs/domain/usecases/review_srs_card.dart';
 import 'features/srs/presentation/cubit/srs_session_cubit.dart';
 import 'features/srs/presentation/cubit/srs_session_state.dart';
 import 'features/srs/presentation/screens/srs_study_screen.dart';
-import 'features/slang/data/datasources/slang_seed_datasource.dart';
-import 'features/slang/data/repositories/slang_repository_impl.dart';
-import 'features/slang/domain/repositories/slang_repository.dart';
-import 'features/slang/domain/usecases/get_slang_expressions.dart';
 import 'features/stories/data/datasources/stories_seed_datasource.dart';
 import 'features/stories/data/repositories/stories_repository_impl.dart';
 import 'features/stories/domain/repositories/stories_repository.dart';
@@ -654,6 +654,7 @@ class _MainShellState extends State<_MainShell> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       HomeScreen(
+        database: widget.database,
         audioService: widget.audioService,
         addCardToSrsUseCase: widget.addCardToSrsUseCase,
         getDailyWorkoutUseCase: widget.getDailyWorkoutUseCase,
