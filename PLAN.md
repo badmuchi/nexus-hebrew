@@ -122,3 +122,12 @@ flowchart TD
 - [x] **Панель мастерства на экране Прогресса:** в `ProgressScreen` добавлены карточки `_ShoreshMasteryCard` («Лаборатория корней (Шореш)») и `_ScenesProgressCard` («Реальный Израиль: Быт») с прогресс-барами, рангом детектива и быстрой навигацией.
 - [x] **Расчет XP и активности:** в `ProgressLocalDataSource` добавлены запросы к `ShoreshProgressEntries` и `SceneProgressEntries`, таймстампы включены в стрик и тепловую карту активности.
 - [x] **Верификация:** `flutter analyze` (0 issues), 380/380 тестов пройдено (100% pass), фиксация коммита и Hot Restart в Chrome.
+
+---
+
+### Этап 6: Голосовой тренажёр живых ситуаций и произношения (Voice Roleplay)
+- [x] **Микрофон в карточках фраз (`ScenePhraseTile`):** кнопка `Icons.mic_rounded` вызывает `PronunciationPracticeSheet` с эталонной фразой, транслитерацией, live STT и пословной оценкой точности через `PronunciationAccuracyEvaluator`.
+- [x] **Голосовой ответ в бытовых ситуациях (`SceneChallengeCard`):** опция «Ответить голосом 🎙️ (+10 XP)», автоматическое определение правильности ответа по речи, золотистый бейдж и начисление бонусного опыта.
+- [x] **Голосовой ответ в Тренировке Дня (`DailyWorkoutScreen`):** возможность на шаге «Ситуация дня» произнести фразу вслух и получить мгновенный фидбек произношения с бейджем победы.
+- [x] **Сквозной проброс аудио и речи:** в `ScenesCatalogScreen` и `SceneDetailScreen` проброшены `AudioPlaybackService` и `SpeechRecognitionService`.
+- [x] **Верификация:** `flutter analyze` (0 issues), 380/380 тестов пройдено (100% pass), коммит и Hot Restart в Chrome.
