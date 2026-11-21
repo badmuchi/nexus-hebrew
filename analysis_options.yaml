@@ -17,6 +17,7 @@ analyzer:
     - ios/**
     - macos/**
     - web/**
+    - nexus_english_app/**
 
 linter:
   rules:

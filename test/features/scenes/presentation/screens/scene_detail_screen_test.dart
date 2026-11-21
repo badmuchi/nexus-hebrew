@@ -19,7 +19,7 @@ void main() {
   late _MockAddCardToSrsUseCase addSrsUseCase;
   late ScenesRepositoryImpl repository;
 
-  final testScene = const IsraeliLifeScene(
+  const testScene = IsraeliLifeScene(
     id: 'test_market',
     type: SceneType.supermarket,
     titleHebrew: 'בַּסּוּפֶּרְמַרְקֶט',

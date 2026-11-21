@@ -13,7 +13,7 @@ void main() {
     });
 
     test('IsraeliScenesSeedData contains exactly 6 unique scenes', () {
-      final scenes = IsraeliScenesSeedData.scenes;
+      const scenes = IsraeliScenesSeedData.scenes;
       expect(scenes.length, equals(6));
 
       final ids = scenes.map((s) => s.id).toSet();
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('Every scene has valid words with Hebrew vocalization, transliteration and translation', () {
-      final scenes = IsraeliScenesSeedData.scenes;
+      const scenes = IsraeliScenesSeedData.scenes;
 
       for (final scene in scenes) {
         expect(scene.titleRussian, isNotEmpty, reason: 'Empty title for ${scene.id}');
@@ -52,7 +52,7 @@ void main() {
     });
 
     test('Every scene has survival phrases with incoming and outgoing roles', () {
-      final scenes = IsraeliScenesSeedData.scenes;
+      const scenes = IsraeliScenesSeedData.scenes;
 
       for (final scene in scenes) {
         expect(scene.phrases, isNotEmpty, reason: 'No phrases for ${scene.id}');
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('Every scene has challenges with valid options and correctIndex', () {
-      final scenes = IsraeliScenesSeedData.scenes;
+      const scenes = IsraeliScenesSeedData.scenes;
 
       for (final scene in scenes) {
         expect(scene.challenges, isNotEmpty, reason: 'No challenges for ${scene.id}');
