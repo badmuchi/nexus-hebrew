@@ -2,7 +2,7 @@ import '../entities/israeli_life_scene.dart';
 import '../repositories/scenes_repository.dart';
 
 /// Use case for fetching all Israeli life scenes with optional filtering by type or search query.
-final class GetScenesUseCase {
+class GetScenesUseCase {
   const GetScenesUseCase(this._repository);
 
   final ScenesRepository _repository;

@@ -8,13 +8,13 @@ class SceneChallengeCard extends StatefulWidget {
     required this.challenge,
     required this.index,
     required this.total,
-    this.onAnswerSelected,
+    required this.onAnswerSelected,
   });
 
   final SceneChallenge challenge;
   final int index;
   final int total;
-  final ValueChanged<bool>? onAnswerSelected;
+  final void Function(int challengeIndex, bool isCorrect) onAnswerSelected;
 
   @override
   State<SceneChallengeCard> createState() => _SceneChallengeCardState();
@@ -24,14 +24,16 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
   int? _selectedIndex;
   bool _hasAnswered = false;
 
-  void _selectOption(int index) {
+  void _selectOption(int optionIndex) {
     if (_hasAnswered) return;
+
+    final isCorrect = optionIndex == widget.challenge.correctIndex;
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex = optionIndex;
       _hasAnswered = true;
     });
-    final isCorrect = index == widget.challenge.correctIndex;
-    widget.onAnswerSelected?.call(isCorrect);
+
+    widget.onAnswerSelected(widget.index, isCorrect);
   }
 
   @override
@@ -45,28 +47,28 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isDark ? Colors.white12 : Colors.black.withOpacity(0.08),
+          color: isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Question Counter & Badge
+            // Top: Question index and status
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withOpacity(0.6),
+                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'Ситуация ${widget.index + 1} из ${widget.total}',
                     style: TextStyle(
-                      fontSize: 12,
                       fontWeight: FontWeight.bold,
+                      fontSize: 12,
                       color: theme.colorScheme.primary,
                     ),
                   ),
@@ -74,6 +76,7 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
                 const Spacer(),
                 if (_hasAnswered)
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         _selectedIndex == widget.challenge.correctIndex
@@ -112,53 +115,26 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
             ),
             const SizedBox(height: 16),
 
-            // Options
+            // Options list
             for (int i = 0; i < widget.challenge.options.length; i++) ...[
-              _buildOption(i, theme, isDark),
+              _ChallengeOptionTile(
+                index: i,
+                optionText: widget.challenge.options[i],
+                isSelected: _selectedIndex == i,
+                isCorrect: i == widget.challenge.correctIndex,
+                hasAnswered: _hasAnswered,
+                isDark: isDark,
+                onTap: () => _selectOption(i),
+              ),
               const SizedBox(height: 8),
             ],
 
-            // Explanation Block (Revealed after answering)
+            // Explanation Block
             if (_hasAnswered) ...[
               const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: (_selectedIndex == widget.challenge.correctIndex
-                          ? Colors.green
-                          : Colors.orange)
-                      .withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: (_selectedIndex == widget.challenge.correctIndex
-                            ? Colors.green
-                            : Colors.orange)
-                        .withOpacity(0.3),
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.lightbulb_outline_rounded,
-                      size: 18,
-                      color: _selectedIndex == widget.challenge.correctIndex
-                          ? Colors.green
-                          : Colors.orange.shade800,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        widget.challenge.explanationRu,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 12,
-                          height: 1.35,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _ChallengeExplanationCard(
+                explanation: widget.challenge.explanationRu,
+                isCorrect: _selectedIndex == widget.challenge.correctIndex,
               ),
             ],
           ],
@@ -166,30 +142,49 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
       ),
     );
   }
+}
 
-  Widget _buildOption(int index, ThemeData theme, bool isDark) {
-    final optionText = widget.challenge.options[index];
-    final isSelected = _selectedIndex == index;
-    final isCorrect = index == widget.challenge.correctIndex;
+class _ChallengeOptionTile extends StatelessWidget {
+  const _ChallengeOptionTile({
+    required this.index,
+    required this.optionText,
+    required this.isSelected,
+    required this.isCorrect,
+    required this.hasAnswered,
+    required this.isDark,
+    required this.onTap,
+  });
 
-    Color borderColor = isDark ? Colors.white12 : Colors.black.withOpacity(0.08);
+  final int index;
+  final String optionText;
+  final bool isSelected;
+  final bool isCorrect;
+  final bool hasAnswered;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    Color borderColor = isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08);
     Color bgColor = theme.colorScheme.surface;
 
-    if (_hasAnswered) {
+    if (hasAnswered) {
       if (isCorrect) {
         borderColor = Colors.green;
-        bgColor = Colors.green.withOpacity(isDark ? 0.25 : 0.12);
+        bgColor = Colors.green.withValues(alpha: isDark ? 0.25 : 0.12);
       } else if (isSelected) {
         borderColor = Colors.red;
-        bgColor = Colors.red.withOpacity(isDark ? 0.25 : 0.12);
+        bgColor = Colors.red.withValues(alpha: isDark ? 0.25 : 0.12);
       }
     } else if (isSelected) {
       borderColor = theme.colorScheme.primary;
-      bgColor = theme.colorScheme.primaryContainer.withOpacity(0.2);
+      bgColor = theme.colorScheme.primaryContainer.withValues(alpha: 0.2);
     }
 
     return InkWell(
-      onTap: _hasAnswered ? null : () => _selectOption(index),
+      onTap: hasAnswered ? null : onTap,
       borderRadius: BorderRadius.circular(14),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -197,7 +192,10 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: borderColor, width: isSelected || (_hasAnswered && isCorrect) ? 1.8 : 1.0),
+          border: Border.all(
+            color: borderColor,
+            width: isSelected || (hasAnswered && isCorrect) ? 1.8 : 1.0,
+          ),
         ),
         child: Row(
           children: [
@@ -208,8 +206,8 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isSelected
-                    ? (_hasAnswered && !isCorrect ? Colors.red : theme.colorScheme.primary)
-                    : theme.colorScheme.surfaceVariant,
+                    ? (hasAnswered && !isCorrect ? Colors.red : theme.colorScheme.primary)
+                    : theme.colorScheme.surfaceContainerHighest,
               ),
               child: Text(
                 '${index + 1}',
@@ -237,6 +235,53 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ChallengeExplanationCard extends StatelessWidget {
+  const _ChallengeExplanationCard({
+    required this.explanation,
+    required this.isCorrect,
+  });
+
+  final String explanation;
+  final bool isCorrect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: (isCorrect ? Colors.green : Colors.orange).withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: (isCorrect ? Colors.green : Colors.orange).withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.lightbulb_outline_rounded,
+            size: 18,
+            color: isCorrect ? Colors.green : Colors.orange.shade800,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              explanation,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 12,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

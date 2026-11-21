@@ -33,7 +33,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProgress();
+    unawaited(_loadProgress());
   }
 
   Future<void> _loadProgress() async {
@@ -44,6 +44,24 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _onSceneTapped(IsraeliLifeScene scene) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SceneDetailScreen(
+          scene: scene,
+          repository: widget.repository,
+          audioService: widget.audioService,
+          addCardToSrsUseCase: widget.addCardToSrsUseCase,
+          onSceneCompleted: () {
+            widget.onSceneCompleted?.call();
+            unawaited(_loadProgress());
+          },
+        ),
+      ),
+    );
+    await _loadProgress();
   }
 
   @override
@@ -65,85 +83,122 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               children: [
-                // Header Banner
-                Card(
-                  elevation: 0,
-                  color: theme.colorScheme.primaryContainer.withOpacity(0.35),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text('🏙️', style: TextStyle(fontSize: 28)),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Живые ситуации Израиля',
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Слова, фразы кассиров и водителей, чек-листы',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: LinearProgressIndicator(
-                                  value: scenes.isEmpty ? 0 : completedCount / scenes.length,
-                                  minHeight: 8,
-                                  backgroundColor: theme.colorScheme.surfaceVariant,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Пройдено: $completedCount из ${scenes.length}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                _CatalogHeaderBanner(
+                  completedCount: completedCount,
+                  totalCount: scenes.length,
                 ),
                 const SizedBox(height: 16),
-
-                // Scenes List
                 for (final scene in scenes) ...[
-                  _buildSceneCard(scene, theme, isDark),
+                  _SceneCatalogCard(
+                    scene: scene,
+                    isCompleted: _completedMap[scene.id] == true,
+                    isDark: isDark,
+                    onTap: () => _onSceneTapped(scene),
+                  ),
                   const SizedBox(height: 12),
                 ],
               ],
             ),
     );
   }
+}
 
-  Widget _buildSceneCard(IsraeliLifeScene scene, ThemeData theme, bool isDark) {
-    final isCompleted = _completedMap[scene.id] == true;
+class _CatalogHeaderBanner extends StatelessWidget {
+  const _CatalogHeaderBanner({
+    required this.completedCount,
+    required this.totalCount,
+  });
+
+  final int completedCount;
+  final int totalCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('🏙️', style: TextStyle(fontSize: 28)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Живые ситуации Израиля',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Слова, фразы кассиров и водителей, чек-листы',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: LinearProgressIndicator(
+                      value: totalCount == 0 ? 0 : completedCount / totalCount,
+                      minHeight: 8,
+                      backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Пройдено: $completedCount из $totalCount',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SceneCatalogCard extends StatelessWidget {
+  const _SceneCatalogCard({
+    required this.scene,
+    required this.isCompleted,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  final IsraeliLifeScene scene;
+  final bool isCompleted;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Card(
       elevation: 0,
@@ -151,29 +206,13 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
           color: isCompleted
-              ? Colors.green.withOpacity(0.5)
-              : (isDark ? Colors.white12 : Colors.black.withOpacity(0.08)),
+              ? Colors.green.withValues(alpha: 0.5)
+              : (isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08)),
           width: isCompleted ? 1.5 : 1.0,
         ),
       ),
       child: InkWell(
-        onTap: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (_) => SceneDetailScreen(
-                scene: scene,
-                repository: widget.repository,
-                audioService: widget.audioService,
-                addCardToSrsUseCase: widget.addCardToSrsUseCase,
-                onSceneCompleted: () {
-                  widget.onSceneCompleted?.call();
-                  unawaited(_loadProgress());
-                },
-              ),
-            ),
-          );
-          await _loadProgress();
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -188,7 +227,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceVariant,
+                      color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -205,7 +244,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(isDark ? 0.25 : 0.12),
+                        color: Colors.green.withValues(alpha: isDark ? 0.25 : 0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Row(
@@ -251,6 +290,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
                         fontFamily: 'Heebo',
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
+                        height: 1.45,
                         color: theme.colorScheme.primary,
                       ),
                     ),
@@ -272,16 +312,25 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
               // Stats row: words, phrases, challenges
               Row(
                 children: [
-                  _buildStatBadge(Icons.translate_rounded, '${scene.words.length} слов', theme),
+                  _StatBadge(
+                    icon: Icons.translate_rounded,
+                    label: '${scene.words.length} слов',
+                  ),
                   const SizedBox(width: 8),
-                  _buildStatBadge(Icons.chat_bubble_outline_rounded, '${scene.phrases.length} фраз', theme),
+                  _StatBadge(
+                    icon: Icons.chat_bubble_outline_rounded,
+                    label: '${scene.phrases.length} фраз',
+                  ),
                   const SizedBox(width: 8),
-                  _buildStatBadge(Icons.quiz_outlined, '${scene.challenges.length} ситуации', theme),
+                  _StatBadge(
+                    icon: Icons.quiz_outlined,
+                    label: '${scene.challenges.length} ситуации',
+                  ),
                   const Spacer(),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 14,
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ],
               ),
@@ -291,12 +340,25 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
       ),
     );
   }
+}
 
-  Widget _buildStatBadge(IconData icon, String text, ThemeData theme) {
+class _StatBadge extends StatelessWidget {
+  const _StatBadge({
+    required this.icon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
@@ -305,7 +367,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
           Icon(icon, size: 12, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 4),
           Text(
-            text,
+            label,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,

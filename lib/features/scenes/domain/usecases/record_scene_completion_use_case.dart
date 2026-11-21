@@ -21,7 +21,7 @@ final class RecordSceneCompletionParams extends Equatable {
 }
 
 /// Use case for persisting scene completion and quiz results to local SQLite storage.
-final class RecordSceneCompletionUseCase {
+class RecordSceneCompletionUseCase {
   const RecordSceneCompletionUseCase(this._repository);
 
   final ScenesRepository _repository;

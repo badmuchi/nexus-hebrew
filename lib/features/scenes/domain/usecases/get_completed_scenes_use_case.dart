@@ -3,7 +3,7 @@ import '../../../../core/result/result.dart';
 import '../repositories/scenes_repository.dart';
 
 /// Use case for fetching the completion status map of all scenes from persistent storage.
-final class GetCompletedScenesUseCase {
+class GetCompletedScenesUseCase {
   const GetCompletedScenesUseCase(this._repository);
 
   final ScenesRepository _repository;

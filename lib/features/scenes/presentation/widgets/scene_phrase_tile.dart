@@ -65,8 +65,8 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
 
     final roleColor = isIncoming ? Colors.amber.shade800 : theme.colorScheme.primary;
     final roleBg = isIncoming
-        ? Colors.amber.withOpacity(isDark ? 0.2 : 0.12)
-        : theme.colorScheme.primary.withOpacity(isDark ? 0.2 : 0.1);
+        ? Colors.amber.withValues(alpha: isDark ? 0.2 : 0.12)
+        : theme.colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1);
 
     final hebrewText = widget.showNikkud
         ? widget.phrase.hebrewVocalized
@@ -78,7 +78,7 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: isDark ? Colors.white12 : Colors.black.withOpacity(0.08),
+          color: isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08),
         ),
       ),
       child: Padding(
@@ -94,7 +94,7 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
                   decoration: BoxDecoration(
                     color: roleBg,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: roleColor.withOpacity(0.3)),
+                    border: Border.all(color: roleColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     widget.phrase.role.labelRu,
@@ -154,7 +154,7 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
               widget.phrase.transliteration,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontStyle: FontStyle.italic,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 6),
@@ -174,7 +174,7 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(

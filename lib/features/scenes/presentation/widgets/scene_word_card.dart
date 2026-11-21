@@ -31,10 +31,10 @@ class _SceneWordCardState extends State<SceneWordCard> {
     if (useCase == null) return;
 
     final params = AddCardToSrsParams(
-      id: 'scene_word_${widget.word.id}_${DateTime.now().millisecondsSinceEpoch}',
+      id: 'scene_${widget.word.id}_${DateTime.now().millisecondsSinceEpoch}',
       hebrewVocalized: widget.word.hebrewVocalized,
       russianTranslation: widget.word.russianMeaning,
-      category: LexicalCategory.phrase,
+      category: LexicalCategory.noun,
     );
 
     final res = await useCase(params);
@@ -48,8 +48,8 @@ class _SceneWordCardState extends State<SceneWordCard> {
       SnackBar(
         content: Text(
           (res.getOrNull() == true)
-              ? '«${widget.word.hebrewNormalized}» добавлено в FSRS повторения!'
-              : 'Уже в колоде FSRS',
+              ? '«${widget.word.russianMeaning}» добавлено в FSRS!'
+              : 'Слово уже в колоде FSRS',
         ),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -72,7 +72,7 @@ class _SceneWordCardState extends State<SceneWordCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: isDark ? Colors.white12 : Colors.black.withOpacity(0.08),
+          color: isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08),
         ),
       ),
       child: Padding(
@@ -87,7 +87,7 @@ class _SceneWordCardState extends State<SceneWordCard> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.5),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -148,7 +148,7 @@ class _SceneWordCardState extends State<SceneWordCard> {
                         widget.word.transliteration,
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontStyle: FontStyle.italic,
-                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -177,7 +177,7 @@ class _SceneWordCardState extends State<SceneWordCard> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
