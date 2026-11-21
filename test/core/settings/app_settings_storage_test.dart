@@ -98,5 +98,56 @@ void main() {
       final readDate = await settingsStorage.readLastDailyWorkoutDate();
       expect(readDate, equals(date));
     });
+
+    test('readAssessedLevel and writeAssessedLevel roundtrip', () async {
+      when(() => storage.read(key: 'nexus_hebrew_assessed_level'))
+          .thenAnswer((_) async => null);
+
+      expect(await settingsStorage.readAssessedLevel(), isNull);
+
+      when(() => storage.write(key: any(named: 'key'), value: any(named: 'value')))
+          .thenAnswer((_) async {});
+
+      await settingsStorage.writeAssessedLevel('A2.1');
+
+      verify(
+        () => storage.write(
+          key: 'nexus_hebrew_assessed_level',
+          value: 'A2.1',
+        ),
+      ).called(1);
+
+      when(() => storage.read(key: 'nexus_hebrew_assessed_level'))
+          .thenAnswer((_) async => 'A2.1');
+
+      final level = await settingsStorage.readAssessedLevel();
+      expect(level, equals('A2.1'));
+    });
+
+    test('readLastAssessmentDate and writeLastAssessmentDate roundtrip', () async {
+      when(() => storage.read(key: 'nexus_hebrew_last_assessment_date'))
+          .thenAnswer((_) async => null);
+
+      expect(await settingsStorage.readLastAssessmentDate(), isNull);
+
+      when(() => storage.write(key: any(named: 'key'), value: any(named: 'value')))
+          .thenAnswer((_) async {});
+
+      final date = DateTime.utc(2026, 11, 20, 15, 30);
+      await settingsStorage.writeLastAssessmentDate(date);
+
+      verify(
+        () => storage.write(
+          key: 'nexus_hebrew_last_assessment_date',
+          value: date.toIso8601String(),
+        ),
+      ).called(1);
+
+      when(() => storage.read(key: 'nexus_hebrew_last_assessment_date'))
+          .thenAnswer((_) async => date.toIso8601String());
+
+      final readDate = await settingsStorage.readLastAssessmentDate();
+      expect(readDate, equals(date));
+    });
   });
 }

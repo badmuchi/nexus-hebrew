@@ -75,6 +75,9 @@ void main() {
     listeningRepo = _MockListeningRepository();
     settingsStorage = _MockAppSettingsStorage();
 
+    when(() => settingsStorage.readAssessedLevel())
+        .thenAnswer((_) async => null);
+
     getUseCase = GetDailyWorkoutUseCase(
       srsRepository: srsRepo,
       grammarRepository: grammarRepo,
@@ -126,6 +129,26 @@ void main() {
 
       final result = await getUseCase(asOf: now);
       expect(result.getOrNull()!.isCompletedToday, isTrue);
+    });
+
+    test('адаптирует подборку биньяна и сцен под уровень A2+ / B1', () async {
+      when(() => settingsStorage.readLastDailyWorkoutDate())
+          .thenAnswer((_) async => null);
+      when(() => settingsStorage.readAssessedLevel())
+          .thenAnswer((_) async => 'A2.1');
+      when(() => srsRepo.getDueCards(asOf: any(named: 'asOf'), limit: any(named: 'limit')))
+          .thenAnswer((_) async => Success([testCard]));
+      when(() => grammarRepo.getVerbs(binyan: any(named: 'binyan')))
+          .thenAnswer((_) async => Success([testVerb]));
+      when(() => listeningRepo.getExercises())
+          .thenAnswer((_) async => Success([testExercise]));
+
+      final result = await getUseCase();
+      expect(result.isSuccess, isTrue);
+
+      final plan = result.getOrNull()!;
+      expect(plan.sceneChallenge, isNotNull);
+      expect(plan.grammarChallenge, isNotNull);
     });
 
     test('CompleteDailyWorkoutUseCase сохраняет дату завершения в хранилище', () async {

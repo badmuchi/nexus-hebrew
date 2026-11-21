@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/settings/app_settings_storage.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../data/datasources/level_quiz_seed_data.dart';
 import '../../domain/entities/level_quiz_question.dart';
@@ -14,11 +15,15 @@ import '../widgets/level_certificate_card.dart';
 class LevelAssessmentScreen extends StatefulWidget {
   final AudioPlaybackService? audioService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
+  final AppSettingsStorage? settingsStorage;
+  final ValueChanged<LevelQuizResult>? onLevelUpdated;
 
   const LevelAssessmentScreen({
     super.key,
     this.audioService,
     this.addCardToSrsUseCase,
+    this.settingsStorage,
+    this.onLevelUpdated,
   });
 
   @override
@@ -68,6 +73,9 @@ class _LevelAssessmentScreenState extends State<LevelAssessmentScreen> {
       questions: _questions,
       userAnswers: _userAnswers,
     );
+    unawaited(widget.settingsStorage?.writeAssessedLevel(result.determinedLevel));
+    unawaited(widget.settingsStorage?.writeLastAssessmentDate(result.completedAt));
+    widget.onLevelUpdated?.call(result);
     setState(() {
       _result = result;
     });

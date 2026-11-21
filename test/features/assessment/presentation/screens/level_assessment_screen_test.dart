@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nexus_hebrew_app/core/audio/audio_playback_service.dart';
 import 'package:nexus_hebrew_app/core/result/result.dart';
+import 'package:nexus_hebrew_app/core/settings/app_settings_storage.dart';
 import 'package:nexus_hebrew_app/features/assessment/data/datasources/level_quiz_seed_data.dart';
 import 'package:nexus_hebrew_app/features/assessment/presentation/screens/level_assessment_screen.dart';
 import 'package:nexus_hebrew_app/features/assessment/presentation/widgets/level_certificate_card.dart';
@@ -10,6 +11,7 @@ import 'package:nexus_hebrew_app/features/srs/domain/usecases/add_card_to_srs.da
 
 class _MockAudioPlaybackService extends Mock implements AudioPlaybackService {}
 class _MockAddCardToSrsUseCase extends Mock implements AddCardToSrsUseCase {}
+class _MockAppSettingsStorage extends Mock implements AppSettingsStorage {}
 
 void main() {
   setUpAll(() {
@@ -24,10 +26,12 @@ void main() {
 
   late _MockAudioPlaybackService audioMock;
   late _MockAddCardToSrsUseCase addCardToSrsMock;
+  late _MockAppSettingsStorage settingsStorageMock;
 
   setUp(() {
     audioMock = _MockAudioPlaybackService();
     addCardToSrsMock = _MockAddCardToSrsUseCase();
+    settingsStorageMock = _MockAppSettingsStorage();
 
     when(
       () => audioMock.playWithTtsFallback(
@@ -38,6 +42,10 @@ void main() {
 
     when(() => addCardToSrsMock(any()))
         .thenAnswer((_) async => const Success(true));
+    when(() => settingsStorageMock.writeAssessedLevel(any()))
+        .thenAnswer((_) async {});
+    when(() => settingsStorageMock.writeLastAssessmentDate(any()))
+        .thenAnswer((_) async {});
   });
 
   Future<void> pumpSubject(WidgetTester tester) async {
@@ -51,6 +59,7 @@ void main() {
         home: LevelAssessmentScreen(
           audioService: audioMock,
           addCardToSrsUseCase: addCardToSrsMock,
+          settingsStorage: settingsStorageMock,
         ),
       ),
     );
@@ -136,5 +145,8 @@ void main() {
     expect(find.text('NEXUS HEBREW DIPLOMA'), findsOneWidget);
     expect(find.text('Диагностика навыков:'), findsOneWidget);
     expect(find.text('Индивидуальный план развития:'), findsOneWidget);
+
+    verify(() => settingsStorageMock.writeAssessedLevel(any())).called(1);
+    verify(() => settingsStorageMock.writeLastAssessmentDate(any())).called(1);
   });
 }

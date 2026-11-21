@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
+import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
@@ -54,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showNikkud = true;
   DailyWorkoutPlan? _dailyWorkout;
   bool _isLoadingWorkout = false;
+  String? _assessedLevel;
   late final OmniSearchEngine _searchEngine = OmniSearchEngine.withStaticDefaults();
   late final ScenesRepository _scenesRepository = ScenesRepositoryImpl(database: widget.database);
 
@@ -61,7 +63,31 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadWorkoutPlan();
+    _loadAssessedLevel();
     _populateSearchEngine();
+  }
+
+  Future<void> _loadAssessedLevel() async {
+    final level = await widget.settingsStorage?.readAssessedLevel();
+    if (mounted) {
+      setState(() => _assessedLevel = level);
+    }
+  }
+
+  void _openLevelAssessment() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LevelAssessmentScreen(
+          audioService: widget.audioService,
+          addCardToSrsUseCase: widget.addCardToSrsUseCase,
+          settingsStorage: widget.settingsStorage,
+          onLevelUpdated: (result) {
+            setState(() => _assessedLevel = result.determinedLevel);
+            unawaited(_loadWorkoutPlan());
+          },
+        ),
+      ),
+    ).then((_) => unawaited(_loadAssessedLevel()));
   }
 
   void _populateSearchEngine() {
@@ -237,38 +263,86 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      BlocBuilder<ProgressCubit, ProgressState>(
-                        builder: (context, state) {
-                          final streak = state is ProgressLoaded
-                              ? state.summary.currentStreakDays
-                              : 0;
-                          return Container(
-                            padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: Colors.orange.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Text('🔥', style: TextStyle(fontSize: 18)),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '$streak ${streak == 1 ? 'день' : (streak >= 2 && streak <= 4 ? 'дня' : 'дней')}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepOrange,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          BlocBuilder<ProgressCubit, ProgressState>(
+                            builder: (context, state) {
+                              final streak = state is ProgressLoaded
+                                  ? state.summary.currentStreakDays
+                                  : 0;
+                              return Container(
+                                padding: const EdgeInsetsDirectional.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.orange.withValues(alpha: 0.3),
                                   ),
                                 ),
-                              ],
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('🔥', style: TextStyle(fontSize: 14)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '$streak ${streak == 1 ? 'день' : (streak >= 2 && streak <= 4 ? 'дня' : 'дней')}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 6),
+                          InkWell(
+                            onTap: _openLevelAssessment,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primaryContainer
+                                    .withValues(alpha: 0.4),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: theme.colorScheme.primary
+                                      .withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.military_tech_rounded,
+                                    size: 14,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    _assessedLevel != null
+                                        ? 'Уровень: $_assessedLevel'
+                                        : 'Тест уровня ➔',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ],
                   ),

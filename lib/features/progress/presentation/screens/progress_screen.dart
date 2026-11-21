@@ -50,12 +50,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
   double _currentSpeed = 1.0;
   bool _isPlayingSample = false;
   DailyWorkoutPlan? _dailyWorkoutPlan;
+  String? _assessedLevel;
 
   @override
   void initState() {
     super.initState();
     _currentSpeed = widget.audioService?.currentSpeed ?? 1.0;
     unawaited(_loadDailyWorkout());
+    unawaited(_loadAssessedLevel());
+  }
+
+  Future<void> _loadAssessedLevel() async {
+    final level = await widget.settingsStorage?.readAssessedLevel();
+    if (mounted) {
+      setState(() => _assessedLevel = level);
+    }
   }
 
   Future<void> _loadDailyWorkout() async {
@@ -256,14 +265,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(height: 12),
           ],
           _LevelAssessmentBannerCard(
+            assessedLevel: _assessedLevel,
             onStartAssessment: () {
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => LevelAssessmentScreen(
                     audioService: widget.audioService,
+                    settingsStorage: widget.settingsStorage,
+                    onLevelUpdated: (result) {
+                      setState(() => _assessedLevel = result.determinedLevel);
+                    },
                   ),
                 ),
-              );
+              ).then((_) => unawaited(_loadAssessedLevel()));
             },
           ),
           const SizedBox(height: 12),
@@ -334,13 +348,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
 }
 
 class _LevelAssessmentBannerCard extends StatelessWidget {
+  final String? assessedLevel;
   final VoidCallback onStartAssessment;
 
-  const _LevelAssessmentBannerCard({required this.onStartAssessment});
+  const _LevelAssessmentBannerCard({
+    this.assessedLevel,
+    required this.onStartAssessment,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final hasLevel = assessedLevel != null;
+
     return Card(
       elevation: 0,
       color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
@@ -372,14 +392,18 @@ class _LevelAssessmentBannerCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Определить уровень иврита',
+                    hasLevel
+                        ? 'Твой уровень: $assessedLevel 🎯'
+                        : 'Определить уровень иврита',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Диагностика A1 ➔ B1 с дипломом и разбором',
+                    hasLevel
+                        ? 'CEFR диагностика активна • Персональный трек'
+                        : 'Диагностика A1 ➔ B1 с дипломом и разбором',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -394,7 +418,7 @@ class _LevelAssessmentBannerCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 14),
               ),
               onPressed: onStartAssessment,
-              child: const Text('Пройти'),
+              child: Text(hasLevel ? 'Тест ➔' : 'Пройти'),
             ),
           ],
         ),

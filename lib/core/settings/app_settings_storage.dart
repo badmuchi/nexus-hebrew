@@ -10,6 +10,10 @@ abstract interface class AppSettingsStorage {
   Future<void> writeThemeMode(ThemeMode mode);
   Future<DateTime?> readLastDailyWorkoutDate();
   Future<void> writeLastDailyWorkoutDate(DateTime date);
+  Future<String?> readAssessedLevel();
+  Future<void> writeAssessedLevel(String level);
+  Future<DateTime?> readLastAssessmentDate();
+  Future<void> writeLastAssessmentDate(DateTime date);
 }
 
 final class SecureAppSettingsStorage implements AppSettingsStorage {
@@ -17,6 +21,8 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
   static const String _speedKey = 'nexus_hebrew_audio_speed';
   static const String _themeKey = 'nexus_hebrew_theme_mode';
   static const String _dailyWorkoutKey = 'nexus_hebrew_daily_workout_date';
+  static const String _assessedLevelKey = 'nexus_hebrew_assessed_level';
+  static const String _lastAssessmentDateKey = 'nexus_hebrew_last_assessment_date';
   static const double _defaultSpeed = 1.0;
 
   final FlutterSecureStorage _storage;
@@ -142,6 +148,67 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
       _logger.error(
         _tag,
         'Failed to persist daily workout date "$date" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<String?> readAssessedLevel() async {
+    try {
+      final raw = await _storage.read(key: _assessedLevelKey);
+      if (raw == null || raw.trim().isEmpty) return null;
+      return raw.trim();
+    } on Object catch (error) {
+      _logger.warning(
+        _tag,
+        'Failed to read assessed CEFR level from storage ($error)',
+      );
+      return null;
+    }
+  }
+
+  @override
+  Future<void> writeAssessedLevel(String level) async {
+    try {
+      await _storage.write(key: _assessedLevelKey, value: level.trim());
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist assessed CEFR level "$level" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<DateTime?> readLastAssessmentDate() async {
+    try {
+      final raw = await _storage.read(key: _lastAssessmentDateKey);
+      if (raw == null || raw.trim().isEmpty) return null;
+      return DateTime.tryParse(raw.trim());
+    } on Object catch (error) {
+      _logger.warning(
+        _tag,
+        'Failed to read last assessment date from storage ($error)',
+      );
+      return null;
+    }
+  }
+
+  @override
+  Future<void> writeLastAssessmentDate(DateTime date) async {
+    try {
+      await _storage.write(
+        key: _lastAssessmentDateKey,
+        value: date.toUtc().toIso8601String(),
+      );
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist last assessment date "$date" to storage',
         errorDetails: error.toString(),
         stackTrace: stackTrace,
       );

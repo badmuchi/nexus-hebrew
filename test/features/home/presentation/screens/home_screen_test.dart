@@ -149,6 +149,7 @@ void main() {
 
       expect(find.text('Nexus Hebrew'), findsWidgets);
       expect(find.text('СЛОВО ДНЯ'), findsOneWidget);
+      expect(find.text('Тест уровня ➔'), findsOneWidget);
       expect(find.text('Разделы обучения:'), findsOneWidget);
 
       expect(find.text('Диалоги'), findsOneWidget);

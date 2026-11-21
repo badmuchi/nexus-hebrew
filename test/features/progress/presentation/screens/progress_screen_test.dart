@@ -341,4 +341,16 @@ void main() {
     expect(find.text('Реальный Израиль: Быт'), findsOneWidget);
     expect(find.text('Перейти к бытовым ситуациям'), findsOneWidget);
   });
+
+  testWidgets('Отображает карточку определения уровня CEFR', (tester) async {
+    final cubit = buildCubit();
+    addTearDown(cubit.close);
+    await cubit.loadProgress();
+
+    await tester.pumpWidget(createSubject(cubit));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Определить уровень иврита'), findsOneWidget);
+    expect(find.text('Пройти'), findsOneWidget);
+  });
 }

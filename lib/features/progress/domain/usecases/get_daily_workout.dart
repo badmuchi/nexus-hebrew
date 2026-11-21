@@ -46,7 +46,7 @@ class GetDailyWorkoutUseCase {
   Future<Result<DailyWorkoutPlan, Failure>> call({DateTime? asOf}) async {
     final now = asOf?.toUtc() ?? DateTime.now().toUtc();
 
-    // Check completion today
+    // Check completion today & user CEFR level
     var isCompletedToday = false;
     final lastCompletedDate = await _settingsStorage?.readLastDailyWorkoutDate();
     if (lastCompletedDate != null) {
@@ -56,14 +56,31 @@ class GetDailyWorkoutUseCase {
           lastUtc.day == now.day;
     }
 
+    final assessedLevel = await _settingsStorage?.readAssessedLevel();
+    final isAdvanced = assessedLevel != null &&
+        (assessedLevel.startsWith('A2') || assessedLevel.startsWith('B1'));
+
     // 1. Fetch up to 5 cards (due cards or fallback)
     final cardsResult = await _srsRepository.getDueCards(asOf: now, limit: 5);
     final cards = cardsResult.getOrNull() ?? <SrsCard>[];
 
-    // 2. Fetch grammar verb & form
+    // 2. Fetch grammar verb & form (adaptive binyan based on level)
     DailyGrammarChallenge? grammarChallenge;
-    final verbsResult = await _grammarRepository.getVerbs(binyan: Binyan.paal);
-    final verbs = verbsResult.getOrNull() ?? <VerbLexeme>[];
+    final targetBinyan = isAdvanced
+        ? switch (_random.nextInt(4)) {
+            0 => Binyan.paal,
+            1 => Binyan.piel,
+            2 => Binyan.hifil,
+            _ => Binyan.hitpael,
+          }
+        : Binyan.paal;
+
+    final verbsResult = await _grammarRepository.getVerbs(binyan: targetBinyan);
+    var verbs = verbsResult.getOrNull() ?? <VerbLexeme>[];
+    if (verbs.isEmpty && targetBinyan != Binyan.paal) {
+      final fallbackVerbs = await _grammarRepository.getVerbs(binyan: Binyan.paal);
+      verbs = fallbackVerbs.getOrNull() ?? <VerbLexeme>[];
+    }
 
     if (verbs.isNotEmpty) {
       final verb = verbs[_random.nextInt(verbs.length)];
@@ -105,12 +122,20 @@ class GetDailyWorkoutUseCase {
           shoreshQuestions[_random.nextInt(shoreshQuestions.length)];
     }
 
-    // 5. Fetch scene challenge
+    // 5. Fetch scene challenge (adaptive based on CEFR level)
     SceneChallenge? sceneChallenge;
-    final scenes =
+    final allScenes =
         _scenesRepository?.getAllScenes() ?? IsraeliScenesSeedData.scenes;
+    final matchedScenes = isAdvanced
+        ? allScenes
+            .where((s) =>
+                s.cefrLevel.contains('A2') || s.cefrLevel.contains('B1'))
+            .toList()
+        : allScenes.where((s) => s.cefrLevel.contains('A1')).toList();
+
+    final targetScenes = matchedScenes.isNotEmpty ? matchedScenes : allScenes;
     final allSceneChallenges = [
-      for (final s in scenes) ...s.challenges,
+      for (final s in targetScenes) ...s.challenges,
     ];
     if (allSceneChallenges.isNotEmpty) {
       sceneChallenge =
