@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/speech/speech_recognition_service.dart';
 import '../../../conversation/domain/entities/binyan.dart';
+import '../../../conversation/presentation/widgets/pronunciation_practice_sheet.dart';
 import '../../../srs/domain/entities/fsrs_models.dart';
 import '../../domain/entities/daily_workout_plan.dart';
 import '../../domain/usecases/complete_daily_workout.dart';
@@ -14,6 +16,7 @@ enum WorkoutStep { cards, grammar, listening, shoresh, scene, completed }
 class DailyWorkoutScreen extends StatefulWidget {
   final DailyWorkoutPlan plan;
   final AudioPlaybackService? audioService;
+  final SpeechRecognitionService? speechService;
   final CompleteDailyWorkoutUseCase completeUseCase;
   final VoidCallback? onCompleted;
 
@@ -22,6 +25,7 @@ class DailyWorkoutScreen extends StatefulWidget {
     required this.plan,
     required this.completeUseCase,
     this.audioService,
+    this.speechService,
     this.onCompleted,
   });
 
@@ -46,6 +50,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
 
   // Scene challenge state
   int? _selectedSceneOption;
+  bool _sceneAnsweredByVoice = false;
 
   @override
   void initState() {
@@ -921,7 +926,92 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
                   ),
                   const SizedBox(height: 10),
                 ],
+                if (!isSubmitted) ...[
+                  const SizedBox(height: 6),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      final correctOption =
+                          challenge.options[challenge.correctIndex];
+                      PronunciationPracticeSheet.show(
+                        context,
+                        phraseVocalized: correctOption,
+                        phraseRussian: 'Эталонный ответ в данной ситуации',
+                        audioService: widget.audioService,
+                        speechService: widget.speechService,
+                        onXpEarned: (int xp) {
+                          if (_selectedSceneOption == null && mounted) {
+                            setState(() {
+                              _selectedSceneOption = challenge.correctIndex;
+                              _sceneAnsweredByVoice = true;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    const Icon(Icons.mic_rounded,
+                                        color: Colors.amber),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Отвечено голосом! +$xp XP и верный ответ! 🎙️🎉',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                duration: const Duration(seconds: 3),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.mic_rounded, size: 18),
+                    label: const Text('Ответить голосом 🎙️ (+10 XP)'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.primary,
+                      side: BorderSide(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
                 if (isSubmitted) ...[
+                  if (_sceneAnsweredByVoice) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: Colors.amber.withValues(alpha: 0.4)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.mic_rounded,
+                              size: 16, color: Colors.amber),
+                          SizedBox(width: 6),
+                          Text(
+                            'Отвечено голосом! 🎙️ (+10 XP бонус)',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.all(14),

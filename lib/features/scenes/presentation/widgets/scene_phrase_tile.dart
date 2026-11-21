@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/speech/speech_recognition_service.dart';
+import '../../../conversation/presentation/widgets/pronunciation_practice_sheet.dart';
 import '../../../srs/domain/entities/srs_card.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../domain/entities/israeli_life_scene.dart';
@@ -11,12 +13,14 @@ class ScenePhraseTile extends StatefulWidget {
     required this.phrase,
     this.showNikkud = true,
     this.audioService,
+    this.speechService,
     this.addCardToSrsUseCase,
   });
 
   final ScenePhrase phrase;
   final bool showNikkud;
   final AudioPlaybackService? audioService;
+  final SpeechRecognitionService? speechService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
 
   @override
@@ -116,6 +120,28 @@ class _ScenePhraseTileState extends State<ScenePhraseTile> {
                       fallbackHebrewText: widget.phrase.hebrewVocalized,
                     ),
                   ),
+                IconButton(
+                  icon: const Icon(Icons.mic_rounded, size: 20),
+                  tooltip: 'Тренировать произношение 🎙️',
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => PronunciationPracticeSheet.show(
+                    context,
+                    phraseVocalized: widget.phrase.hebrewVocalized,
+                    phraseRussian: widget.phrase.russianTranslation,
+                    transliteration: widget.phrase.transliteration,
+                    audioService: widget.audioService,
+                    speechService: widget.speechService,
+                    onXpEarned: (int xp) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('+$xp XP за произношение! 🎙️'),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 if (widget.addCardToSrsUseCase != null)
                   IconButton(
                     icon: Icon(

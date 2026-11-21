@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/speech/speech_recognition_service.dart';
+import '../../../conversation/presentation/widgets/pronunciation_practice_sheet.dart';
 import '../../domain/entities/israeli_life_scene.dart';
 
 class SceneChallengeCard extends StatefulWidget {
@@ -9,12 +12,16 @@ class SceneChallengeCard extends StatefulWidget {
     required this.index,
     required this.total,
     required this.onAnswerSelected,
+    this.audioService,
+    this.speechService,
   });
 
   final SceneChallenge challenge;
   final int index;
   final int total;
   final void Function(int challengeIndex, bool isCorrect) onAnswerSelected;
+  final AudioPlaybackService? audioService;
+  final SpeechRecognitionService? speechService;
 
   @override
   State<SceneChallengeCard> createState() => _SceneChallengeCardState();
@@ -23,6 +30,7 @@ class SceneChallengeCard extends StatefulWidget {
 class _SceneChallengeCardState extends State<SceneChallengeCard> {
   int? _selectedIndex;
   bool _hasAnswered = false;
+  bool _answeredByVoice = false;
 
   void _selectOption(int optionIndex) {
     if (_hasAnswered) return;
@@ -34,6 +42,48 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
     });
 
     widget.onAnswerSelected(widget.index, isCorrect);
+  }
+
+  void _answerByVoice() {
+    if (_hasAnswered) return;
+    final correctOption =
+        widget.challenge.options[widget.challenge.correctIndex];
+
+    PronunciationPracticeSheet.show(
+      context,
+      phraseVocalized: correctOption,
+      phraseRussian: 'Эталонный ответ в данной ситуации',
+      audioService: widget.audioService,
+      speechService: widget.speechService,
+      onXpEarned: (int xp) {
+        if (!_hasAnswered && mounted) {
+          setState(() {
+            _selectedIndex = widget.challenge.correctIndex;
+            _hasAnswered = true;
+            _answeredByVoice = true;
+          });
+          widget.onAnswerSelected(widget.index, true);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.mic_rounded, color: Colors.amber),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Отвечено голосом! +$xp XP и верный ответ! 🎙️🎉',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -127,6 +177,55 @@ class _SceneChallengeCardState extends State<SceneChallengeCard> {
                 onTap: () => _selectOption(i),
               ),
               const SizedBox(height: 8),
+            ],
+
+            if (!_hasAnswered) ...[
+              const SizedBox(height: 6),
+              OutlinedButton.icon(
+                onPressed: _answerByVoice,
+                icon: const Icon(Icons.mic_rounded, size: 18),
+                label: const Text('Ответить голосом 🎙️ (+10 XP)'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
+                  side: BorderSide(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+
+            // Voice Badge
+            if (_hasAnswered && _answeredByVoice) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                  border:
+                      Border.all(color: Colors.amber.withValues(alpha: 0.4)),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.mic_rounded, size: 16, color: Colors.amber),
+                    SizedBox(width: 6),
+                    Text(
+                      'Отвечено голосом! 🎙️ (+10 XP бонус)',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
 
             // Explanation Block

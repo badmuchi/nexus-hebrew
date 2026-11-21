@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/speech/speech_recognition_service.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../domain/entities/israeli_life_scene.dart';
 import '../../domain/repositories/scenes_repository.dart';
@@ -13,12 +14,14 @@ class ScenesCatalogScreen extends StatefulWidget {
     super.key,
     required this.repository,
     this.audioService,
+    this.speechService,
     this.addCardToSrsUseCase,
     this.onSceneCompleted,
   });
 
   final ScenesRepository repository;
   final AudioPlaybackService? audioService;
+  final SpeechRecognitionService? speechService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final VoidCallback? onSceneCompleted;
 
@@ -53,6 +56,7 @@ class _ScenesCatalogScreenState extends State<ScenesCatalogScreen> {
           scene: scene,
           repository: widget.repository,
           audioService: widget.audioService,
+          speechService: widget.speechService,
           addCardToSrsUseCase: widget.addCardToSrsUseCase,
           onSceneCompleted: () {
             widget.onSceneCompleted?.call();

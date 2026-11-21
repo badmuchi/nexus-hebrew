@@ -154,6 +154,10 @@ void main() {
       expect(find.text('Нужны пакеты?'), findsOneWidget);
       expect(find.text('Два, пожалуйста'), findsOneWidget);
 
+      // Verify microphone practice button is present on phrases
+      final micButtons = find.byTooltip('Тренировать произношение 🎙️');
+      expect(micButtons, findsNWidgets(2));
+
       // Switch to Lifehack Tab
       await tester.tap(find.textContaining('Лайфхак'));
       await tester.pumpAndSettle();
@@ -189,6 +193,7 @@ void main() {
 
       expect(find.byType(SceneChallengeCard), findsOneWidget);
       expect(find.text('Кассир спрашивает про пакеты.'), findsOneWidget);
+      expect(find.text('Ответить голосом 🎙️ (+10 XP)'), findsOneWidget);
 
       // Tap correct option
       final correctOption = find.text('כֵּן, אַחַת בְּבַקָּשָׁה (Да, один, пожалуйста)');

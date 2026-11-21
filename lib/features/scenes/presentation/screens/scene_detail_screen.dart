@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/speech/speech_recognition_service.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../domain/entities/israeli_life_scene.dart';
 import '../../domain/repositories/scenes_repository.dart';
@@ -16,6 +17,7 @@ class SceneDetailScreen extends StatefulWidget {
     required this.scene,
     required this.repository,
     this.audioService,
+    this.speechService,
     this.addCardToSrsUseCase,
     this.onSceneCompleted,
   });
@@ -23,6 +25,7 @@ class SceneDetailScreen extends StatefulWidget {
   final IsraeliLifeScene scene;
   final ScenesRepository repository;
   final AudioPlaybackService? audioService;
+  final SpeechRecognitionService? speechService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final VoidCallback? onSceneCompleted;
 
@@ -181,6 +184,7 @@ class _SceneDetailScreenState extends State<SceneDetailScreen>
                 phrase: phrase,
                 showNikkud: _showNikkud,
                 audioService: widget.audioService,
+                speechService: widget.speechService,
                 addCardToSrsUseCase: widget.addCardToSrsUseCase,
               );
             },
@@ -196,6 +200,8 @@ class _SceneDetailScreenState extends State<SceneDetailScreen>
                   index: i,
                   total: widget.scene.challenges.length,
                   onAnswerSelected: _onAnswerSelected,
+                  audioService: widget.audioService,
+                  speechService: widget.speechService,
                 ),
               if (_isSceneCompleted) ...[
                 const SizedBox(height: 12),

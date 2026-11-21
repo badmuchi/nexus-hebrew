@@ -232,6 +232,7 @@ void main() {
       // ШАГ 5: Ситуация дня
       expect(find.textContaining('РЕАЛЬНЫЙ ИЗРАИЛЬ: СИТУАЦИЯ ДНЯ'), findsOneWidget);
       expect(find.text('Бариста спрашивает о молоке'), findsOneWidget);
+      expect(find.text('Ответить голосом 🎙️ (+10 XP)'), findsOneWidget);
       expect(find.text('חלב סויה בבקשה'), findsOneWidget);
       await tester.tap(find.text('חלב סויה בבקשה'));
       await tester.pumpAndSettle();
