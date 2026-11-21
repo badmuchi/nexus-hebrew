@@ -8,6 +8,12 @@ import '../../../grammar/domain/entities/verb_conjugation.dart';
 import '../../../grammar/domain/repositories/grammar_repository.dart';
 import '../../../listening/domain/entities/listening_exercise.dart';
 import '../../../listening/domain/repositories/listening_repository.dart';
+import '../../../scenes/data/datasources/israeli_scenes_seed_data.dart';
+import '../../../scenes/domain/entities/israeli_life_scene.dart';
+import '../../../scenes/domain/repositories/scenes_repository.dart';
+import '../../../shoresh/data/datasources/shoresh_seed_data.dart';
+import '../../../shoresh/domain/entities/shoresh_entity.dart';
+import '../../../shoresh/domain/repositories/shoresh_repository.dart';
 import '../../../srs/domain/entities/srs_card.dart';
 import '../../../srs/domain/repositories/srs_repository.dart';
 import '../entities/daily_workout_plan.dart';
@@ -16,6 +22,8 @@ class GetDailyWorkoutUseCase {
   final SrsRepository _srsRepository;
   final GrammarRepository _grammarRepository;
   final ListeningRepository _listeningRepository;
+  final ShoreshRepository? _shoreshRepository;
+  final ScenesRepository? _scenesRepository;
   final AppSettingsStorage? _settingsStorage;
   final Random _random;
 
@@ -23,11 +31,15 @@ class GetDailyWorkoutUseCase {
     required SrsRepository srsRepository,
     required GrammarRepository grammarRepository,
     required ListeningRepository listeningRepository,
+    ShoreshRepository? shoreshRepository,
+    ScenesRepository? scenesRepository,
     AppSettingsStorage? settingsStorage,
     Random? random,
   })  : _srsRepository = srsRepository,
         _grammarRepository = grammarRepository,
         _listeningRepository = listeningRepository,
+        _shoreshRepository = shoreshRepository,
+        _scenesRepository = scenesRepository,
         _settingsStorage = settingsStorage,
         _random = random ?? Random();
 
@@ -83,11 +95,35 @@ class GetDailyWorkoutUseCase {
       listeningExercise = exercises[_random.nextInt(exercises.length)];
     }
 
+    // 4. Fetch shoresh challenge
+    ShoreshQuizQuestion? shoreshChallenge;
+    final shoreshQuestions =
+        _shoreshRepository?.generateQuizQuestions(count: 10) ??
+            ShoreshSeedData.detectiveQuizChallenges;
+    if (shoreshQuestions.isNotEmpty) {
+      shoreshChallenge =
+          shoreshQuestions[_random.nextInt(shoreshQuestions.length)];
+    }
+
+    // 5. Fetch scene challenge
+    SceneChallenge? sceneChallenge;
+    final scenes =
+        _scenesRepository?.getAllScenes() ?? IsraeliScenesSeedData.scenes;
+    final allSceneChallenges = [
+      for (final s in scenes) ...s.challenges,
+    ];
+    if (allSceneChallenges.isNotEmpty) {
+      sceneChallenge =
+          allSceneChallenges[_random.nextInt(allSceneChallenges.length)];
+    }
+
     final plan = DailyWorkoutPlan(
       date: now,
       cards: cards,
       grammarChallenge: grammarChallenge,
       listeningExercise: listeningExercise,
+      shoreshChallenge: shoreshChallenge,
+      sceneChallenge: sceneChallenge,
       isCompletedToday: isCompletedToday,
     );
 

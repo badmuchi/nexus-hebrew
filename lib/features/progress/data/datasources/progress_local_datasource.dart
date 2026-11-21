@@ -120,10 +120,23 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
           ? 0.0
           : accuracySum / listeningLogs.length;
 
+      final shoreshRows = await _database.getAllShoreshProgress();
+      final masteredShoreshCount = shoreshRows
+          .where((ShoreshProgressRow r) => r.masteryLevel >= 0.8)
+          .length;
+
+      final sceneRows = await _database.getAllSceneProgress();
+      final completedScenesCount =
+          sceneRows.where((SceneProgressRow r) => r.isCompleted).length;
+
       final allTimestamps = <DateTime>[
         ...srsLogs.map((SrsReviewLogRow r) => r.reviewedAt),
         ...grammarLogs.map((GrammarPracticeLogRow g) => g.practicedAt),
         ...listeningLogs.map((ListeningAttemptLogRow l) => l.attemptedAt),
+        ...shoreshRows
+            .where((ShoreshProgressRow r) => r.lastPracticedAt != null)
+            .map((ShoreshProgressRow r) => r.lastPracticedAt!),
+        ...sceneRows.map((SceneProgressRow r) => r.lastVisitedAt),
       ];
 
       final streak = StreakCalculator.calculateCurrentStreakDays(
@@ -161,6 +174,10 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
           listeningExactMatches: listeningExact,
           averageListeningAccuracy: averageListeningAccuracy,
           activityByDate: activityByDate,
+          masteredShoreshCount: masteredShoreshCount,
+          totalShoreshCount: 35,
+          completedScenesCount: completedScenesCount,
+          totalScenesCount: 6,
         ),
       );
     } on Object catch (error, stackTrace) {

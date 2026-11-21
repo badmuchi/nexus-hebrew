@@ -8,7 +8,7 @@ import '../../../srs/domain/entities/fsrs_models.dart';
 import '../../domain/entities/daily_workout_plan.dart';
 import '../../domain/usecases/complete_daily_workout.dart';
 
-enum WorkoutStep { cards, grammar, listening, completed }
+enum WorkoutStep { cards, grammar, listening, shoresh, scene, completed }
 
 /// 5-minute mixed daily training screen combining FSRS, grammar, and listening.
 class DailyWorkoutScreen extends StatefulWidget {
@@ -41,18 +41,76 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
   bool _listeningRevealed = false;
   bool _isPlayingAudio = false;
 
+  // Shoresh challenge state
+  int? _selectedShoreshOption;
+
+  // Scene challenge state
+  int? _selectedSceneOption;
+
   @override
   void initState() {
     super.initState();
     if (widget.plan.cards.isEmpty) {
-      if (widget.plan.grammarChallenge != null) {
-        _currentStep = WorkoutStep.grammar;
-      } else if (widget.plan.listeningExercise != null) {
-        _currentStep = WorkoutStep.listening;
-      } else {
-        _currentStep = WorkoutStep.completed;
-      }
+      _advanceFrom(WorkoutStep.cards);
     }
+  }
+
+  void _advanceFrom(WorkoutStep from) {
+    switch (from) {
+      case WorkoutStep.cards:
+        if (widget.plan.grammarChallenge != null) {
+          _currentStep = WorkoutStep.grammar;
+        } else {
+          _advanceFrom(WorkoutStep.grammar);
+        }
+      case WorkoutStep.grammar:
+        if (widget.plan.listeningExercise != null) {
+          _currentStep = WorkoutStep.listening;
+        } else {
+          _advanceFrom(WorkoutStep.listening);
+        }
+      case WorkoutStep.listening:
+        if (widget.plan.shoreshChallenge != null) {
+          _currentStep = WorkoutStep.shoresh;
+        } else {
+          _advanceFrom(WorkoutStep.shoresh);
+        }
+      case WorkoutStep.shoresh:
+        if (widget.plan.sceneChallenge != null) {
+          _currentStep = WorkoutStep.scene;
+        } else {
+          _finishWorkout();
+        }
+      case WorkoutStep.scene:
+        _finishWorkout();
+      case WorkoutStep.completed:
+        break;
+    }
+  }
+
+  int _calculateStepNumber(WorkoutStep step) {
+    var count = 0;
+    if (widget.plan.cards.isNotEmpty) {
+      count++;
+      if (step == WorkoutStep.cards) return count;
+    }
+    if (widget.plan.grammarChallenge != null) {
+      count++;
+      if (step == WorkoutStep.grammar) return count;
+    }
+    if (widget.plan.listeningExercise != null) {
+      count++;
+      if (step == WorkoutStep.listening) return count;
+    }
+    if (widget.plan.shoreshChallenge != null) {
+      count++;
+      if (step == WorkoutStep.shoresh) return count;
+    }
+    if (widget.plan.sceneChallenge != null) {
+      count++;
+      if (step == WorkoutStep.scene) return count;
+    }
+    return count;
   }
 
   Future<void> _playHebrew(String vocalized, {String? audioUrl}) async {
@@ -80,14 +138,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
       if (_cardIndex + 1 < widget.plan.cards.length) {
         _cardIndex += 1;
       } else {
-        // Move to step 2 or 3
-        if (widget.plan.grammarChallenge != null) {
-          _currentStep = WorkoutStep.grammar;
-        } else if (widget.plan.listeningExercise != null) {
-          _currentStep = WorkoutStep.listening;
-        } else {
-          _finishWorkout();
-        }
+        _advanceFrom(WorkoutStep.cards);
       }
     });
   }
@@ -103,11 +154,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
     Future<void>.delayed(const Duration(milliseconds: 1400), () {
       if (!mounted) return;
       setState(() {
-        if (widget.plan.listeningExercise != null) {
-          _currentStep = WorkoutStep.listening;
-        } else {
-          _finishWorkout();
-        }
+        _advanceFrom(WorkoutStep.grammar);
       });
     });
   }
@@ -139,6 +186,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
           WorkoutStep.cards => _buildCardsStep(theme),
           WorkoutStep.grammar => _buildGrammarStep(theme),
           WorkoutStep.listening => _buildListeningStep(theme),
+          WorkoutStep.shoresh => _buildShoreshStep(theme),
+          WorkoutStep.scene => _buildSceneStep(theme),
           WorkoutStep.completed => _buildCompletedStep(theme),
         },
       ),
@@ -160,7 +209,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'ШАГ $stepNumber ИЗ 3: $stepTitle',
+                'ШАГ $stepNumber ИЗ ${widget.plan.totalSteps}: $stepTitle',
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w800,
                   color: theme.colorScheme.primary,
@@ -202,9 +251,9 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
       children: [
         _buildStepHeader(
           theme: theme,
-          stepTitle: 'FSRS-ЭКСПРЕСС ($_cardIndex/$totalCards)',
-          stepNumber: 1,
-          progress: (_cardIndex + 1) / (totalCards + 2),
+          stepTitle: 'FSRS-ЭКСПРЕСС (${_cardIndex + 1}/$totalCards)',
+          stepNumber: _calculateStepNumber(WorkoutStep.cards),
+          progress: _calculateStepNumber(WorkoutStep.cards) / widget.plan.totalSteps,
         ),
         Expanded(
           child: Padding(
@@ -366,8 +415,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
         _buildStepHeader(
           theme: theme,
           stepTitle: 'ГРАММАТИЧЕСКИЙ БЛИЦ',
-          stepNumber: 2,
-          progress: 0.66,
+          stepNumber: _calculateStepNumber(WorkoutStep.grammar),
+          progress: _calculateStepNumber(WorkoutStep.grammar) / widget.plan.totalSteps,
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -534,8 +583,8 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
         _buildStepHeader(
           theme: theme,
           stepTitle: 'АУДИО-ЧЕЛЛЕНДЖ',
-          stepNumber: 3,
-          progress: 0.95,
+          stepNumber: _calculateStepNumber(WorkoutStep.listening),
+          progress: _calculateStepNumber(WorkoutStep.listening) / widget.plan.totalSteps,
         ),
         Expanded(
           child: Padding(
@@ -629,9 +678,285 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
           child: FilledButton.icon(
-            onPressed: _finishWorkout,
-            icon: const Icon(Icons.check_circle_rounded),
-            label: const Text('Завершить тренировку дня'),
+            onPressed: () =>
+                setState(() => _advanceFrom(WorkoutStep.listening)),
+            icon: Icon(
+              widget.plan.shoreshChallenge != null ||
+                      widget.plan.sceneChallenge != null
+                  ? Icons.arrow_forward_rounded
+                  : Icons.check_circle_rounded,
+            ),
+            label: Text(
+              widget.plan.shoreshChallenge != null ||
+                      widget.plan.sceneChallenge != null
+                  ? 'Следующий шаг'
+                  : 'Завершить тренировку дня',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShoreshStep(ThemeData theme) {
+    final challenge = widget.plan.shoreshChallenge;
+    if (challenge == null) return const SizedBox.shrink();
+
+    final stepNum = _calculateStepNumber(WorkoutStep.shoresh);
+    final total = widget.plan.totalSteps;
+    final isSubmitted = _selectedShoreshOption != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildStepHeader(
+          theme: theme,
+          stepTitle: 'ШОРЕШ ДНЯ: РАСКРОЙ КОРЕНЬ 🔍',
+          stepNumber: stepNum,
+          progress: stepNum / total,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  elevation: 0,
+                  color: theme.colorScheme.tertiaryContainer
+                      .withValues(alpha: 0.35),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Text(
+                          challenge.wordVocalized,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: theme.colorScheme.primary,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          challenge.wordTranslation,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Какие 3 буквы составляют корень этого слова?',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                for (var i = 0; i < challenge.options.length; i++) ...[
+                  _WorkoutQuizOptionTile(
+                    optionText: challenge.options[i],
+                    isSelected: _selectedShoreshOption == i,
+                    isSubmitted: isSubmitted,
+                    isCorrect: i == challenge.correctIndex,
+                    isRtl: true,
+                    onTap: isSubmitted
+                        ? null
+                        : () => setState(() => _selectedShoreshOption = i),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+                if (isSubmitted) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: _selectedShoreshOption == challenge.correctIndex
+                          ? Colors.teal.withValues(alpha: 0.1)
+                          : Colors.amber.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: _selectedShoreshOption == challenge.correctIndex
+                            ? Colors.teal.withValues(alpha: 0.4)
+                            : Colors.amber.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Text(
+                      challenge.affixesExplanationRu,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                    onPressed: () =>
+                        setState(() => _advanceFrom(WorkoutStep.shoresh)),
+                    icon: Icon(
+                      widget.plan.sceneChallenge != null
+                          ? Icons.arrow_forward_rounded
+                          : Icons.check_circle_rounded,
+                    ),
+                    label: Text(
+                      widget.plan.sceneChallenge != null
+                          ? 'Следующий шаг'
+                          : 'Завершить тренировку дня',
+                    ),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSceneStep(ThemeData theme) {
+    final challenge = widget.plan.sceneChallenge;
+    if (challenge == null) return const SizedBox.shrink();
+
+    final stepNum = _calculateStepNumber(WorkoutStep.scene);
+    final total = widget.plan.totalSteps;
+    final isSubmitted = _selectedSceneOption != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildStepHeader(
+          theme: theme,
+          stepTitle: 'РЕАЛЬНЫЙ ИЗРАИЛЬ: СИТУАЦИЯ ДНЯ 🇮🇱',
+          stepNumber: stepNum,
+          progress: stepNum / total,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  elevation: 0,
+                  color: theme.colorScheme.primaryContainer
+                      .withValues(alpha: 0.35),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Text('📍', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                challenge.situationRu,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (challenge.promptHebrew != null) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              challenge.promptHebrew!,
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                                height: 1.45,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Что правильнее всего ответить / сказать?',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                for (var i = 0; i < challenge.options.length; i++) ...[
+                  _WorkoutQuizOptionTile(
+                    optionText: challenge.options[i],
+                    isSelected: _selectedSceneOption == i,
+                    isSubmitted: isSubmitted,
+                    isCorrect: i == challenge.correctIndex,
+                    isRtl: true,
+                    onTap: isSubmitted
+                        ? null
+                        : () => setState(() => _selectedSceneOption = i),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+                if (isSubmitted) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: _selectedSceneOption == challenge.correctIndex
+                          ? Colors.teal.withValues(alpha: 0.1)
+                          : Colors.amber.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: _selectedSceneOption == challenge.correctIndex
+                            ? Colors.teal.withValues(alpha: 0.4)
+                            : Colors.amber.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Text(
+                      challenge.explanationRu,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                    onPressed: () =>
+                        setState(() => _advanceFrom(WorkoutStep.scene)),
+                    icon: const Icon(Icons.check_circle_rounded),
+                    label: const Text('Завершить тренировку дня'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ],
@@ -688,7 +1013,7 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Ты отлично потренировал карточки, спряжение глаголов и восприятие на слух. Твоя ударная серия продолжается!',
+              'Ты отлично потренировал карточки, спряжение глаголов, аудирование, корень дня и бытовую сцену. Твоя ударная серия продолжается!',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -702,6 +1027,104 @@ class _DailyWorkoutScreenState extends State<DailyWorkoutScreen> {
               label: const Text('Отлично, к прогрессу!'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WorkoutQuizOptionTile extends StatelessWidget {
+  const _WorkoutQuizOptionTile({
+    required this.optionText,
+    required this.isSelected,
+    required this.isSubmitted,
+    required this.isCorrect,
+    required this.onTap,
+    this.isRtl = false,
+  });
+
+  final String optionText;
+  final bool isSelected;
+  final bool isSubmitted;
+  final bool isCorrect;
+  final VoidCallback? onTap;
+  final bool isRtl;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    Color backgroundColor = colorScheme.surfaceContainerLow;
+    Color borderColor = colorScheme.outlineVariant.withValues(alpha: 0.5);
+    Color textColor = colorScheme.onSurface;
+
+    if (isSubmitted) {
+      if (isCorrect) {
+        backgroundColor = Colors.teal.withValues(alpha: 0.15);
+        borderColor = Colors.teal;
+        textColor = Colors.teal.shade800;
+      } else if (isSelected) {
+        backgroundColor = Colors.red.withValues(alpha: 0.15);
+        borderColor = Colors.red;
+        textColor = Colors.red.shade800;
+      }
+    } else if (isSelected) {
+      backgroundColor = colorScheme.primaryContainer;
+      borderColor = colorScheme.primary;
+      textColor = colorScheme.onPrimaryContainer;
+    }
+
+    return Material(
+      color: backgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(
+          color: borderColor,
+          width: isSelected || (isSubmitted && isCorrect) ? 1.5 : 1.0,
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSubmitted && isCorrect
+                      ? Colors.teal
+                      : (isSubmitted && isSelected
+                          ? Colors.red
+                          : colorScheme.surfaceContainerHighest),
+                  shape: BoxShape.circle,
+                ),
+                child: isSubmitted && isCorrect
+                    ? const Icon(Icons.check, size: 16, color: Colors.white)
+                    : (isSubmitted && isSelected
+                        ? const Icon(Icons.close, size: 16, color: Colors.white)
+                        : Icon(Icons.circle_outlined,
+                            size: 14, color: colorScheme.outline)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  optionText,
+                  textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                  textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                    height: isRtl ? 1.4 : 1.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

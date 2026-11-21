@@ -312,4 +312,33 @@ void main() {
 
     expect(find.byType(DatabaseBackupDialog), findsOneWidget);
   });
+
+  testWidgets('Отображает карточки Мастер корней и Ситуации в Израиле', (tester) async {
+    final cubit = buildCubit();
+    addTearDown(cubit.close);
+    await cubit.loadProgress();
+
+    await tester.pumpWidget(createSubject(cubit));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Лаборатория корней (Шореш)'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Лаборатория корней (Шореш)'), findsOneWidget);
+    expect(find.text('Открыть древо корней и квест'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Реальный Израиль: Быт'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Реальный Израиль: Быт'), findsOneWidget);
+    expect(find.text('Перейти к бытовым ситуациям'), findsOneWidget);
+  });
 }

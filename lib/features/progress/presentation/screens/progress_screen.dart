@@ -8,6 +8,9 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
+import '../../../scenes/data/repositories/scenes_repository_impl.dart';
+import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
+import '../../../shoresh/presentation/screens/shoresh_catalog_screen.dart';
 import '../../domain/entities/daily_workout_plan.dart';
 import '../../domain/entities/learning_progress_summary.dart';
 import '../../domain/usecases/complete_daily_workout.dart';
@@ -277,6 +280,29 @@ class _ProgressScreenState extends State<ProgressScreen> {
           _GrammarStatsCard(summary: summary),
           const SizedBox(height: 12),
           _ListeningStatsCard(summary: summary),
+          const SizedBox(height: 12),
+          _ShoreshMasteryCard(
+            summary: summary,
+            onOpenShoreshLab: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ShoreshCatalogScreen(
+                  audioService: widget.audioService,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _ScenesProgressCard(
+            summary: summary,
+            onOpenScenes: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ScenesCatalogScreen(
+                  repository: ScenesRepositoryImpl(database: widget.database),
+                  audioService: widget.audioService,
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 12),
           _ThemeSettingsCard(
             currentThemeMode: widget.currentThemeMode,
@@ -1279,7 +1305,9 @@ int _calculateTotalXp(LearningProgressSummary summary) {
   final grammarPoints = (summary.grammarAttempts * 20);
   final listeningPoints = (summary.listeningAttempts * 25);
   final streakPoints = (summary.currentStreakDays * 40);
-  return srsPoints + grammarPoints + listeningPoints + streakPoints;
+  final shoreshPoints = (summary.masteredShoreshCount * 50);
+  final scenePoints = (summary.completedScenesCount * 100);
+  return srsPoints + grammarPoints + listeningPoints + streakPoints + shoreshPoints + scenePoints;
 }
 
 _LevelInfo _getLevelForXp(int xp) {
@@ -1752,7 +1780,7 @@ class _DailyWorkoutHeroCard extends StatelessWidget {
                       Text(
                         isDone
                             ? 'Дневная норма закрыта! Серия дней защищена. Можно повторить для закрепления.'
-                            : '${plan.cards.length} FSRS-карт. + 1 грамматика + 1 аудирование',
+                            : '${plan.totalSteps} шагов тренировки (карточки, грамматика, аудирование, корень, сцена)',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -1774,6 +1802,234 @@ class _DailyWorkoutHeroCard extends StatelessWidget {
                     icon: const Icon(Icons.play_arrow_rounded),
                     label: const Text('Начать тренировку дня'),
                   ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ShoreshMasteryCard extends StatelessWidget {
+  const _ShoreshMasteryCard({
+    required this.summary,
+    required this.onOpenShoreshLab,
+  });
+
+  final LearningProgressSummary summary;
+  final VoidCallback onOpenShoreshLab;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final mastered = summary.masteredShoreshCount;
+    final total = summary.totalShoreshCount;
+    final ratio = total > 0 ? (mastered / total).clamp(0.0, 1.0) : 0.0;
+
+    final rank = switch (ratio) {
+      >= 0.8 => 'Шериф Морфологии 🕵️‍♂️✨',
+      >= 0.4 => 'Старший Детектив 🔍',
+      _ => 'Младший Следователь 📜',
+    };
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.teal.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.biotech_rounded,
+                    color: Colors.teal,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Лаборатория корней (Шореш)',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Ранг: $rank',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Освоено корневых семейств:',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  '$mastered из $total (${(ratio * 100).toInt()}%)',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: ratio,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.teal,
+              backgroundColor: Colors.teal.withValues(alpha: 0.15),
+            ),
+            const SizedBox(height: 14),
+            OutlinedButton.icon(
+              onPressed: onOpenShoreshLab,
+              icon: const Icon(Icons.hub_rounded, size: 18),
+              label: const Text('Открыть древо корней и квест'),
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ScenesProgressCard extends StatelessWidget {
+  const _ScenesProgressCard({
+    required this.summary,
+    required this.onOpenScenes,
+  });
+
+  final LearningProgressSummary summary;
+  final VoidCallback onOpenScenes;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final completed = summary.completedScenesCount;
+    final total = summary.totalScenesCount;
+    final ratio = total > 0 ? (completed / total).clamp(0.0, 1.0) : 0.0;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.location_city_rounded,
+                    color: Colors.blue,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Реальный Израиль: Быт',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Готовность к живым ситуациям',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Пройдено локаций:',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  '$completed из $total ситуаций',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: ratio,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.blue,
+              backgroundColor: Colors.blue.withValues(alpha: 0.15),
+            ),
+            const SizedBox(height: 14),
+            OutlinedButton.icon(
+              onPressed: onOpenScenes,
+              icon: const Icon(Icons.explore_rounded, size: 18),
+              label: const Text('Перейти к бытовым ситуациям'),
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
           ],
         ),
       ),

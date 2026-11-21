@@ -42,6 +42,10 @@ final class LearningProgressSummary extends Equatable {
     required this.listeningExactMatches,
     required this.averageListeningAccuracy,
     this.activityByDate = const <String, int>{},
+    this.masteredShoreshCount = 0,
+    this.totalShoreshCount = 35,
+    this.completedScenesCount = 0,
+    this.totalScenesCount = 6,
   }) : binyanStats = List<BinyanAccuracyStat>.unmodifiable(binyanStats);
 
   final int totalSrsCards;
@@ -60,6 +64,10 @@ final class LearningProgressSummary extends Equatable {
   final int listeningExactMatches;
   final double averageListeningAccuracy;
   final Map<String, int> activityByDate;
+  final int masteredShoreshCount;
+  final int totalShoreshCount;
+  final int completedScenesCount;
+  final int totalScenesCount;
 
   /// Overall grammar drill accuracy in `[0.0, 1.0]`.
   double get grammarAccuracy =>
@@ -83,6 +91,10 @@ final class LearningProgressSummary extends Equatable {
         listeningExactMatches,
         averageListeningAccuracy,
         activityByDate,
+        masteredShoreshCount,
+        totalShoreshCount,
+        completedScenesCount,
+        totalScenesCount,
       ];
 }
 

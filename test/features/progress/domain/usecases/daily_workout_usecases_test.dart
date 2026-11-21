@@ -88,7 +88,7 @@ void main() {
   });
 
   group('Daily Workout UseCases', () {
-    test('собирает карточки, грамматику и аудирование в единый план', () async {
+    test('собирает карточки, грамматику, аудирование, корни и сцены в единый план 2.0', () async {
       when(() => settingsStorage.readLastDailyWorkoutDate())
           .thenAnswer((_) async => null);
       when(() => srsRepo.getDueCards(asOf: any(named: 'asOf'), limit: any(named: 'limit')))
@@ -107,7 +107,9 @@ void main() {
       expect(plan.grammarChallenge, isNotNull);
       expect(plan.grammarChallenge!.verb.id, equals('verb-1'));
       expect(plan.listeningExercise, isNotNull);
-      expect(plan.totalSteps, equals(3));
+      expect(plan.shoreshChallenge, isNotNull);
+      expect(plan.sceneChallenge, isNotNull);
+      expect(plan.totalSteps, equals(5));
       expect(plan.bonusXp, equals(50));
     });
 
