@@ -6,6 +6,7 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
+import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
 import '../../../shoresh/presentation/screens/shoresh_catalog_screen.dart';
@@ -240,6 +241,23 @@ class QuickAccessGrid extends StatelessWidget {
             MaterialPageRoute<void>(
               builder: (_) => ScenesCatalogScreen(
                 repository: ScenesRepositoryImpl(),
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Касса и Шекели',
+        hebrewTitle: 'קֻפָּה וּמִסְפָּרִים',
+        description: 'Числа, перевернутый род, счет шекелей и касса Шуферсаль',
+        icon: Icons.point_of_sale_rounded,
+        color: const Color(0xFFF57F17),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => NumbersCashierScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
