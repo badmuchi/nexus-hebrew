@@ -10,11 +10,16 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
+import '../../../conversation/domain/entities/hebrew_text.dart';
 import '../../../gamification/presentation/widgets/memory_stability_badges_section.dart';
 import '../../../gamification/presentation/widgets/sabra_league_card.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
 import '../../../shoresh/presentation/screens/shoresh_catalog_screen.dart';
+import '../../../srs/domain/entities/fsrs_models.dart';
+import '../../../srs/domain/entities/srs_card.dart';
+import '../../../srs/presentation/screens/audio_drill_screen.dart';
+import '../../../srs/presentation/widgets/audio_drill_config_sheet.dart';
 import '../../domain/entities/daily_workout_plan.dart';
 import '../../domain/entities/learning_progress_summary.dart';
 import '../../domain/usecases/complete_daily_workout.dart';
@@ -199,6 +204,64 @@ class _ProgressScreenState extends State<ProgressScreen> {
       unawaited(_loadDailyWorkout());
       unawaited(context.read<ProgressCubit>().loadProgress());
     });
+  }
+
+  Future<void> _openAudioDrill(BuildContext context) async {
+    final database = widget.database;
+    List<SrsCard> cards = [];
+    if (database != null) {
+      final rows = await database.getAllSrsCards();
+      cards = rows
+          .map((r) => SrsCard(
+                id: r.id,
+                hebrew: HebrewText.create(r.hebrewVocalized).getOrNull() ??
+                    HebrewText.fixture(
+                      vocalized: r.hebrewVocalized,
+                      normalized: r.hebrewNormalized,
+                    ),
+                russianTranslation: r.russianTranslation,
+                root: r.root != null
+                    ? Shoresh.create(r.root!).getOrNull()
+                    : null,
+                audioUrl: r.audioUrl,
+                memory: FsrsMemoryState(
+                  stability: r.stability,
+                  difficulty: r.difficulty,
+                  dueAt: r.dueAt,
+                  reps: r.reps,
+                  lapses: r.lapses,
+                  state: switch (r.fsrsState) {
+                    'learning' => FsrsCardState.learning,
+                    'review' => FsrsCardState.review,
+                    'relearning' => FsrsCardState.relearning,
+                    _ => FsrsCardState.review,
+                  },
+                  lastReviewedAt: r.lastReviewedAt,
+                ),
+                attribution: ContentAttribution(
+                  sourceName: r.sourceName,
+                  licenseName: r.licenseName,
+                ),
+              ))
+          .toList();
+    }
+
+    if (!context.mounted) return;
+    final config = await AudioDrillConfigSheet.show(context);
+    if (config != null && context.mounted) {
+      if (cards.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('В колоде пока нет карточек для тренировки')),
+        );
+        return;
+      }
+      unawaited(AudioDrillScreen.launch(
+        context,
+        allCards: cards,
+        audioService: widget.audioService,
+        initialConfig: config,
+      ));
+    }
   }
 
   Future<void> _updateSpeed(double speed) async {
@@ -386,7 +449,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 12),
           MemoryStabilityBadgesSection(summary: summary),
           const SizedBox(height: 12),
-          FsrsMemoryDashboardCard(summary: summary),
+          FsrsMemoryDashboardCard(
+            summary: summary,
+            onStartAudioDrill: () => _openAudioDrill(context),
+          ),
           const SizedBox(height: 12),
           _GrammarStatsCard(summary: summary),
           const SizedBox(height: 12),

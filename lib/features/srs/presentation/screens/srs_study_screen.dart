@@ -12,9 +12,10 @@ import '../../domain/usecases/add_card_to_srs.dart';
 import '../cubit/srs_session_cubit.dart';
 import '../cubit/srs_session_state.dart';
 import '../widgets/anki_export_dialog.dart';
+import '../widgets/audio_drill_config_sheet.dart';
 import '../widgets/deck_import_dialog.dart';
 import '../widgets/srs_flashcard_widget.dart';
-import 'hands_free_player_screen.dart';
+import 'audio_drill_screen.dart';
 import 'match_pairs_screen.dart';
 import 'speed_sprint_screen.dart';
 
@@ -77,39 +78,51 @@ class SrsStudyScreen extends StatelessWidget {
     );
   }
 
-  void _openHandsFreePlayer(BuildContext context, SrsSessionState state) {
-    final List<HandsFreeItem> items = [];
-    if (state is SrsSessionActive) {
-      for (final c in state.queue) {
-        items.add(HandsFreeItem.fromSrsCard(c));
-      }
-    }
-    if (items.isEmpty) {
+  Future<void> _openHandsFreePlayer(
+      BuildContext context, SrsSessionState state) async {
+    final activeCards = state is SrsSessionActive ? state.queue : <SrsCard>[];
+    List<SrsCard> cardsToUse = List<SrsCard>.from(activeCards);
+    if (cardsToUse.isEmpty) {
       final dictState = context.read<DictionaryCubit>().state;
       if (dictState is DictionaryLoaded) {
-        for (final entry in dictState.allEntries.take(30)) {
-          items.add(
-            HandsFreeItem(
-              id: entry.id,
-              hebrewVocalized: entry.hebrew.vocalized,
-              hebrewNormalized: entry.hebrew.normalized,
-              russianTranslation: entry.russianTranslation,
-              audioUrl: entry.audioUrl,
-              transliteration: entry.transliteration,
-            ),
-          );
-        }
+        cardsToUse = dictState.allEntries
+            .map((e) => SrsCard(
+                  id: e.id,
+                  hebrew: e.hebrew,
+                  russianTranslation: e.russianTranslation,
+                  root: e.root,
+                  binyan: e.binyan,
+                  audioUrl: e.audioUrl,
+                  memory: FsrsMemoryState.initial(
+                    now: DateTime.now().toUtc(),
+                  ),
+                  attribution: const ContentAttribution(
+                    sourceName: 'Dictionary',
+                    licenseName: 'CC-BY',
+                  ),
+                ))
+            .toList();
       }
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => HandsFreePlayerScreen(
-          items: items,
-          audioService: audioService,
+    if (cardsToUse.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Слова загружаются, попробуйте через секунду'),
         ),
-      ),
-    );
+      );
+      return;
+    }
+
+    final config = await AudioDrillConfigSheet.show(context);
+    if (config != null && context.mounted) {
+      unawaited(AudioDrillScreen.launch(
+        context,
+        allCards: cardsToUse,
+        audioService: audioService,
+        initialConfig: config,
+      ));
+    }
   }
 
   void _openSpeedSprint(BuildContext context) {
@@ -262,6 +275,11 @@ class SrsStudyScreen extends StatelessWidget {
                   ),
                 ),
               ],
+              IconButton(
+                tooltip: 'Hands-Free аудиотренажер 🎧',
+                icon: const Icon(Icons.headphones_rounded),
+                onPressed: () => _openHandsFreePlayer(context, state),
+              ),
               if (isImporting)
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.0),

@@ -10,10 +10,12 @@ import 'fsrs_stability_matrix_widget.dart';
 /// Interactive FSRS-4.5 memory analytics dashboard card for [ProgressScreen].
 class FsrsMemoryDashboardCard extends StatefulWidget {
   final LearningProgressSummary summary;
+  final VoidCallback? onStartAudioDrill;
 
   const FsrsMemoryDashboardCard({
     super.key,
     required this.summary,
+    this.onStartAudioDrill,
   });
 
   @override
@@ -294,6 +296,14 @@ class _FsrsMemoryDashboardCardState extends State<FsrsMemoryDashboardCard> {
             ),
           ],
         ),
+        if (widget.onStartAudioDrill != null) ...[
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
+            onPressed: widget.onStartAudioDrill,
+            icon: const Icon(Icons.headphones_rounded),
+            label: const Text('Запустить Hands-Free аудиотренажер'),
+          ),
+        ],
       ],
     );
   }
