@@ -5,6 +5,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
@@ -258,6 +259,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => NumbersCashierScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Дешифровщик Ктав Яд',
+        hebrewTitle: 'כְּתָב יָד',
+        description: 'Рукописные записки соседей, ваад байт, поликлиники и списки',
+        icon: Icons.draw_rounded,
+        color: const Color(0xFF6A1B9A),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => CursiveDecryptorScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
