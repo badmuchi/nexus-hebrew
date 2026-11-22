@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/audio/audio_playback_service.dart';
 import 'core/audio/hybrid_audio_playback_service.dart';
 import 'core/audio/just_audio_playback_service.dart';
+import 'core/audio/offline_audio_cache_service.dart';
 import 'core/audio/tts_speech_service.dart';
 import 'core/database/app_database.dart';
 import 'core/logging/app_logger.dart';
@@ -104,6 +105,12 @@ Future<void> main() async {
     logger: logger,
   );
 
+  final audioCacheService = OfflineAudioCacheServiceImpl(
+    settingsStorage: settingsStorage,
+    dio: dio,
+    logger: logger,
+  );
+
   final primaryAudio = JustAudioPlaybackService(logger: logger);
   late final HybridAudioPlaybackService audioService;
   final ttsService = createPlatformTtsSpeechService(
@@ -114,6 +121,7 @@ Future<void> main() async {
   audioService = HybridAudioPlaybackService(
     primaryAudioService: primaryAudio,
     ttsService: ttsService,
+    offlineCacheService: audioCacheService,
     logger: logger,
   );
 
@@ -226,6 +234,7 @@ Future<void> main() async {
       storiesRepository: storiesRepo,
       slangRepository: slangRepo,
       audioService: audioService,
+      audioCacheService: audioCacheService,
       settingsStorage: settingsStorage,
       logger: logger,
     ),
@@ -308,6 +317,7 @@ class NexusHebrewApp extends StatefulWidget {
   final StoriesRepository? storiesRepository;
   final SlangRepository? slangRepository;
   final AudioPlaybackService audioService;
+  final OfflineAudioCacheService? audioCacheService;
   final AppSettingsStorage? settingsStorage;
   final AppLogger logger;
 
@@ -323,6 +333,7 @@ class NexusHebrewApp extends StatefulWidget {
     this.storiesRepository,
     this.slangRepository,
     required this.audioService,
+    this.audioCacheService,
     this.settingsStorage,
     required this.logger,
   });
@@ -591,6 +602,7 @@ class _NexusHebrewAppState extends State<NexusHebrewApp> {
           home: _MainShell(
             database: widget.database,
             audioService: widget.audioService,
+            audioCacheService: widget.audioCacheService,
             settingsStorage: widget.settingsStorage,
             addCardToSrsUseCase: addCardToSrsUseCase,
             getDailyWorkoutUseCase: getDailyWorkoutUseCase,
@@ -607,6 +619,7 @@ class _NexusHebrewAppState extends State<NexusHebrewApp> {
 class _MainShell extends StatefulWidget {
   final AppDatabase? database;
   final AudioPlaybackService? audioService;
+  final OfflineAudioCacheService? audioCacheService;
   final AppSettingsStorage? settingsStorage;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final GetDailyWorkoutUseCase? getDailyWorkoutUseCase;
@@ -618,6 +631,7 @@ class _MainShell extends StatefulWidget {
   const _MainShell({
     this.database,
     this.audioService,
+    this.audioCacheService,
     this.settingsStorage,
     this.addCardToSrsUseCase,
     this.getDailyWorkoutUseCase,
@@ -682,6 +696,7 @@ class _MainShellState extends State<_MainShell> {
       ProgressScreen(
         database: widget.database,
         audioService: widget.audioService,
+        audioCacheService: widget.audioCacheService,
         settingsStorage: widget.settingsStorage,
         currentThemeMode: widget.currentThemeMode,
         onThemeModeChanged: widget.onThemeModeChanged,

@@ -149,5 +149,56 @@ void main() {
       final readDate = await settingsStorage.readLastAssessmentDate();
       expect(readDate, equals(date));
     });
+
+    test('readOfflineCachedAudioCount and writeOfflineCachedAudioCount roundtrip', () async {
+      when(() => storage.read(key: 'nexus_hebrew_cached_audio_count'))
+          .thenAnswer((_) async => null);
+
+      expect(await settingsStorage.readOfflineCachedAudioCount(), equals(0));
+
+      when(() => storage.write(key: any(named: 'key'), value: any(named: 'value')))
+          .thenAnswer((_) async {});
+
+      await settingsStorage.writeOfflineCachedAudioCount(72);
+
+      verify(
+        () => storage.write(
+          key: 'nexus_hebrew_cached_audio_count',
+          value: '72',
+        ),
+      ).called(1);
+
+      when(() => storage.read(key: 'nexus_hebrew_cached_audio_count'))
+          .thenAnswer((_) async => '72');
+
+      final count = await settingsStorage.readOfflineCachedAudioCount();
+      expect(count, equals(72));
+    });
+
+    test('readLastAudioPreloadDate and writeLastAudioPreloadDate roundtrip', () async {
+      when(() => storage.read(key: 'nexus_hebrew_last_audio_preload_date'))
+          .thenAnswer((_) async => null);
+
+      expect(await settingsStorage.readLastAudioPreloadDate(), isNull);
+
+      when(() => storage.write(key: any(named: 'key'), value: any(named: 'value')))
+          .thenAnswer((_) async {});
+
+      final date = DateTime.utc(2026, 11, 21, 12, 0);
+      await settingsStorage.writeLastAudioPreloadDate(date);
+
+      verify(
+        () => storage.write(
+          key: 'nexus_hebrew_last_audio_preload_date',
+          value: date.toIso8601String(),
+        ),
+      ).called(1);
+
+      when(() => storage.read(key: 'nexus_hebrew_last_audio_preload_date'))
+          .thenAnswer((_) async => date.toIso8601String());
+
+      final readDate = await settingsStorage.readLastAudioPreloadDate();
+      expect(readDate, equals(date));
+    });
   });
 }

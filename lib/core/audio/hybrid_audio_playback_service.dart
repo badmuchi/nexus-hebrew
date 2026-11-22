@@ -4,6 +4,7 @@ import '../error/failures.dart';
 import '../logging/app_logger.dart';
 import '../result/result.dart';
 import 'audio_playback_service.dart';
+import 'offline_audio_cache_service.dart';
 import 'tts_speech_service.dart';
 
 /// Audio service that prefers native recordings (Tatoeba / Wikimedia / local assets)
@@ -13,6 +14,7 @@ final class HybridAudioPlaybackService implements AudioPlaybackService {
 
   final AudioPlaybackService _primaryAudioService;
   final TtsSpeechService _ttsService;
+  final OfflineAudioCacheService? _offlineCacheService;
   final AppLogger _logger;
   final StreamController<AudioPlaybackEvent> _statusController =
       StreamController<AudioPlaybackEvent>.broadcast();
@@ -25,14 +27,18 @@ final class HybridAudioPlaybackService implements AudioPlaybackService {
   HybridAudioPlaybackService({
     required AudioPlaybackService primaryAudioService,
     required TtsSpeechService ttsService,
+    OfflineAudioCacheService? offlineCacheService,
     required AppLogger logger,
   })  : _primaryAudioService = primaryAudioService,
         _ttsService = ttsService,
+        _offlineCacheService = offlineCacheService,
         _logger = logger {
     _primarySub = _primaryAudioService.statusStream.listen((event) {
       _emitState(event);
     });
   }
+
+  OfflineAudioCacheService? get offlineCacheService => _offlineCacheService;
 
   @override
   Stream<AudioPlaybackEvent> get statusStream => _statusController.stream;
@@ -63,7 +69,8 @@ final class HybridAudioPlaybackService implements AudioPlaybackService {
       return const Error(AudioFailure('Audio service has been disposed'));
     }
     await _ttsService.stop();
-    return _primaryAudioService.play(sourcePath);
+    final resolvedPath = await _offlineCacheService?.resolveAudioSource(sourcePath) ?? sourcePath;
+    return _primaryAudioService.play(resolvedPath);
   }
 
   @override

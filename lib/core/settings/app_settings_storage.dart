@@ -14,6 +14,10 @@ abstract interface class AppSettingsStorage {
   Future<void> writeAssessedLevel(String level);
   Future<DateTime?> readLastAssessmentDate();
   Future<void> writeLastAssessmentDate(DateTime date);
+  Future<int> readOfflineCachedAudioCount();
+  Future<void> writeOfflineCachedAudioCount(int count);
+  Future<DateTime?> readLastAudioPreloadDate();
+  Future<void> writeLastAudioPreloadDate(DateTime date);
 }
 
 final class SecureAppSettingsStorage implements AppSettingsStorage {
@@ -23,6 +27,8 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
   static const String _dailyWorkoutKey = 'nexus_hebrew_daily_workout_date';
   static const String _assessedLevelKey = 'nexus_hebrew_assessed_level';
   static const String _lastAssessmentDateKey = 'nexus_hebrew_last_assessment_date';
+  static const String _cachedAudioCountKey = 'nexus_hebrew_cached_audio_count';
+  static const String _lastAudioPreloadKey = 'nexus_hebrew_last_audio_preload_date';
   static const double _defaultSpeed = 1.0;
 
   final FlutterSecureStorage _storage;
@@ -209,6 +215,70 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
       _logger.error(
         _tag,
         'Failed to persist last assessment date "$date" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<int> readOfflineCachedAudioCount() async {
+    try {
+      final raw = await _storage.read(key: _cachedAudioCountKey);
+      if (raw == null || raw.trim().isEmpty) return 0;
+      return int.tryParse(raw.trim()) ?? 0;
+    } on Object catch (error) {
+      _logger.warning(
+        _tag,
+        'Failed to read cached audio count from storage ($error)',
+      );
+      return 0;
+    }
+  }
+
+  @override
+  Future<void> writeOfflineCachedAudioCount(int count) async {
+    try {
+      await _storage.write(
+        key: _cachedAudioCountKey,
+        value: count.toString(),
+      );
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist cached audio count "$count" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<DateTime?> readLastAudioPreloadDate() async {
+    try {
+      final raw = await _storage.read(key: _lastAudioPreloadKey);
+      if (raw == null || raw.trim().isEmpty) return null;
+      return DateTime.tryParse(raw.trim());
+    } on Object catch (error) {
+      _logger.warning(
+        _tag,
+        'Failed to read last audio preload date from storage ($error)',
+      );
+      return null;
+    }
+  }
+
+  @override
+  Future<void> writeLastAudioPreloadDate(DateTime date) async {
+    try {
+      await _storage.write(
+        key: _lastAudioPreloadKey,
+        value: date.toUtc().toIso8601String(),
+      );
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist last audio preload date "$date" to storage',
         errorDetails: error.toString(),
         stackTrace: stackTrace,
       );

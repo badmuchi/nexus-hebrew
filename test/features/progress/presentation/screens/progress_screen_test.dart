@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nexus_hebrew_app/core/audio/audio_playback_service.dart';
+import 'package:nexus_hebrew_app/core/audio/offline_audio_cache_service.dart';
 import 'package:nexus_hebrew_app/core/database/app_database.dart';
 import 'package:nexus_hebrew_app/core/result/result.dart';
 import 'package:nexus_hebrew_app/features/conversation/domain/entities/binyan.dart';
@@ -40,6 +41,9 @@ class _MockCompleteDailyWorkoutUseCase extends Mock
     implements CompleteDailyWorkoutUseCase {}
 
 class _MockAppDatabase extends Mock implements AppDatabase {}
+
+class _MockOfflineAudioCacheService extends Mock
+    implements OfflineAudioCacheService {}
 
 void main() {
   late _MockGetLearningProgressUseCase getProgressUseCase;
@@ -352,5 +356,57 @@ void main() {
 
     expect(find.text('Определить уровень иврита'), findsOneWidget);
     expect(find.text('Пройти'), findsOneWidget);
+  });
+
+  testWidgets('Отображает контролы офлайн-кэша аудио и запускает предзагрузку', (tester) async {
+    final cubit = buildCubit();
+    addTearDown(cubit.close);
+    await cubit.loadProgress();
+
+    final cacheMock = _MockOfflineAudioCacheService();
+    when(() => cacheMock.getCachedAudioCount()).thenAnswer((_) async => 524);
+    when(() => cacheMock.getLastPreloadDate())
+        .thenAnswer((_) async => DateTime.utc(2026, 11, 22));
+    when(() => cacheMock.preloadAllEssentialAudio(
+          additionalUrls: any(named: 'additionalUrls'),
+        )).thenAnswer(
+      (_) => Stream.value(
+        const AudioPreloadProgress(
+          total: 524,
+          completed: 524,
+          failed: 0,
+          currentItem: 'Готово',
+          isFinished: true,
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<ProgressCubit>.value(
+          value: cubit,
+          child: ProgressScreen(
+            audioCacheService: cacheMock,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Офлайн-кэш озвучки'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Офлайн-кэш озвучки'), findsOneWidget);
+    expect(find.text('524 файлов готово без интернета ✈️'), findsOneWidget);
+    expect(find.text('Обновить офлайн-аудио'), findsOneWidget);
+
+    await tester.tap(find.text('Обновить офлайн-аудио'));
+    await tester.pumpAndSettle();
+
+    verify(() => cacheMock.preloadAllEssentialAudio()).called(1);
   });
 }

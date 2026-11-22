@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/audio/offline_audio_cache_service.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/logging/app_logger.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
@@ -23,6 +25,7 @@ import 'daily_workout_screen.dart';
 /// Unified progress analytics & global shoresh/Hebrew search workspace.
 class ProgressScreen extends StatefulWidget {
   final AudioPlaybackService? audioService;
+  final OfflineAudioCacheService? audioCacheService;
   final AppSettingsStorage? settingsStorage;
   final AppDatabase? database;
   final ThemeMode currentThemeMode;
@@ -33,6 +36,7 @@ class ProgressScreen extends StatefulWidget {
   const ProgressScreen({
     super.key,
     this.audioService,
+    this.audioCacheService,
     this.settingsStorage,
     this.database,
     this.currentThemeMode = ThemeMode.system,
@@ -51,13 +55,105 @@ class _ProgressScreenState extends State<ProgressScreen> {
   bool _isPlayingSample = false;
   DailyWorkoutPlan? _dailyWorkoutPlan;
   String? _assessedLevel;
+  late final OfflineAudioCacheService _cacheService;
+  int _cachedAudioCount = 0;
+  DateTime? _lastPreloadDate;
+  bool _isPreloadingAudio = false;
+  AudioPreloadProgress? _preloadProgress;
+  StreamSubscription<AudioPreloadProgress>? _preloadSub;
 
   @override
   void initState() {
     super.initState();
     _currentSpeed = widget.audioService?.currentSpeed ?? 1.0;
+    _cacheService = widget.audioCacheService ??
+        OfflineAudioCacheServiceImpl(
+          settingsStorage: widget.settingsStorage ??
+              SecureAppSettingsStorage.withDefaultOptions(
+                logger: const DeveloperAppLogger(),
+              ),
+          logger: const DeveloperAppLogger(),
+        );
     unawaited(_loadDailyWorkout());
     unawaited(_loadAssessedLevel());
+    unawaited(_loadAudioCacheStats());
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _preloadSub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadAudioCacheStats() async {
+    final count = await _cacheService.getCachedAudioCount();
+    final date = await _cacheService.getLastPreloadDate();
+    if (mounted) {
+      setState(() {
+        _cachedAudioCount = count;
+        _lastPreloadDate = date;
+      });
+    }
+  }
+
+  void _startAudioPreload() {
+    if (_isPreloadingAudio) return;
+    setState(() {
+      _isPreloadingAudio = true;
+      _preloadProgress = const AudioPreloadProgress.idle();
+    });
+
+    _preloadSub?.cancel();
+    _preloadSub = _cacheService.preloadAllEssentialAudio().listen(
+      (progress) {
+        if (!mounted) return;
+        setState(() {
+          _preloadProgress = progress;
+          if (progress.isFinished) {
+            _isPreloadingAudio = false;
+            _cachedAudioCount = progress.completed;
+            _lastPreloadDate = DateTime.now();
+          }
+        });
+
+        if (progress.isFinished) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Вся озвучка (${progress.completed} файлов) успешно синхронизирована для офлайн-работы! ✈️',
+              ),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+      onError: (Object error) {
+        if (!mounted) return;
+        setState(() {
+          _isPreloadingAudio = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка предзагрузки аудио: $error'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _clearAudioCache() async {
+    await _cacheService.clearCache();
+    await _loadAudioCacheStats();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Кэш загруженных аудиозаписей очищен'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _loadAssessedLevel() async {
@@ -124,12 +220,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
         _isPlayingSample = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override
@@ -328,6 +418,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
             onSpeedChanged: (double speed) => unawaited(_updateSpeed(speed)),
             onPlaySample: () => unawaited(_playSample()),
             isPlayingSample: _isPlayingSample,
+            cachedAudioCount: _cachedAudioCount,
+            lastPreloadDate: _lastPreloadDate,
+            isPreloadingAudio: _isPreloadingAudio,
+            preloadProgress: _preloadProgress,
+            onPreloadAudio: _startAudioPreload,
+            onClearCache: () => unawaited(_clearAudioCache()),
           ),
           if (widget.database != null) ...[
             const SizedBox(height: 12),
@@ -590,12 +686,24 @@ class _AudioSettingsCard extends StatelessWidget {
   final ValueChanged<double> onSpeedChanged;
   final VoidCallback onPlaySample;
   final bool isPlayingSample;
+  final int cachedAudioCount;
+  final DateTime? lastPreloadDate;
+  final bool isPreloadingAudio;
+  final AudioPreloadProgress? preloadProgress;
+  final VoidCallback onPreloadAudio;
+  final VoidCallback onClearCache;
 
   const _AudioSettingsCard({
     required this.currentSpeed,
     required this.onSpeedChanged,
     required this.onPlaySample,
     required this.isPlayingSample,
+    this.cachedAudioCount = 0,
+    this.lastPreloadDate,
+    this.isPreloadingAudio = false,
+    this.preloadProgress,
+    required this.onPreloadAudio,
+    required this.onClearCache,
   });
 
   @override
@@ -697,6 +805,118 @@ class _AudioSettingsCard extends StatelessWidget {
                 isPlayingSample
                     ? 'Озвучивается...'
                     : 'Прослушать образец (!שָׁלוֹם! בְּרוּכִים הַבָּאִים)',
+              ),
+            ),
+            const Divider(height: 32),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsetsDirectional.all(8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.offline_pin_rounded,
+                    color: theme.colorScheme.onSecondaryContainer,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Офлайн-кэш озвучки',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        cachedAudioCount > 0
+                            ? '$cachedAudioCount файлов готово без интернета ✈️'
+                            : 'Синхронизируйте аудио для занятий офлайн',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cachedAudioCount > 0
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurfaceVariant,
+                          fontWeight: cachedAudioCount > 0 ? FontWeight.w600 : null,
+                        ),
+                      ),
+                      if (lastPreloadDate != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          'Синхронизировано: ${lastPreloadDate!.day.toString().padLeft(2, '0')}.${lastPreloadDate!.month.toString().padLeft(2, '0')}.${lastPreloadDate!.year}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.outline,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (cachedAudioCount > 0 && !isPreloadingAudio)
+                  IconButton(
+                    onPressed: onClearCache,
+                    tooltip: 'Очистить загруженный кэш',
+                    icon: Icon(
+                      Icons.delete_outline_rounded,
+                      color: theme.colorScheme.error,
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+            if (isPreloadingAudio) ...[
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: preloadProgress?.progressRatio,
+                  minHeight: 6,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      preloadProgress?.currentItem ?? 'Синхронизация...',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Text(
+                    '${preloadProgress?.completed ?? 0} / ${preloadProgress?.total ?? 0} (${preloadProgress?.percent ?? 0}%)',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 12),
+            FilledButton.tonalIcon(
+              onPressed: isPreloadingAudio ? null : onPreloadAudio,
+              icon: isPreloadingAudio
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.download_for_offline_rounded),
+              label: Text(
+                isPreloadingAudio
+                    ? 'Загрузка озвучки (${preloadProgress?.percent ?? 0}%)...'
+                    : (cachedAudioCount > 0
+                        ? 'Обновить офлайн-аудио'
+                        : 'Предзагрузить всю озвучку 📥'),
               ),
             ),
           ],
