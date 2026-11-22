@@ -5,6 +5,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
@@ -276,6 +277,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => CursiveDecryptorScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Карьера и Тлуш',
+        hebrewTitle: 'רֵאָיוֹן וְתְלוּשׁ',
+        description: 'Собеседование в хайтек, тлуш маскорет, налоги и офисный сленг',
+        icon: Icons.badge_rounded,
+        color: const Color(0xFF00695C),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => JobInterviewSimulatorScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
