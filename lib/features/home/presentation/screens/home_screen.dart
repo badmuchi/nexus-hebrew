@@ -7,6 +7,8 @@ import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
+import '../../../gamification/domain/services/sabra_quest_service.dart';
+import '../../../gamification/presentation/widgets/sabra_daily_quests_card.dart';
 import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _assessedLevel;
   late final OmniSearchEngine _searchEngine = OmniSearchEngine.withStaticDefaults();
   late final ScenesRepository _scenesRepository = ScenesRepositoryImpl(database: widget.database);
+  late final SabraQuestService _sabraQuestService = SabraQuestService(storage: widget.settingsStorage);
 
   @override
   void initState() {
@@ -537,6 +540,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+
+          // Sabra Daily Quests & Streaks
+          BlocBuilder<ProgressCubit, ProgressState>(
+            builder: (context, state) {
+              final streak = state is ProgressLoaded
+                  ? state.summary.currentStreakDays
+                  : 0;
+              return SabraDailyQuestsCard(
+                questService: _sabraQuestService,
+                streakDays: streak,
+                onXpClaimed: (_) {
+                  unawaited(context.read<ProgressCubit>().loadProgress());
+                },
+                onNavigateToDialogue: () => widget.onNavigateToTab?.call(4),
+                onNavigateToSrs: () => widget.onNavigateToTab?.call(2),
+                onNavigateToShoresh: () => widget.onNavigateToTab?.call(1),
+              );
+            },
           ),
           const SizedBox(height: 16),
 

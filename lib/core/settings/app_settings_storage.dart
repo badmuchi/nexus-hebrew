@@ -18,6 +18,10 @@ abstract interface class AppSettingsStorage {
   Future<void> writeOfflineCachedAudioCount(int count);
   Future<DateTime?> readLastAudioPreloadDate();
   Future<void> writeLastAudioPreloadDate(DateTime date);
+  Future<String?> readSabraQuestsJson();
+  Future<void> writeSabraQuestsJson(String json);
+  Future<int> readSabraStreakDays();
+  Future<void> writeSabraStreakDays(int days);
 }
 
 final class SecureAppSettingsStorage implements AppSettingsStorage {
@@ -29,6 +33,8 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
   static const String _lastAssessmentDateKey = 'nexus_hebrew_last_assessment_date';
   static const String _cachedAudioCountKey = 'nexus_hebrew_cached_audio_count';
   static const String _lastAudioPreloadKey = 'nexus_hebrew_last_audio_preload_date';
+  static const String _sabraQuestsKey = 'nexus_hebrew_sabra_quests_state';
+  static const String _sabraStreakDaysKey = 'nexus_hebrew_sabra_streak_days';
   static const double _defaultSpeed = 1.0;
 
   final FlutterSecureStorage _storage;
@@ -279,6 +285,58 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
       _logger.error(
         _tag,
         'Failed to persist last audio preload date "$date" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<String?> readSabraQuestsJson() async {
+    try {
+      final raw = await _storage.read(key: _sabraQuestsKey);
+      if (raw == null || raw.trim().isEmpty) return null;
+      return raw.trim();
+    } on Object catch (error) {
+      _logger.warning(_tag, 'Failed to read Sabra quests state from storage ($error)');
+      return null;
+    }
+  }
+
+  @override
+  Future<void> writeSabraQuestsJson(String json) async {
+    try {
+      await _storage.write(key: _sabraQuestsKey, value: json);
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist Sabra quests state to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<int> readSabraStreakDays() async {
+    try {
+      final raw = await _storage.read(key: _sabraStreakDaysKey);
+      if (raw == null || raw.trim().isEmpty) return 0;
+      return int.tryParse(raw.trim()) ?? 0;
+    } on Object catch (error) {
+      _logger.warning(_tag, 'Failed to read Sabra streak days from storage ($error)');
+      return 0;
+    }
+  }
+
+  @override
+  Future<void> writeSabraStreakDays(int days) async {
+    try {
+      await _storage.write(key: _sabraStreakDaysKey, value: days.toString());
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist Sabra streak days "$days" to storage',
         errorDetails: error.toString(),
         stackTrace: stackTrace,
       );

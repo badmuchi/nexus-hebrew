@@ -4,14 +4,20 @@ import '../utils/hebrew_normalizer.dart';
 abstract final class TtsTextSanitizer {
   static final RegExp _cantillationAndRareMarksPattern =
       RegExp(r'[\u0591-\u05AF\u05BD\u05BF\u05C0\u05C3\u200E\u200F\u202A-\u202E\u2066-\u2069]');
+  static final RegExp _blanksPattern = RegExp(r'_+');
+  static final RegExp _ellipsisPattern = RegExp(r'\.{2,}|…');
+  static final RegExp _straySymbolsPattern = RegExp(r'["«»“”„*#@~^]');
   static final RegExp _whitespacePattern = RegExp(r'\s+');
 
   /// Keeps standard nikkud for accurate pronunciation while stripping cantillation,
-  /// meteg/rafe, directional markers, brackets, and separators that confuse TTS.
+  /// meteg/rafe, directional markers, blanks, ellipsis, brackets, and separators that confuse TTS.
   static String sanitizeForHebrewTts(String raw) {
     var text = HebrewNormalizer.toNfc(raw);
     text = text.replaceAll(_cantillationAndRareMarksPattern, '');
     text = text
+        .replaceAll(_blanksPattern, ', ')
+        .replaceAll(_ellipsisPattern, ', ')
+        .replaceAll(_straySymbolsPattern, ' ')
         .replaceAll('\u05BE', ' ')
         .replaceAll('—', ', ')
         .replaceAll('–', ', ')

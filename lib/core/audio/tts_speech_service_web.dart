@@ -136,11 +136,10 @@ final class WebTtsSpeechService implements TtsSpeechService {
         return const Success<void, Failure>(null);
       }
 
-      final wordCount = cleaned.split(' ').length;
-      final baseRate = wordCount <= 2 ? 0.86 : 0.94;
+      const baseRate = 0.98;
       final utterance = _WebSpeechUtterance(cleaned)
         ..lang = hebrewVoice?.lang ?? languageTag
-        ..rate = (baseRate * _speedMultiplier).clamp(0.6, 1.4)
+        ..rate = (baseRate * _speedMultiplier).clamp(0.7, 1.4)
         ..pitch = 1.0
         ..volume = 1.0;
       if (hebrewVoice != null) {
@@ -241,18 +240,17 @@ final class WebTtsSpeechService implements TtsSpeechService {
         score += 100;
       }
       final lowerName = voice.name.toLowerCase();
-      if (lowerName.contains('neural') ||
+      if (lowerName.contains('google')) {
+        score += 150; // Google high-fidelity neural voice in Chrome
+      } else if (lowerName.contains('neural') ||
           lowerName.contains('natural') ||
           lowerName.contains('online')) {
-        score += 60;
-      } else if (lowerName.contains('google') ||
-          lowerName.contains('enhanced') ||
-          lowerName.contains('premium') ||
-          lowerName.contains('siri')) {
+        score += 120;
+      } else if (lowerName.contains('siri')) {
+        score += 90;
+      } else if (lowerName.contains('enhanced') ||
+          lowerName.contains('premium')) {
         score += 40;
-      }
-      if (voice.isLocalService) {
-        score += 10;
       }
       if (score > bestScore) {
         bestScore = score;

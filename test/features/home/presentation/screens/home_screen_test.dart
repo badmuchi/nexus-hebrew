@@ -165,7 +165,7 @@ void main() {
     });
 
     testWidgets('навигация по клику на раздел вызывает onNavigateToTab', (tester) async {
-      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.physicalSize = const Size(800, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);

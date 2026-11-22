@@ -11,7 +11,9 @@ import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
 import '../../../conversation/domain/entities/hebrew_text.dart';
+import '../../../gamification/domain/services/sabra_quest_service.dart';
 import '../../../gamification/presentation/widgets/memory_stability_badges_section.dart';
+import '../../../gamification/presentation/widgets/sabra_daily_quests_card.dart';
 import '../../../gamification/presentation/widgets/sabra_league_card.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
@@ -63,6 +65,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   bool _isPlayingSample = false;
   DailyWorkoutPlan? _dailyWorkoutPlan;
   String? _assessedLevel;
+  late final SabraQuestService _sabraQuestService = SabraQuestService(storage: widget.settingsStorage);
   late final OfflineAudioCacheService _cacheService;
   int _cachedAudioCount = 0;
   DateTime? _lastPreloadDate;
@@ -440,6 +443,30 @@ class _ProgressScreenState extends State<ProgressScreen> {
           _LevelAndXpHeroCard(summary: summary),
           const SizedBox(height: 12),
           SabraLeagueCard(weeklyXp: _calculateWeeklyXp(summary)),
+          const SizedBox(height: 12),
+          SabraDailyQuestsCard(
+            questService: _sabraQuestService,
+            streakDays: summary.currentStreakDays,
+            onXpClaimed: (_) {
+              unawaited(context.read<ProgressCubit>().loadProgress());
+            },
+            onNavigateToDialogue: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ScenesCatalogScreen(
+                  repository: ScenesRepositoryImpl(database: widget.database),
+                  audioService: widget.audioService,
+                ),
+              ),
+            ),
+            onNavigateToSrs: () => _openAudioDrill(context),
+            onNavigateToShoresh: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ShoreshCatalogScreen(
+                  audioService: widget.audioService,
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 12),
           _StreakHeroCard(summary: summary),
           const SizedBox(height: 12),

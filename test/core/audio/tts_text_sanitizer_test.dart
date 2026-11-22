@@ -25,5 +25,19 @@ void main() {
         equals('כֹּותֵב , מִכְתָּב'),
       );
     });
+
+    test('заменяет пропуски (подчеркивания) и многоточия на паузу-запятую для тестов', () {
+      const raw = 'דָּנָה __ בָּאוּנִיבֶרְסִיטָה.';
+      expect(
+        TtsTextSanitizer.sanitizeForHebrewTts(raw),
+        equals('דָּנָה , בָּאוּנִיבֶרְסִיטָה.'),
+      );
+
+      const rawWithEllipsis = 'הוּא אָמַר... וְהָלַךְ';
+      expect(
+        TtsTextSanitizer.sanitizeForHebrewTts(rawWithEllipsis),
+        equals('הוּא אָמַר, וְהָלַךְ'),
+      );
+    });
   });
 }
