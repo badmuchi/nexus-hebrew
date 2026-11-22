@@ -10,6 +10,8 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../conversation/domain/entities/binyan.dart';
+import '../../../gamification/presentation/widgets/memory_stability_badges_section.dart';
+import '../../../gamification/presentation/widgets/sabra_league_card.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
 import '../../../shoresh/presentation/screens/shoresh_catalog_screen.dart';
@@ -374,11 +376,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 12),
           _LevelAndXpHeroCard(summary: summary),
           const SizedBox(height: 12),
+          SabraLeagueCard(weeklyXp: _calculateWeeklyXp(summary)),
+          const SizedBox(height: 12),
           _StreakHeroCard(summary: summary),
           const SizedBox(height: 12),
           _ActivityHeatmapCard(summary: summary),
           const SizedBox(height: 12),
           _AchievementsGridCard(summary: summary),
+          const SizedBox(height: 12),
+          MemoryStabilityBadgesSection(summary: summary),
           const SizedBox(height: 12),
           FsrsMemoryDashboardCard(summary: summary),
           const SizedBox(height: 12),
@@ -1509,6 +1515,24 @@ int _calculateTotalXp(LearningProgressSummary summary) {
   final shoreshPoints = (summary.masteredShoreshCount * 50);
   final scenePoints = (summary.completedScenesCount * 100);
   return srsPoints + grammarPoints + listeningPoints + streakPoints + shoreshPoints + scenePoints;
+}
+
+int _calculateWeeklyXp(LearningProgressSummary summary) {
+  if (summary.activityByDate.isNotEmpty) {
+    final now = DateTime.now().toUtc();
+    var weeklyActions = 0;
+    for (var i = 0; i < 7; i++) {
+      final date = now.subtract(Duration(days: i));
+      final key =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      weeklyActions += summary.activityByDate[key] ?? 0;
+    }
+    if (weeklyActions > 0) {
+      return (weeklyActions * 25) + (summary.activeTodayCount * 10);
+    }
+  }
+  final total = _calculateTotalXp(summary);
+  return (total % 1000) + (summary.activeTodayCount * 25) + 60;
 }
 
 _LevelInfo _getLevelForXp(int xp) {

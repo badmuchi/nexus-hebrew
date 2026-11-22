@@ -679,6 +679,7 @@ class _MainShellState extends State<_MainShell> {
       ConversationScreen(
         audioService: widget.audioService,
         addCardToSrsUseCase: widget.addCardToSrsUseCase,
+        database: widget.database,
       ),
       SrsStudyScreen(
         audioService: widget.audioService,

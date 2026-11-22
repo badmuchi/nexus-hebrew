@@ -242,78 +242,137 @@ class StoryReaderScreen extends StatelessWidget {
                 ),
                 // Reader Content
                 Expanded(
-                  child: ListView.builder(
+                  child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                    itemCount: story.paragraphs.length + 1,
-                    itemBuilder: (context, pIndex) {
-                      if (pIndex == story.paragraphs.length) {
-                        return Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            top: 24,
-                            bottom: 40,
-                          ),
-                          child: Center(
-                            child: FilledButton.icon(
-                              icon: Icon(
-                                isCompleted
-                                    ? Icons.check_circle_rounded
-                                    : Icons.done_all_rounded,
-                              ),
-                              label: Text(
-                                isCompleted
-                                    ? 'Прочитано!'
-                                    : 'Я прочитал этот рассказ',
-                              ),
-                              onPressed: isCompleted
-                                  ? null
-                                  : () => cubit.markCompleted(story.id),
+                    children: [
+                      if (story.level == 'FSRS Smart') ...[
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.amber.withValues(alpha: 0.35),
                             ),
                           ),
-                        );
-                      }
-
-                      final paragraph = story.paragraphs[pIndex];
-
-                      return Card(
-                        elevation: 0,
-                        margin: const EdgeInsetsDirectional.only(bottom: 16),
-                        color: theme.colorScheme.surfaceContainerLow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(
-                            color: theme.colorScheme.outlineVariant,
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Text('🪄', style: TextStyle(fontSize: 20)),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Адаптивный контекстный тренажер',
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: theme.brightness == Brightness.dark
+                                            ? Colors.amber.shade200
+                                            : Colors.amber.shade900,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Трудные слова FSRS выделены волнистой линией. Нажмите на любое слово для перевода и озвучки.',
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
+                      ],
+                      for (final paragraph in story.paragraphs)
+                        Card(
+                          elevation: 0,
+                          margin: const EdgeInsetsDirectional.only(bottom: 16),
+                          color: theme.colorScheme.surfaceContainerLow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: BorderSide(
+                              color: theme.colorScheme.outlineVariant,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                for (final sentence in paragraph.sentences) ...[
+                                  _SentenceView(
+                                    sentence: sentence,
+                                    showNikkud: showNikkud,
+                                    showTranslation: showTranslation,
+                                    fontDelta: fontDelta,
+                                    isPlaying:
+                                        playingSentenceId == sentence.id,
+                                    srsForms: srsForms,
+                                    allDictEntries: allDictEntries,
+                                    allVerbs: allVerbs,
+                                    audioService: audioService,
+                                    addCardToSrsUseCase: addCardToSrsUseCase,
+                                    onPlaySentence: () =>
+                                        cubit.playSentence(sentence),
+                                    onWordAddedToSrs: cubit.refreshSrsStatus,
+                                  ),
+                                  if (sentence != paragraph.sentences.last)
+                                    const Divider(height: 24),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          top: 16,
+                          bottom: 40,
+                        ),
+                        child: Center(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              for (final sentence in paragraph.sentences) ...[
-                                _SentenceView(
-                                  sentence: sentence,
-                                  showNikkud: showNikkud,
-                                  showTranslation: showTranslation,
-                                  fontDelta: fontDelta,
-                                  isPlaying:
-                                      playingSentenceId == sentence.id,
-                                  srsForms: srsForms,
-                                  allDictEntries: allDictEntries,
-                                  allVerbs: allVerbs,
-                                  audioService: audioService,
-                                  addCardToSrsUseCase: addCardToSrsUseCase,
-                                  onPlaySentence: () =>
-                                      cubit.playSentence(sentence),
-                                  onWordAddedToSrs: cubit.refreshSrsStatus,
+                              FilledButton.icon(
+                                icon: Icon(
+                                  isCompleted
+                                      ? Icons.check_circle_rounded
+                                      : Icons.done_all_rounded,
                                 ),
-                                if (sentence != paragraph.sentences.last)
-                                  const Divider(height: 24),
+                                label: Text(
+                                  isCompleted
+                                      ? 'Прочитано!'
+                                      : 'Я прочитал этот рассказ',
+                                ),
+                                onPressed: isCompleted
+                                    ? null
+                                    : () => cubit.markCompleted(story.id),
+                              ),
+                              if (story.level == 'FSRS Smart') ...[
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Слова закреплены в долговременной памяти 🎉',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ],
                             ],
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -518,7 +577,9 @@ class _WordTokenChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final text = showNikkud ? token.wordVocalized : token.wordNormalized;
+    final isWeakWord = token.category == 'weak_word_practice';
 
     return Material(
       color: Colors.transparent,
@@ -538,17 +599,40 @@ class _WordTokenChip extends StatelessWidget {
             onWordAddedToSrs: onWordAddedToSrs,
           );
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+        child: Container(
+          decoration: isWeakWord
+              ? BoxDecoration(
+                  color: (isDark ? Colors.amber.shade700 : Colors.amber.shade200)
+                      .withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: (isDark ? Colors.amber.shade400 : Colors.amber.shade800)
+                        .withValues(alpha: 0.35),
+                  ),
+                )
+              : null,
+          padding: EdgeInsets.symmetric(
+            horizontal: isWeakWord ? 5 : 3,
+            vertical: isWeakWord ? 3 : 2,
+          ),
           child: Text(
             text,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontSize: 18.0 + fontDelta,
-              fontWeight: FontWeight.w600,
-              decoration: isInSrs
+              fontWeight: isWeakWord ? FontWeight.w700 : FontWeight.w600,
+              height: 1.5,
+              color: isWeakWord
+                  ? (isDark ? Colors.amber.shade300 : Colors.amber.shade900)
+                  : null,
+              decoration: isWeakWord
                   ? TextDecoration.underline
-                  : TextDecoration.none,
-              decorationColor: theme.colorScheme.primary,
+                  : (isInSrs ? TextDecoration.underline : TextDecoration.none),
+              decorationColor: isWeakWord
+                  ? (isDark ? Colors.amber.shade400 : Colors.amber.shade800)
+                  : theme.colorScheme.primary,
+              decorationStyle: isWeakWord
+                  ? TextDecorationStyle.wavy
+                  : TextDecorationStyle.solid,
             ),
           ),
         ),

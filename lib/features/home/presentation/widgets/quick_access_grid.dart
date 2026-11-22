@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
@@ -22,6 +23,7 @@ class QuickAccessGrid extends StatelessWidget {
   final AudioPlaybackService? audioService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final GetSlangExpressionsUseCase? getSlangUseCase;
+  final AppDatabase? database;
 
   const QuickAccessGrid({
     super.key,
@@ -29,6 +31,7 @@ class QuickAccessGrid extends StatelessWidget {
     this.audioService,
     this.addCardToSrsUseCase,
     this.getSlangUseCase,
+    this.database,
   });
 
   @override
@@ -131,6 +134,7 @@ class QuickAccessGrid extends StatelessWidget {
                 body: StoriesCatalogView(
                   audioService: audioService!,
                   addCardToSrsUseCase: addCardToSrsUseCase!,
+                  database: database,
                 ),
               ),
             );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../dictionary/domain/entities/dictionary_entry.dart';
@@ -35,11 +36,13 @@ class ConversationScreen extends StatefulWidget {
 
   final AudioPlaybackService? audioService;
   final AddCardToSrsUseCase? addCardToSrsUseCase;
+  final AppDatabase? database;
 
   const ConversationScreen({
     super.key,
     this.audioService,
     this.addCardToSrsUseCase,
+    this.database,
   });
 
   @override
@@ -342,6 +345,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ? StoriesCatalogView(
                         audioService: widget.audioService!,
                         addCardToSrsUseCase: widget.addCardToSrsUseCase!,
+                        database: widget.database,
                       )
                     : const Center(
                         child: Text('Сервисы историй инициализируются...'),

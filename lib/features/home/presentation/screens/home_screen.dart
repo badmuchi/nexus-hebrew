@@ -642,6 +642,7 @@ class _HomeScreenState extends State<HomeScreen> {
             audioService: widget.audioService,
             addCardToSrsUseCase: widget.addCardToSrsUseCase,
             getSlangUseCase: widget.getSlangUseCase,
+            database: widget.database,
           ),
           const SizedBox(height: 24),
 

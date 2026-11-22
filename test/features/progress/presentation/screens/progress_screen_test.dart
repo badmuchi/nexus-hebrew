@@ -130,10 +130,20 @@ void main() {
 
     expect(find.text('Прогресс · Поиск'), findsOneWidget);
     expect(find.textContaining('XP накоплено'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Карта активности'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Карта активности'), findsOneWidget);
     expect(find.text('Серия: 4 дн.'), findsOneWidget);
 
-    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.scrollUntilVisible(
+      find.text('Достижения и бейджи 🏆'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Достижения и бейджи 🏆'), findsOneWidget);
@@ -151,7 +161,11 @@ void main() {
     await tester.pumpWidget(createSubject(cubit));
     await tester.pumpAndSettle();
 
-    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.scrollUntilVisible(
+      find.text('Ударный режим 🔥'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
     // Нажимаем на бейдж Ударный режим

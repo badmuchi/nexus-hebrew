@@ -173,9 +173,41 @@ class _StoryWordBottomSheetState extends State<_StoryWordBottomSheet> {
                           style: theme.textTheme.headlineLarge?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: theme.colorScheme.onSurface,
+                            height: 1.45,
                           ),
                         ),
                       ),
+                      if (widget.token.category == 'weak_word_practice')
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, bottom: 2),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.amber.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text('🎯', style: TextStyle(fontSize: 12)),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Трудное слово FSRS',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.brightness == Brightness.dark
+                                        ? Colors.amber.shade200
+                                        : Colors.amber.shade900,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       if (widget.token.transliteration != null)
                         Text(
                           '[${widget.token.transliteration}]',
