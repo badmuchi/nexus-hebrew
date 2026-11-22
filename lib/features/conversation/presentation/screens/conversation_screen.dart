@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/logging/app_logger.dart';
+import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../dictionary/domain/entities/dictionary_entry.dart';
 import '../../../dictionary/presentation/cubit/dictionary_cubit.dart';
 import '../../../dictionary/presentation/cubit/dictionary_state.dart';
@@ -158,6 +159,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   )
                 : null,
             actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => AiRoleplayCatalogScreen(
+                        audioService: widget.audioService,
+                        addCardToSrsUseCase: widget.addCardToSrsUseCase,
+                      ),
+                    ),
+                  );
+                },
+                tooltip: 'AI-Собеседник: Ролевые диалоги 💬',
+                icon: const Icon(
+                  Icons.smart_toy_rounded,
+                  color: Color(0xFF00ACC1),
+                ),
+              ),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).push(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/logging/app_logger.dart';
+import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
@@ -42,6 +43,21 @@ class QuickAccessGrid extends StatelessWidget {
         icon: Icons.forum_rounded,
         color: const Color(0xFF1E88E5),
         onTap: () => onNavigateToTab?.call(1),
+      ),
+      _QuickItem(
+        title: 'AI-Собеседник',
+        hebrewTitle: 'שִׂיחָה עִם AI',
+        description: 'Живые диалоги, распознавание речи и разбор ошибок',
+        icon: Icons.smart_toy_rounded,
+        color: const Color(0xFF00838F),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => AiRoleplayCatalogScreen(
+              audioService: audioService,
+              addCardToSrsUseCase: addCardToSrsUseCase,
+            ),
+          ),
+        ),
       ),
       _QuickItem(
         title: 'FSRS Карточки',
