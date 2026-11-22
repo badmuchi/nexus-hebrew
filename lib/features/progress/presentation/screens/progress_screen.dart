@@ -20,6 +20,7 @@ import '../../domain/usecases/get_daily_workout.dart';
 import '../cubit/progress_cubit.dart';
 import '../cubit/progress_state.dart';
 import '../widgets/database_backup_dialog.dart';
+import '../widgets/fsrs_memory_dashboard_card.dart';
 import 'daily_workout_screen.dart';
 
 /// Unified progress analytics & global shoresh/Hebrew search workspace.
@@ -379,7 +380,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 12),
           _AchievementsGridCard(summary: summary),
           const SizedBox(height: 12),
-          _SrsMasteryCard(summary: summary),
+          FsrsMemoryDashboardCard(summary: summary),
           const SizedBox(height: 12),
           _GrammarStatsCard(summary: summary),
           const SizedBox(height: 12),
@@ -1190,50 +1191,6 @@ class _ActivityHeatmapCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(2),
-      ),
-    );
-  }
-}
-
-class _SrsMasteryCard extends StatelessWidget {
-  const _SrsMasteryCard({required this.summary});
-
-  final LearningProgressSummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'FSRS Колода (${summary.totalSrsCards} карт.)',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                Chip(label: Text('К повторению: ${summary.dueSrsCards}')),
-                Chip(label: Text('Новые: ${summary.newCards}')),
-                Chip(label: Text('Изучаются: ${summary.learningCards}')),
-                Chip(label: Text('Закреплены: ${summary.reviewCards}')),
-                Chip(label: Text('Всего повторений: ${summary.totalSrsReviews}')),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

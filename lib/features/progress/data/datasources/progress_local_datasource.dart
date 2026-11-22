@@ -6,6 +6,7 @@ import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../../conversation/domain/entities/binyan.dart';
 import '../../../conversation/domain/entities/hebrew_text.dart';
 import '../../../srs/domain/entities/fsrs_models.dart';
+import '../../../srs/domain/services/fsrs_analytics_calculator.dart';
 import '../../domain/entities/learning_progress_summary.dart';
 
 /// Contract for local progress aggregation and cross-table Hebrew search.
@@ -156,6 +157,12 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
         activityByDate[key] = (activityByDate[key] ?? 0) + 1;
       }
 
+      final fsrsAnalytics = FsrsAnalyticsCalculator.compute(
+        cards: cards.map(FsrsCardItem.fromRow).toList(),
+        logs: srsLogs.map(FsrsReviewLogItem.fromRow).toList(),
+        asOf: asOf,
+      );
+
       return Success<LearningProgressSummary, Failure>(
         LearningProgressSummary(
           totalSrsCards: cards.length,
@@ -178,6 +185,7 @@ final class DriftProgressLocalDataSource implements ProgressLocalDataSource {
           totalShoreshCount: 35,
           completedScenesCount: completedScenesCount,
           totalScenesCount: 6,
+          fsrsAnalytics: fsrsAnalytics,
         ),
       );
     } on Object catch (error, stackTrace) {

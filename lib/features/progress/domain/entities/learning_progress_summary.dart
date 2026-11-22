@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../conversation/domain/entities/binyan.dart';
 import '../../../conversation/domain/entities/hebrew_text.dart';
+import '../../../srs/domain/entities/fsrs_analytics_data.dart';
 
 /// Accuracy breakdown for one Hebrew binyan in grammar drills.
 final class BinyanAccuracyStat extends Equatable {
@@ -46,6 +47,7 @@ final class LearningProgressSummary extends Equatable {
     this.totalShoreshCount = 35,
     this.completedScenesCount = 0,
     this.totalScenesCount = 6,
+    this.fsrsAnalytics,
   }) : binyanStats = List<BinyanAccuracyStat>.unmodifiable(binyanStats);
 
   final int totalSrsCards;
@@ -68,6 +70,7 @@ final class LearningProgressSummary extends Equatable {
   final int totalShoreshCount;
   final int completedScenesCount;
   final int totalScenesCount;
+  final FsrsAnalyticsData? fsrsAnalytics;
 
   /// Overall grammar drill accuracy in `[0.0, 1.0]`.
   double get grammarAccuracy =>
@@ -95,6 +98,7 @@ final class LearningProgressSummary extends Equatable {
         totalShoreshCount,
         completedScenesCount,
         totalScenesCount,
+        fsrsAnalytics,
       ];
 }
 
