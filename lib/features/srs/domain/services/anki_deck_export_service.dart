@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../conversation/domain/entities/binyan.dart';
 import '../../../dictionary/domain/entities/dictionary_entry.dart';
 import '../entities/srs_card.dart';
@@ -15,6 +17,12 @@ enum AnkiExportFormat {
     displayName: 'Стандартный CSV',
     fileExtension: 'csv',
     mimeType: 'text/csv',
+  ),
+  json(
+    id: 'json',
+    displayName: 'JSON массив',
+    fileExtension: 'json',
+    mimeType: 'application/json',
   );
 
   const AnkiExportFormat({
@@ -131,6 +139,23 @@ final class AnkiDeckExportService {
     bool includeNikkud = true,
   }) {
     final buffer = StringBuffer();
+
+    if (format == AnkiExportFormat.json) {
+      final list = rows.map((r) {
+        return <String, dynamic>{
+          'hebrew': includeNikkud ? r.hebrewVocalized : r.hebrewNormalized,
+          'hebrewNormalized': r.hebrewNormalized,
+          'russianTranslation': r.russianTranslation,
+          if (r.transliteration != null && r.transliteration!.isNotEmpty)
+            'transliteration': r.transliteration,
+          if (r.root != null && r.root!.isNotEmpty) 'root': r.root,
+          if (r.binyanOrPart.isNotEmpty) 'binyanOrCategory': r.binyanOrPart,
+          if (r.audioUrl != null && r.audioUrl!.isNotEmpty) 'audio': r.audioUrl,
+          'tags': r.tags,
+        };
+      }).toList(growable: false);
+      return const JsonEncoder.withIndent('  ').convert(list);
+    }
 
     if (format == AnkiExportFormat.tsv) {
       // Anki TSV metadata headers for auto-configuration on import

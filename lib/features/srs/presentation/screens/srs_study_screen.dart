@@ -12,6 +12,7 @@ import '../../domain/usecases/add_card_to_srs.dart';
 import '../cubit/srs_session_cubit.dart';
 import '../cubit/srs_session_state.dart';
 import '../widgets/anki_export_dialog.dart';
+import '../widgets/deck_import_dialog.dart';
 import '../widgets/srs_flashcard_widget.dart';
 import 'hands_free_player_screen.dart';
 import 'match_pairs_screen.dart';
@@ -61,6 +62,19 @@ class SrsStudyScreen extends StatelessWidget {
     if (query != null && query.trim().isNotEmpty) {
       await cubit.importFromTatoeba(query);
     }
+  }
+
+  void _showDeckImportDialog(BuildContext context) {
+    if (addCardToSrsUseCase == null) return;
+    unawaited(
+      DeckImportDialog.show(
+        context,
+        addCardToSrsUseCase: addCardToSrsUseCase!,
+        onImportCompleted: () {
+          unawaited(context.read<SrsSessionCubit>().loadDueCards());
+        },
+      ),
+    );
   }
 
   void _openHandsFreePlayer(BuildContext context, SrsSessionState state) {
@@ -277,6 +291,9 @@ class SrsStudyScreen extends StatelessWidget {
                       case 'import_tatoeba':
                         unawaited(_showTatoebaImportDialog(context));
                         break;
+                      case 'import_deck':
+                        _showDeckImportDialog(context);
+                        break;
                       case 'export_anki':
                         _exportToAnki(context, state);
                         break;
@@ -385,6 +402,31 @@ class SrsStudyScreen extends StatelessWidget {
                       ),
                     ),
                     const PopupMenuItem(
+                      value: 'import_deck',
+                      child: Row(
+                        children: [
+                          Icon(Icons.file_download_rounded, color: Colors.deepPurple),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Импорт колоды',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'Anki TSV / CSV / JSON',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
                       value: 'export_anki',
                       child: Row(
                         children: [
@@ -429,6 +471,9 @@ class SrsStudyScreen extends StatelessWidget {
                   onRefresh: () => unawaited(cubit.loadDueCards()),
                   onImportTatoeba: () =>
                       unawaited(_showTatoebaImportDialog(context)),
+                  onImportDeck: addCardToSrsUseCase != null
+                      ? () => _showDeckImportDialog(context)
+                      : null,
                   onStartSprint: () {
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
@@ -468,6 +513,7 @@ class _SrsEmptyBody extends StatelessWidget {
   final bool isImporting;
   final VoidCallback onRefresh;
   final VoidCallback onImportTatoeba;
+  final VoidCallback? onImportDeck;
   final VoidCallback onStartSprint;
   final VoidCallback onStartHandsFree;
 
@@ -476,6 +522,7 @@ class _SrsEmptyBody extends StatelessWidget {
     required this.isImporting,
     required this.onRefresh,
     required this.onImportTatoeba,
+    this.onImportDeck,
     required this.onStartSprint,
     required this.onStartHandsFree,
   });
@@ -521,6 +568,14 @@ class _SrsEmptyBody extends StatelessWidget {
               icon: const Icon(Icons.cloud_download_rounded),
               label: const Text('Подгрузить фразы из Tatoeba'),
             ),
+            if (onImportDeck != null) ...[
+              const SizedBox(height: 10.0),
+              FilledButton.tonalIcon(
+                onPressed: onImportDeck,
+                icon: const Icon(Icons.file_download_rounded),
+                label: const Text('Импортировать свою колоду (Anki/JSON)'),
+              ),
+            ],
             const SizedBox(height: 10.0),
             OutlinedButton.icon(
               onPressed: onStartHandsFree,

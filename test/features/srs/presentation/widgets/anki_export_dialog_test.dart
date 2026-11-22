@@ -85,8 +85,9 @@ void main() {
 
       expect(find.text('Экспорт FSRS колоды в Anki'), findsOneWidget);
       expect(find.text('Всего карточек к экспорту: 1'), findsOneWidget);
-      expect(find.text('Anki TSV (реком.)'), findsOneWidget);
+      expect(find.text('Anki TSV'), findsOneWidget);
       expect(find.text('CSV'), findsOneWidget);
+      expect(find.text('JSON'), findsOneWidget);
       expect(find.text('Включать огласовки (никуд)'), findsOneWidget);
       expect(find.text('Как импортировать в Anki?'), findsOneWidget);
 
@@ -115,6 +116,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Front,Back,Transliteration'), findsOneWidget);
+
+      // Нажимаем на JSON сегмент
+      await tester.tap(find.text('JSON'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('"hebrew"'), findsOneWidget);
     });
   });
 }

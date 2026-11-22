@@ -88,5 +88,15 @@ void main() {
       // Табы и переводы строк внутри Back должны быть заменены на пробелы
       expect(tsv, contains('מַיִם\tВода чистая холодная\t\t\t\t\ttest'));
     });
+
+    test('экспортирует карточки SRS в формат JSON', () {
+      final jsonOutput = service.exportSrsCards([testCard], format: AnkiExportFormat.json);
+
+      expect(jsonOutput, contains('"hebrew": "שָׁלוֹם"'));
+      expect(jsonOutput, contains('"hebrewNormalized": "שלום"'));
+      expect(jsonOutput, contains('"russianTranslation": "Привет, мир"'));
+      expect(jsonOutput, contains('"root": "ש-ל-מ"'));
+      expect(jsonOutput, contains('"audio": "assets/audio/srs/shalom.mp3"'));
+    });
   });
 }

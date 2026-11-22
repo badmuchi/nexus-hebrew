@@ -182,13 +182,18 @@ class _AnkiExportDialogState extends State<AnkiExportDialog> {
                 segments: const [
                   ButtonSegment<AnkiExportFormat>(
                     value: AnkiExportFormat.tsv,
-                    label: Text('Anki TSV (реком.)'),
+                    label: Text('Anki TSV'),
                     tooltip: 'Табуляция — стандарт для Anki Desktop и AnkiDroid',
                   ),
                   ButtonSegment<AnkiExportFormat>(
                     value: AnkiExportFormat.csv,
                     label: Text('CSV'),
                     tooltip: 'Стандартный текстовый файл через запятую',
+                  ),
+                  ButtonSegment<AnkiExportFormat>(
+                    value: AnkiExportFormat.json,
+                    label: Text('JSON'),
+                    tooltip: 'Массив JSON для бэкапа и программной обработки',
                   ),
                 ],
                 selected: {_format},
