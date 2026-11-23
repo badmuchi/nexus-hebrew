@@ -27,6 +27,7 @@ import '../../../slang/presentation/screens/slang_screen.dart';
 import '../../../speech_lab/presentation/screens/speech_lab_screen.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../stories/presentation/screens/stories_catalog_view.dart';
+import '../../../voice_ai/presentation/screens/voice_ai_companion_screen.dart';
 import '../../../yael_exam/presentation/screens/yael_exam_screen.dart';
 
 /// Interactive grid of feature launch tiles on the Home dashboard.
@@ -447,6 +448,23 @@ class QuickAccessGrid extends StatelessWidget {
                 ),
               );
             },
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Сабра AI Голос',
+        hebrewTitle: 'שִׂיחָה קוֹלִית עִם סַבְּרָה',
+        description: 'Голосовые диалоги с распознаванием речи, кофе, шук и купат холим',
+        icon: Icons.mic_external_on_rounded,
+        color: const Color(0xFF2E7D32),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => VoiceAiCompanionScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
           );
         },
       ),
