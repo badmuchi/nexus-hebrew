@@ -83,23 +83,6 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
             ),
             actions: [
               if (loaded != null) ...[
-                IconButton(
-                  tooltip: _tabMode == DictionaryTabMode.words
-                      ? 'Коренной компас'
-                      : 'Список слов',
-                  onPressed: () {
-                    setState(() {
-                      _tabMode = _tabMode == DictionaryTabMode.words
-                          ? DictionaryTabMode.roots
-                          : DictionaryTabMode.words;
-                    });
-                  },
-                  icon: Icon(
-                    _tabMode == DictionaryTabMode.words
-                        ? Icons.account_tree_rounded
-                        : Icons.menu_book_rounded,
-                  ),
-                ),
                 if (_tabMode == DictionaryTabMode.words)
                   IconButton(
                     tooltip: loaded.showNikkud
@@ -113,45 +96,74 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                           : Icons.visibility_off_rounded,
                     ),
                   ),
-                IconButton(
-                  tooltip: 'Сабра-гид: Сленг 🇮🇱',
-                  onPressed: () {
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert_rounded),
+                  tooltip: 'Ещё действия',
+                  onSelected: (value) {
                     final cubit = context.read<DictionaryCubit>();
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => SlangScreen(
-                          getSlangUseCase: GetSlangExpressionsUseCase(
-                            SlangRepositoryImpl(
-                              dataSource: AssetSlangSeedDataSource(
-                                logger: const DeveloperAppLogger(),
+                    if (value == 'slang') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => SlangScreen(
+                            getSlangUseCase: GetSlangExpressionsUseCase(
+                              SlangRepositoryImpl(
+                                dataSource: AssetSlangSeedDataSource(
+                                  logger: const DeveloperAppLogger(),
+                                ),
                               ),
                             ),
+                            audioService: cubit.audioService,
+                            addCardToSrsUseCase: cubit.addCardToSrsUseCase,
                           ),
-                          audioService: cubit.audioService,
-                          addCardToSrsUseCase: cubit.addCardToSrsUseCase,
                         ),
-                      ),
-                    );
+                      );
+                    } else if (value == 'anki') {
+                      unawaited(
+                        AnkiExportDialog.showDictionaryExport(
+                          context,
+                          entries: loaded.allEntries,
+                        ),
+                      );
+                    } else if (value == 'add_word') {
+                      unawaited(showAddDictionaryWordDialog(context));
+                    }
                   },
-                  icon: const Icon(
-                    Icons.local_fire_department_rounded,
-                    color: Colors.deepOrangeAccent,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Экспорт в Anki (TSV/CSV)',
-                  onPressed: () => unawaited(
-                    AnkiExportDialog.showDictionaryExport(
-                      context,
-                      entries: loaded.allEntries,
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: 'add_word',
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_circle_outline_rounded, size: 20),
+                          SizedBox(width: 8),
+                          Text('Добавить своё слово'),
+                        ],
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.download_for_offline_outlined),
-                ),
-                IconButton(
-                  tooltip: 'Добавить своё слово',
-                  onPressed: () => unawaited(showAddDictionaryWordDialog(context)),
-                  icon: const Icon(Icons.add_circle_outline_rounded),
+                    PopupMenuItem(
+                      value: 'slang',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.local_fire_department_rounded,
+                            size: 20,
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          SizedBox(width: 8),
+                          Text('Сабра-гид: Сленг 🇮🇱'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'anki',
+                      child: Row(
+                        children: [
+                          Icon(Icons.download_for_offline_outlined, size: 20),
+                          SizedBox(width: 8),
+                          Text('Экспорт в Anki (TSV/CSV)'),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],

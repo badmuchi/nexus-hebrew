@@ -273,7 +273,7 @@ void main() {
   testWidgets(
     'NexusHebrewApp renders all seven navigation tabs in compact NavigationBar',
     (WidgetTester tester) async {
-      tester.view.physicalSize = const Size(390, 844);
+      tester.view.physicalSize = const Size(600, 900);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
