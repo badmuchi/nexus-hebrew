@@ -6,6 +6,7 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
+import '../../../chat_slang/presentation/screens/israeli_chat_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../driving/presentation/screens/driving_roads_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
@@ -384,6 +385,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => YaelExamScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Сленг WhatsApp',
+        hebrewTitle: 'וָואטְסְאַפּ וּסְלֶנְג',
+        description: 'Сокращения, переписки ваад байта, хайтек-команды и аудио-войсы',
+        icon: Icons.chat_bubble_rounded,
+        color: const Color(0xFF00796B),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => IsraeliChatSimulatorScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
