@@ -10,6 +10,7 @@ import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../driving/presentation/screens/driving_roads_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
+import '../../../holidays/presentation/screens/holidays_shabbat_screen.dart';
 import '../../../housing/presentation/screens/apartment_rental_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
@@ -348,6 +349,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => ApartmentRentalScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Шаббат и Традиции',
+        hebrewTitle: 'שַׁבָּת וְחַגִּים',
+        description: 'Календарь праздников, сирены, транспорт в Шаббат и застольный этикет',
+        icon: Icons.celebration_rounded,
+        color: const Color(0xFFC2185B),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => HolidaysShabbatScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),

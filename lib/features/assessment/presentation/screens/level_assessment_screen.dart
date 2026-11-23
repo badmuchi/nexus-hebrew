@@ -108,6 +108,21 @@ class _LevelAssessmentScreenState extends State<LevelAssessmentScreen> {
     }
   }
 
+  Future<void> _playOptionAudio(String optionText) async {
+    final audio = widget.audioService;
+    if (audio == null) return;
+
+    // Extract Hebrew portion if present, otherwise speak full option
+    final match = RegExp(r'^([\u0590-\u05FF\s\-\.\,\?!]+)').firstMatch(optionText.trim());
+    final hebrewToSpeak = match != null ? match.group(1)!.trim() : optionText.trim();
+    if (hebrewToSpeak.isEmpty) return;
+
+    await audio.playWithTtsFallback(
+      sourcePath: null,
+      fallbackHebrewText: hebrewToSpeak,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -163,9 +178,13 @@ class _LevelAssessmentScreenState extends State<LevelAssessmentScreen> {
         ),
 
         Expanded(
-          child: ListView(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 24),
-            children: [
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680),
+              child: ListView(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 14, 16, 24),
+                children: [
               // Badges: Level & Skill Focus
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -283,12 +302,17 @@ class _LevelAssessmentScreenState extends State<LevelAssessmentScreen> {
                   index: i,
                   isSelected: selectedIndex == i,
                   onSelect: () => _onSelectOption(i),
+                  onPlayAudio: widget.audioService != null
+                      ? () => _playOptionAudio(q.options[i])
+                      : null,
                 ),
                 const SizedBox(height: 10),
               ],
             ],
           ),
         ),
+      ),
+    ),
 
         // Bottom Action Bar: Back / Next
         Container(
@@ -301,28 +325,34 @@ class _LevelAssessmentScreenState extends State<LevelAssessmentScreen> {
               ),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton.icon(
-                onPressed: _currentIndex > 0 ? _prevQuestion : null,
-                icon: const Icon(Icons.chevron_left_rounded),
-                label: const Text('Назад'),
+          child: Align(
+            alignment: Alignment.center,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                    onPressed: _currentIndex > 0 ? _prevQuestion : null,
+                    icon: const Icon(Icons.chevron_left_rounded),
+                    label: const Text('Назад'),
+                  ),
+                  FilledButton.icon(
+                    onPressed: isAnswered ? _nextQuestion : null,
+                    icon: Icon(
+                      _currentIndex == _questions.length - 1
+                          ? Icons.check_circle_rounded
+                          : Icons.chevron_right_rounded,
+                    ),
+                    label: Text(
+                      _currentIndex == _questions.length - 1
+                          ? 'Завершить тест'
+                          : 'Далее',
+                    ),
+                  ),
+                ],
               ),
-              FilledButton.icon(
-                onPressed: isAnswered ? _nextQuestion : null,
-                icon: Icon(
-                  _currentIndex == _questions.length - 1
-                      ? Icons.check_circle_rounded
-                      : Icons.chevron_right_rounded,
-                ),
-                label: Text(
-                  _currentIndex == _questions.length - 1
-                      ? 'Завершить тест'
-                      : 'Далее',
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],
@@ -335,13 +365,86 @@ class _OptionTile extends StatelessWidget {
   final int index;
   final bool isSelected;
   final VoidCallback onSelect;
+  final VoidCallback? onPlayAudio;
 
   const _OptionTile({
     required this.optionText,
     required this.index,
     required this.isSelected,
     required this.onSelect,
+    this.onPlayAudio,
   });
+
+  Widget _buildOptionContent(ThemeData theme) {
+    final trimmed = optionText.trim();
+    // Pattern: "Hebrew (Russian)" e.g. "לוֹמֵד (ломэд)"
+    final match = RegExp(r'^([\u0590-\u05FF\s\-\.\,\?!]+)\s*(\([^\)]+\))$').firstMatch(trimmed);
+    if (match != null) {
+      final hebrewPart = match.group(1)!.trim();
+      final transPart = match.group(2)!.trim();
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 8,
+        runSpacing: 4,
+        children: [
+          Directionality(
+            textDirection: TextDirection.rtl,
+            child: Text(
+              hebrewPart,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                fontSize: 18,
+                height: 1.45,
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          Text(
+            transPart,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: isSelected
+                  ? theme.colorScheme.primary.withValues(alpha: 0.85)
+                  : theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final hasHebrew = RegExp(r'[\u0590-\u05FF]').hasMatch(trimmed);
+    if (hasHebrew) {
+      return Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text(
+            trimmed,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontSize: 18,
+              height: 1.45,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Text(
+      trimmed,
+      style: theme.textTheme.bodyLarge?.copyWith(
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+        color: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurface,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -354,6 +457,8 @@ class _OptionTile extends StatelessWidget {
     final bgColor = isSelected
         ? theme.colorScheme.primaryContainer.withValues(alpha: 0.4)
         : theme.colorScheme.surface;
+
+    final hasHebrew = RegExp(r'[\u0590-\u05FF]').hasMatch(optionText);
 
     return Material(
       color: bgColor,
@@ -370,8 +475,8 @@ class _OptionTile extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 28,
-                height: 28,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isSelected
@@ -383,7 +488,7 @@ class _OptionTile extends StatelessWidget {
                     String.fromCharCode(65 + index), // A, B, C, D
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                      fontSize: 14,
                       color: isSelected
                           ? Colors.white
                           : theme.colorScheme.onSurfaceVariant,
@@ -393,25 +498,26 @@ class _OptionTile extends StatelessWidget {
               ),
               const SizedBox(width: 14),
               Expanded(
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Text(
-                    optionText,
-                    textAlign: TextAlign.start,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
+                child: _buildOptionContent(theme),
               ),
+              if (onPlayAudio != null && hasHebrew) ...[
+                IconButton(
+                  icon: const Icon(Icons.volume_up_rounded, size: 20),
+                  color: isSelected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
+                  tooltip: 'Прослушать вариант',
+                  onPressed: onPlayAudio,
+                ),
+              ],
               if (isSelected)
-                Icon(
-                  Icons.check_circle_rounded,
-                  size: 20,
-                  color: theme.colorScheme.primary,
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 4),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    size: 22,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
             ],
           ),
