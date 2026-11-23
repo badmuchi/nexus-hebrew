@@ -5,6 +5,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../army_tzahal/presentation/screens/army_tzahal_screen.dart';
 import '../../../banking/presentation/screens/banking_services_screen.dart';
 import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
 import '../../../chat_slang/presentation/screens/israeli_chat_simulator_screen.dart';
@@ -479,6 +480,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => EasyHebrewNewsScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Армия и ЦАХАЛ',
+        hebrewTitle: 'צַהַ״ל וְשֵׁרוּת לְאֻמִּי',
+        description: 'Пакаль, гимелим, собеседование Цав Ришон и Шерут Леуми',
+        icon: Icons.shield_rounded,
+        color: const Color(0xFF33691E),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => ArmyTzahalScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
