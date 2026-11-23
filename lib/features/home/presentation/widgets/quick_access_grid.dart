@@ -7,6 +7,7 @@ import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dar
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
+import '../../../driving/presentation/screens/driving_roads_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
@@ -312,6 +313,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => HealthClinicScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Вождение и Waze',
+        hebrewTitle: 'נְהִיגָה וַחֲנָיָה',
+        description: 'Цвета бордюров, Pango, голосовой Waze, заправка и полиция',
+        icon: Icons.directions_car_rounded,
+        color: const Color(0xFFE65100),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => DrivingRoadsScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
