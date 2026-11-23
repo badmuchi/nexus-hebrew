@@ -23,6 +23,7 @@ import '../../../slang/presentation/screens/slang_screen.dart';
 import '../../../speech_lab/presentation/screens/speech_lab_screen.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../../stories/presentation/screens/stories_catalog_view.dart';
+import '../../../yael_exam/presentation/screens/yael_exam_screen.dart';
 
 /// Interactive grid of feature launch tiles on the Home dashboard.
 class QuickAccessGrid extends StatelessWidget {
@@ -366,6 +367,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => HolidaysShabbatScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Экзамен Яэль',
+        hebrewTitle: 'מִבְחַן יַעֵ״ל',
+        description: 'Академический иврит, тексты, синтаксис предлогов и сертификат',
+        icon: Icons.school_rounded,
+        color: const Color(0xFF1565C0),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => YaelExamScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
