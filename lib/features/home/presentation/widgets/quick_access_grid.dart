@@ -17,6 +17,7 @@ import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
 import '../../../holidays/presentation/screens/holidays_shabbat_screen.dart';
 import '../../../housing/presentation/screens/apartment_rental_screen.dart';
+import '../../../leagues/presentation/screens/sabra_leagues_screen.dart';
 import '../../../news/presentation/screens/easy_hebrew_news_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
@@ -500,6 +501,20 @@ class QuickAccessGrid extends StatelessWidget {
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Лиги Сабры',
+        hebrewTitle: 'לִיגַת הַסַּבְּרָה',
+        description: 'Недельная таблица лидеров, продвижение в Бриллиантовую лигу и XP',
+        icon: Icons.emoji_events_rounded,
+        color: const Color(0xFFFF8F00),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => const SabraLeaguesScreen(),
             ),
           );
         },
