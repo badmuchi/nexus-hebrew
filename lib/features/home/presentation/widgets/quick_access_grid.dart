@@ -8,6 +8,7 @@ import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
+import '../../../health/presentation/screens/health_clinic_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
@@ -294,6 +295,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => JobInterviewSimulatorScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Врачи и Аптека',
+        hebrewTitle: 'בְּרִיאוּת וּמִרְפָּאָה',
+        description: 'Части тела, симптомы, купат холим, супер-фарм и скорая',
+        icon: Icons.medical_services_rounded,
+        color: const Color(0xFFD32F2F),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => HealthClinicScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
