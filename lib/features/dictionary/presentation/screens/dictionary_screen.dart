@@ -135,7 +135,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                         children: [
                           Icon(Icons.add_circle_outline_rounded, size: 20),
                           SizedBox(width: 8),
-                          Text('Добавить своё слово'),
+                          Expanded(child: Text('Добавить своё слово')),
                         ],
                       ),
                     ),
@@ -149,7 +149,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                             color: Colors.deepOrangeAccent,
                           ),
                           SizedBox(width: 8),
-                          Text('Сабра-гид: Сленг 🇮🇱'),
+                          Expanded(child: Text('Сабра-гид: Сленг 🇮🇱')),
                         ],
                       ),
                     ),
@@ -159,7 +159,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                         children: [
                           Icon(Icons.download_for_offline_outlined, size: 20),
                           SizedBox(width: 8),
-                          Text('Экспорт в Anki (TSV/CSV)'),
+                          Expanded(child: Text('Экспорт в Anki (TSV/CSV)')),
                         ],
                       ),
                     ),

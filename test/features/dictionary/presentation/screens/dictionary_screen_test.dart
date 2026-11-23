@@ -191,8 +191,10 @@ void main() {
     await tester.tap(find.text('Сбросить'));
     await settle(tester, 'reset root');
 
-    // Добавление пользовательского слова через диалог
-    await tester.tap(find.byTooltip('Добавить своё слово'));
+    // Добавление пользовательского слова через меню действий
+    await tester.tap(find.byTooltip('Ещё действия'));
+    await settle(tester, 'open menu');
+    await tester.tap(find.text('Добавить своё слово'));
     await settle(tester, 'open dialog');
     expect(find.text('Добавить слово в словарь'), findsOneWidget);
 
