@@ -16,6 +16,7 @@ import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
 import '../../../holidays/presentation/screens/holidays_shabbat_screen.dart';
 import '../../../housing/presentation/screens/apartment_rental_screen.dart';
+import '../../../news/presentation/screens/easy_hebrew_news_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
@@ -461,6 +462,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => VoiceAiCompanionScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Новости на иврите',
+        hebrewTitle: 'חֲדָשׁוֹת בְּעִבְרִית קַלָּה',
+        description: 'Адаптированные актуальные новости Израиля со звуком и словарем',
+        icon: Icons.newspaper_rounded,
+        color: const Color(0xFF00838F),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => EasyHebrewNewsScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
