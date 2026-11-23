@@ -10,6 +10,7 @@ import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../driving/presentation/screens/driving_roads_screen.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
+import '../../../housing/presentation/screens/apartment_rental_screen.dart';
 import '../../../numbers/presentation/screens/numbers_cashier_screen.dart';
 import '../../../scenes/data/repositories/scenes_repository_impl.dart';
 import '../../../scenes/presentation/screens/scenes_catalog_screen.dart';
@@ -330,6 +331,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => DrivingRoadsScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Аренда и Договор',
+        hebrewTitle: 'שְׂכִירוּת וְדִירָה',
+        description: 'Объявления Yad2, чеки безопасности, поломки и арнона',
+        icon: Icons.apartment_rounded,
+        color: const Color(0xFF4527A0),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => ApartmentRentalScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
