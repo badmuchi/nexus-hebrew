@@ -5,6 +5,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
+import '../../../banking/presentation/screens/banking_services_screen.dart';
 import '../../../career/presentation/screens/job_interview_simulator_screen.dart';
 import '../../../chat_slang/presentation/screens/israeli_chat_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
@@ -402,6 +403,23 @@ class QuickAccessGrid extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
               builder: (_) => IsraeliChatSimulatorScreen(
+                audioService: audioService,
+                addCardToSrsUseCase: addCardToSrsUseCase,
+              ),
+            ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Банк и Машканта',
+        hebrewTitle: 'בַּנְק וּמַשְׁכַּנְתָּא',
+        description: 'Чеки, овердрафт, открытие счета, машканта и Битуах Леуми',
+        icon: Icons.account_balance_rounded,
+        color: const Color(0xFF0D47A1),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => BankingServicesScreen(
                 audioService: audioService,
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
