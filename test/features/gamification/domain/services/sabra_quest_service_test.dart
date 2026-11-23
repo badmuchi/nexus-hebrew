@@ -16,6 +16,10 @@ class _FakeSettingsStorage implements AppSettingsStorage {
   Future<int> readSabraStreakDays() async => streak;
   @override
   Future<void> writeSabraStreakDays(int days) async => streak = days;
+  @override
+  Future<String?> readDailyGoalJson() async => null;
+  @override
+  Future<void> writeDailyGoalJson(String json) async {}
 
   @override
   Future<String?> readAssessedLevel() async => null;

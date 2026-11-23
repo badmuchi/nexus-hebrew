@@ -16,6 +16,7 @@ class _FakeAppSettingsStorage implements AppSettingsStorage {
   DateTime? preloadDate;
   String? sabraQuestsJson;
   int sabraStreakDays = 0;
+  String? dailyGoalJson;
 
   @override
   Future<double> readPlaybackSpeed() async => speed;
@@ -53,6 +54,10 @@ class _FakeAppSettingsStorage implements AppSettingsStorage {
   Future<int> readSabraStreakDays() async => sabraStreakDays;
   @override
   Future<void> writeSabraStreakDays(int days) async => sabraStreakDays = days;
+  @override
+  Future<String?> readDailyGoalJson() async => dailyGoalJson;
+  @override
+  Future<void> writeDailyGoalJson(String json) async => dailyGoalJson = json;
 }
 
 class _MockDio extends Mock implements Dio {}

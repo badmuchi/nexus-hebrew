@@ -9,6 +9,9 @@ import '../../../../core/settings/app_settings_storage.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../gamification/domain/services/sabra_quest_service.dart';
 import '../../../gamification/presentation/widgets/sabra_daily_quests_card.dart';
+import '../../../goals/domain/entities/daily_goal.dart';
+import '../../../goals/domain/services/daily_goal_service.dart';
+import '../../../goals/presentation/widgets/daily_goal_rings_card.dart';
 import '../../../progress/domain/entities/daily_workout_plan.dart';
 import '../../../progress/domain/usecases/get_daily_workout.dart';
 import '../../../progress/presentation/cubit/progress_cubit.dart';
@@ -61,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late final OmniSearchEngine _searchEngine = OmniSearchEngine.withStaticDefaults();
   late final ScenesRepository _scenesRepository = ScenesRepositoryImpl(database: widget.database);
   late final SabraQuestService _sabraQuestService = SabraQuestService(storage: widget.settingsStorage);
+  late final DailyGoalService _dailyGoalService = DailyGoalService(storage: widget.settingsStorage);
+  DailyGoalProgress? _dailyGoal;
 
   @override
   void initState() {
@@ -68,6 +73,21 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadWorkoutPlan();
     _loadAssessedLevel();
     _populateSearchEngine();
+    _loadDailyGoal();
+  }
+
+  Future<void> _loadDailyGoal() async {
+    final progress = await _dailyGoalService.loadGoalProgress();
+    if (mounted) {
+      setState(() => _dailyGoal = progress);
+    }
+  }
+
+  Future<void> _onGoalIntensityChanged(DailyGoalIntensity intensity) async {
+    final updated = await _dailyGoalService.updateIntensity(intensity);
+    if (mounted) {
+      setState(() => _dailyGoal = updated);
+    }
   }
 
   Future<void> _loadAssessedLevel() async {
@@ -543,6 +563,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
 
+          // Daily Activity Rings & Goals
+          if (_dailyGoal != null) ...[
+            DailyGoalRingsCard(
+              progress: _dailyGoal!,
+              onIntensityChanged: _onGoalIntensityChanged,
+              onNavigateToCards: () => widget.onNavigateToTab?.call(2),
+              onNavigateToPractice: () => widget.onNavigateToTab?.call(6),
+              onNavigateToQuests: () => widget.onNavigateToTab?.call(4),
+            ),
+            const SizedBox(height: 16),
+          ],
+
           // Sabra Daily Quests & Streaks
           BlocBuilder<ProgressCubit, ProgressState>(
             builder: (context, state) {
@@ -554,6 +586,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 streakDays: streak,
                 onXpClaimed: (_) {
                   unawaited(context.read<ProgressCubit>().loadProgress());
+                  unawaited(_dailyGoalService.recordActivity(questsDelta: 1).then((up) {
+                    if (mounted) setState(() => _dailyGoal = up);
+                  }));
                 },
                 onNavigateToDialogue: () => widget.onNavigateToTab?.call(4),
                 onNavigateToSrs: () => widget.onNavigateToTab?.call(2),

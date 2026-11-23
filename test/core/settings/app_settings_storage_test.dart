@@ -200,5 +200,31 @@ void main() {
       final readDate = await settingsStorage.readLastAudioPreloadDate();
       expect(readDate, equals(date));
     });
+
+    test('readDailyGoalJson and writeDailyGoalJson roundtrip correctly', () async {
+      when(() => storage.read(key: 'nexus_hebrew_daily_goal_state'))
+          .thenAnswer((_) async => null);
+
+      expect(await settingsStorage.readDailyGoalJson(), isNull);
+
+      when(() => storage.write(key: any(named: 'key'), value: any(named: 'value')))
+          .thenAnswer((_) async {});
+
+      const sampleJson = '{"dateKey":"2026-11-23","intensity":"regular","cardsReviewed":15}';
+      await settingsStorage.writeDailyGoalJson(sampleJson);
+
+      verify(
+        () => storage.write(
+          key: 'nexus_hebrew_daily_goal_state',
+          value: sampleJson,
+        ),
+      ).called(1);
+
+      when(() => storage.read(key: 'nexus_hebrew_daily_goal_state'))
+          .thenAnswer((_) async => sampleJson);
+
+      final readJson = await settingsStorage.readDailyGoalJson();
+      expect(readJson, equals(sampleJson));
+    });
   });
 }

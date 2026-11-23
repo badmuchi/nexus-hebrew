@@ -10,6 +10,8 @@ import '../../../career/presentation/screens/job_interview_simulator_screen.dart
 import '../../../chat_slang/presentation/screens/israeli_chat_simulator_screen.dart';
 import '../../../cursive/presentation/screens/cursive_decryptor_screen.dart';
 import '../../../driving/presentation/screens/driving_roads_screen.dart';
+import '../../../goals/domain/entities/daily_goal.dart';
+import '../../../goals/presentation/widgets/goal_settings_sheet.dart';
 import '../../../grammar/presentation/widgets/sentence_builder_view.dart';
 import '../../../health/presentation/screens/health_clinic_screen.dart';
 import '../../../holidays/presentation/screens/holidays_shabbat_screen.dart';
@@ -424,6 +426,27 @@ class QuickAccessGrid extends StatelessWidget {
                 addCardToSrsUseCase: addCardToSrsUseCase,
               ),
             ),
+          );
+        },
+      ),
+      _QuickItem(
+        title: 'Трекер целей',
+        hebrewTitle: 'יַעַד יוֹמִי וְהֶרְגֵּלִים',
+        description: 'Кольца активности, стрик дней, дневные таргеты и настройка темпа',
+        icon: Icons.track_changes_rounded,
+        color: const Color(0xFFE65100),
+        onTap: () {
+          GoalSettingsSheet.show(
+            context: context,
+            currentIntensity: DailyGoalIntensity.regular,
+            onIntensitySelected: (intensity) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Цель обновлена: ${intensity.titleRu} (${intensity.targetMinutes} мин/день)'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
           );
         },
       ),

@@ -22,6 +22,8 @@ abstract interface class AppSettingsStorage {
   Future<void> writeSabraQuestsJson(String json);
   Future<int> readSabraStreakDays();
   Future<void> writeSabraStreakDays(int days);
+  Future<String?> readDailyGoalJson();
+  Future<void> writeDailyGoalJson(String json);
 }
 
 final class SecureAppSettingsStorage implements AppSettingsStorage {
@@ -35,6 +37,7 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
   static const String _lastAudioPreloadKey = 'nexus_hebrew_last_audio_preload_date';
   static const String _sabraQuestsKey = 'nexus_hebrew_sabra_quests_state';
   static const String _sabraStreakDaysKey = 'nexus_hebrew_sabra_streak_days';
+  static const String _dailyGoalKey = 'nexus_hebrew_daily_goal_state';
   static const double _defaultSpeed = 1.0;
 
   final FlutterSecureStorage _storage;
@@ -337,6 +340,32 @@ final class SecureAppSettingsStorage implements AppSettingsStorage {
       _logger.error(
         _tag,
         'Failed to persist Sabra streak days "$days" to storage',
+        errorDetails: error.toString(),
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<String?> readDailyGoalJson() async {
+    try {
+      final raw = await _storage.read(key: _dailyGoalKey);
+      if (raw == null || raw.trim().isEmpty) return null;
+      return raw.trim();
+    } on Object catch (error) {
+      _logger.warning(_tag, 'Failed to read Daily goal state from storage ($error)');
+      return null;
+    }
+  }
+
+  @override
+  Future<void> writeDailyGoalJson(String json) async {
+    try {
+      await _storage.write(key: _dailyGoalKey, value: json);
+    } on Object catch (error, stackTrace) {
+      _logger.error(
+        _tag,
+        'Failed to persist Daily goal state to storage',
         errorDetails: error.toString(),
         stackTrace: stackTrace,
       );
