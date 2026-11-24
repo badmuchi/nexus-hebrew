@@ -226,7 +226,7 @@ void main() {
       await tester.pumpWidget(buildWidget());
       await tester.pumpAndSettle();
 
-      final searchBar = find.text('Поиск по словарю, сленгу, корням и алфавиту...');
+      final searchBar = find.text('Поиск по всему приложению');
       expect(searchBar, findsOneWidget);
       await tester.tap(searchBar);
       await tester.pumpAndSettle();

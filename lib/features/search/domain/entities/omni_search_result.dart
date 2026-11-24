@@ -3,11 +3,15 @@ import 'package:equatable/equatable.dart';
 /// Categories of items returned in the global Omni-Search.
 enum OmniResultCategory {
   dictionary(id: 'dictionary', labelRu: 'Словарь'),
+  shoresh(id: 'shoresh', labelRu: 'Корни'),
+  army(id: 'army', labelRu: 'ЦАХАЛ / Армия'),
+  news(id: 'news', labelRu: 'Новости'),
+  chat(id: 'chat', labelRu: 'WhatsApp'),
+  dialogue(id: 'dialogue', labelRu: 'Диалоги'),
   slang(id: 'slang', labelRu: 'Сленг'),
   grammar(id: 'grammar', labelRu: 'Грамматика'),
   alphabet(id: 'alphabet', labelRu: 'Алфавит'),
-  preposition(id: 'preposition', labelRu: 'Предлоги'),
-  shoresh(id: 'shoresh', labelRu: 'Корни');
+  preposition(id: 'preposition', labelRu: 'Предлоги');
 
   const OmniResultCategory({required this.id, required this.labelRu});
 

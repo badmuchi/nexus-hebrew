@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nexus_hebrew_app/core/audio/audio_playback_service.dart';
 import 'package:nexus_hebrew_app/core/result/result.dart';
+import 'package:nexus_hebrew_app/features/army_tzahal/presentation/screens/army_tzahal_screen.dart';
 import 'package:nexus_hebrew_app/features/search/domain/services/omni_search_engine.dart';
 import 'package:nexus_hebrew_app/features/search/presentation/widgets/omni_search_sheet.dart';
 import 'package:nexus_hebrew_app/features/srs/domain/usecases/add_card_to_srs.dart';
@@ -175,5 +176,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(navigatedTab, 1); // Alphabet tab
+  });
+
+  testWidgets('tapping army result tile opens ArmyTzahalScreen', (tester) async {
+    await tester.pumpWidget(createSubject());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'пакаль');
+    await tester.pumpAndSettle();
+
+    final pakalCard = find.text('פַּקָּ״ל').first;
+    await tester.tap(pakalCard);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ArmyTzahalScreen), findsOneWidget);
   });
 }

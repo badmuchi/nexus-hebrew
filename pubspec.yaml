@@ -1,7 +1,7 @@
 name: nexus_hebrew_app
 description: Offline-first Hebrew learning application built with DDD and Clean Architecture.
 publish_to: 'none'
-version: 0.3.0+1
+version: 1.0.0+1
 
 environment:
   sdk: '>=3.5.0 <4.0.0'

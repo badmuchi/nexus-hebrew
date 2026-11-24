@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
+import '../../../army_tzahal/presentation/screens/army_tzahal_screen.dart';
+import '../../../chat_slang/presentation/screens/israeli_chat_simulator_screen.dart';
+import '../../../news/presentation/screens/easy_hebrew_news_screen.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
+import '../../../voice_ai/presentation/screens/voice_ai_companion_screen.dart';
 import '../../domain/entities/omni_search_result.dart';
 import '../../domain/services/omni_search_engine.dart';
 import 'omni_search_result_tile.dart';
@@ -371,19 +375,53 @@ class _OmniSearchSheetState extends State<OmniSearchSheet> {
   }
 
   void _handleResultTap(OmniSearchResult result) {
-    if (widget.onNavigateToTab == null) return;
-
     switch (result.category) {
+      case OmniResultCategory.army:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => ArmyTzahalScreen(
+              audioService: widget.audioService,
+              addCardToSrsUseCase: widget.addCardToSrsUseCase,
+            ),
+          ),
+        );
+      case OmniResultCategory.news:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => EasyHebrewNewsScreen(
+              audioService: widget.audioService,
+              addCardToSrsUseCase: widget.addCardToSrsUseCase,
+            ),
+          ),
+        );
+      case OmniResultCategory.chat:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => IsraeliChatSimulatorScreen(
+              audioService: widget.audioService,
+              addCardToSrsUseCase: widget.addCardToSrsUseCase,
+            ),
+          ),
+        );
+      case OmniResultCategory.dialogue:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => VoiceAiCompanionScreen(
+              audioService: widget.audioService,
+              addCardToSrsUseCase: widget.addCardToSrsUseCase,
+            ),
+          ),
+        );
       case OmniResultCategory.alphabet:
-        widget.onNavigateToTab!(1); // Alphabet tab
+        widget.onNavigateToTab?.call(1);
       case OmniResultCategory.dictionary:
-        widget.onNavigateToTab!(2); // Dictionary tab
+        widget.onNavigateToTab?.call(2);
       case OmniResultCategory.grammar:
       case OmniResultCategory.preposition:
       case OmniResultCategory.shoresh:
-        widget.onNavigateToTab!(3); // Grammar tab
+        widget.onNavigateToTab?.call(3);
       case OmniResultCategory.slang:
-        widget.onNavigateToTab!(4); // Slang / Conversation tab
+        widget.onNavigateToTab?.call(4);
     }
   }
 }

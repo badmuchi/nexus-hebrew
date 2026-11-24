@@ -88,6 +88,30 @@ void main() {
       expect(slangRes.first.hebrewWithoutNikkud, 'סבבה');
     });
 
+    test('withStaticDefaults loads army, chat slang, news, and voice scenarios', () {
+      final engine = OmniSearchEngine.withStaticDefaults();
+
+      // Army slang test
+      final pakalRes = engine.search('пакаль');
+      expect(pakalRes, isNotEmpty);
+      expect(pakalRes.any((r) => r.category == OmniResultCategory.army), isTrue);
+
+      // WhatsApp slang test
+      final amlakRes = engine.search('אמלק');
+      expect(amlakRes, isNotEmpty);
+      expect(amlakRes.any((r) => r.category == OmniResultCategory.chat), isTrue);
+
+      // Easy news test
+      final newsRes = engine.search('Негев');
+      expect(newsRes, isNotEmpty);
+      expect(newsRes.any((r) => r.category == OmniResultCategory.news), isTrue);
+
+      // Voice scenario test
+      final voiceRes = engine.search('Дизенгоф');
+      expect(voiceRes, isNotEmpty);
+      expect(voiceRes.any((r) => r.category == OmniResultCategory.dialogue), isTrue);
+    });
+
     test('empty query returns empty list', () {
       final engine = OmniSearchEngine.withStaticDefaults();
       expect(engine.search(''), isEmpty);

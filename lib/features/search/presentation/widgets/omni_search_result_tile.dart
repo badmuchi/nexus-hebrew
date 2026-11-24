@@ -59,6 +59,26 @@ class _OmniSearchResultTileState extends State<OmniSearchResultTile> {
           const Color(0xFF00897B),
           'Корень'
         ),
+      OmniResultCategory.army => (
+          Icons.shield_rounded,
+          const Color(0xFF33691E),
+          'ЦАХАЛ'
+        ),
+      OmniResultCategory.news => (
+          Icons.newspaper_rounded,
+          const Color(0xFF00838F),
+          'Новости'
+        ),
+      OmniResultCategory.chat => (
+          Icons.chat_rounded,
+          const Color(0xFF00796B),
+          'WhatsApp'
+        ),
+      OmniResultCategory.dialogue => (
+          Icons.record_voice_over_rounded,
+          const Color(0xFF2E7D32),
+          'Диалог'
+        ),
     };
   }
 
@@ -232,16 +252,19 @@ class _OmniSearchResultTileState extends State<OmniSearchResultTile> {
                   ),
                   const SizedBox(width: 12),
                   // Hebrew text block with strict RTL and increased line-height for nikkud
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Text(
-                      widget.result.hebrewWithNikkud,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontFamily: 'Heebo',
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        height: 1.45,
-                        color: theme.colorScheme.primary,
+                  Flexible(
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Text(
+                        widget.result.hebrewWithNikkud,
+                        textAlign: TextAlign.right,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontFamily: 'Heebo',
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          height: 1.45,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),

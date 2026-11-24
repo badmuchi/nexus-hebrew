@@ -2,14 +2,22 @@ import 'package:nexus_hebrew_app/core/utils/hebrew_normalizer.dart';
 import 'package:nexus_hebrew_app/features/alphabet/data/datasources/hebrew_alphabet_seed_data.dart';
 import 'package:nexus_hebrew_app/features/alphabet/domain/entities/hebrew_letter.dart';
 import 'package:nexus_hebrew_app/features/alphabet/domain/entities/nikkud_mark.dart';
+import 'package:nexus_hebrew_app/features/army_tzahal/data/datasources/army_tzahal_seed_data.dart';
+import 'package:nexus_hebrew_app/features/army_tzahal/domain/entities/army_term.dart';
+import 'package:nexus_hebrew_app/features/chat_slang/data/datasources/chat_slang_seed_data.dart';
+import 'package:nexus_hebrew_app/features/chat_slang/domain/entities/chat_channel.dart';
 import 'package:nexus_hebrew_app/features/dictionary/domain/entities/dictionary_entry.dart';
 import 'package:nexus_hebrew_app/features/grammar/data/datasources/hebrew_prepositions_seed_data.dart';
 import 'package:nexus_hebrew_app/features/grammar/domain/entities/preposition_inflection.dart';
+import 'package:nexus_hebrew_app/features/news/data/datasources/easy_hebrew_news_seed_data.dart';
+import 'package:nexus_hebrew_app/features/news/domain/entities/easy_hebrew_article.dart';
 import 'package:nexus_hebrew_app/features/scenes/data/datasources/israeli_scenes_seed_data.dart';
 import 'package:nexus_hebrew_app/features/scenes/domain/entities/israeli_life_scene.dart';
 import 'package:nexus_hebrew_app/features/shoresh/data/datasources/shoresh_seed_data.dart';
 import 'package:nexus_hebrew_app/features/shoresh/domain/entities/shoresh_entity.dart';
 import 'package:nexus_hebrew_app/features/slang/domain/entities/slang_expression.dart';
+import 'package:nexus_hebrew_app/features/voice_ai/data/datasources/voice_ai_seed_data.dart';
+import 'package:nexus_hebrew_app/features/voice_ai/domain/entities/voice_scenario.dart';
 import '../entities/omni_search_result.dart';
 
 /// High-performance in-memory search engine across all app domains.
@@ -22,7 +30,7 @@ class OmniSearchEngine {
     }
   }
 
-  /// Factory creating an engine pre-populated with alphabet letters, nikkud, and core prepositions.
+  /// Factory creating an engine pre-populated with alphabet letters, nikkud, prepositions, roots, IDF slang, chat slang, and news.
   factory OmniSearchEngine.withStaticDefaults() {
     final engine = OmniSearchEngine();
     engine.addAlphabetLetters(HebrewAlphabetSeedData.letters);
@@ -30,6 +38,10 @@ class OmniSearchEngine {
     engine.addPrepositions(HebrewPrepositionsSeedData.prepositions);
     engine.addSceneContent(IsraeliScenesSeedData.scenes);
     engine.addShoreshRoots(ShoreshSeedData.roots);
+    engine.addArmyTerms(ArmyTzahalSeedData.terms);
+    engine.addChatThreads(ChatSlangSeedData.threads);
+    engine.addNewsArticles(EasyHebrewNewsSeedData.articles);
+    engine.addVoiceScenarios(VoiceAiSeedData.scenarios);
     return engine;
   }
 
@@ -227,6 +239,85 @@ class OmniSearchEngine {
           ),
         );
       }
+    }
+  }
+
+  /// Indexes military and IDF slang terms, acronyms, and draft concepts.
+  void addArmyTerms(Iterable<ArmyTerm> terms) {
+    for (final t in terms) {
+      _items.add(
+        OmniSearchResult(
+          id: 'army_${t.id}',
+          category: OmniResultCategory.army,
+          hebrewWithNikkud: t.hebrewWithNikkud,
+          hebrewWithoutNikkud: t.hebrewNormalized,
+          translationRu: t.meaningRu,
+          transliteration: t.transcriptionRu,
+          details: 'ЦАХАЛ • ${t.culturalContextRu.isNotEmpty ? t.culturalContextRu : t.exampleRu}',
+          audioText: t.hebrewWithNikkud,
+          originalObject: t,
+        ),
+      );
+    }
+  }
+
+  /// Indexes Israeli WhatsApp group chat messages and chat slang abbreviations.
+  void addChatThreads(Iterable<ChatThread> threads) {
+    for (final thread in threads) {
+      for (final msg in thread.messages) {
+        if (msg.slangDictionary.isNotEmpty) {
+          msg.slangDictionary.forEach((hebrew, explanation) {
+            _items.add(
+              OmniSearchResult(
+                id: 'chat_${msg.id}_$hebrew',
+                category: OmniResultCategory.chat,
+                hebrewWithNikkud: hebrew,
+                hebrewWithoutNikkud: HebrewNormalizer.stripNikkud(hebrew),
+                translationRu: explanation,
+                details: '${thread.groupNameRu} • ${msg.textPlain}',
+                audioText: hebrew,
+                originalObject: msg,
+              ),
+            );
+          });
+        }
+      }
+    }
+  }
+
+  /// Indexes adapted easy Hebrew news articles.
+  void addNewsArticles(Iterable<EasyHebrewArticle> articles) {
+    for (final a in articles) {
+      _items.add(
+        OmniSearchResult(
+          id: 'news_${a.id}',
+          category: OmniResultCategory.news,
+          hebrewWithNikkud: a.titleHebrewWithNikkud,
+          hebrewWithoutNikkud: a.titleHebrewNormalized,
+          translationRu: a.titleRu,
+          details: '${a.category.titleRu} • Уровень ${a.readingLevelRu} • ${a.summaryRu}',
+          audioText: a.titleHebrewWithNikkud,
+          originalObject: a,
+        ),
+      );
+    }
+  }
+
+  /// Indexes Sabra Voice AI spoken conversational scenarios.
+  void addVoiceScenarios(Iterable<VoiceScenario> scenarios) {
+    for (final s in scenarios) {
+      _items.add(
+        OmniSearchResult(
+          id: 'voice_${s.id}',
+          category: OmniResultCategory.dialogue,
+          hebrewWithNikkud: s.titleHebrewWithNikkud,
+          hebrewWithoutNikkud: HebrewNormalizer.stripNikkud(s.titleHebrewWithNikkud),
+          translationRu: '${s.titleRu} (${s.locationRu})',
+          details: '${s.iconEmoji} Сабра AI диалог • ${s.descriptionRu}',
+          audioText: s.titleHebrewWithNikkud,
+          originalObject: s,
+        ),
+      );
     }
   }
 
