@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../domain/entities/daily_goal.dart';
 import 'daily_goal_rings_painter.dart';
 import 'goal_settings_sheet.dart';
@@ -12,6 +13,7 @@ class DailyGoalRingsCard extends StatelessWidget {
   final VoidCallback? onNavigateToCards;
   final VoidCallback? onNavigateToPractice;
   final VoidCallback? onNavigateToQuests;
+  final bool showNikkud;
 
   const DailyGoalRingsCard({
     super.key,
@@ -20,6 +22,7 @@ class DailyGoalRingsCard extends StatelessWidget {
     this.onNavigateToCards,
     this.onNavigateToPractice,
     this.onNavigateToQuests,
+    this.showNikkud = true,
   });
 
   @override
@@ -50,11 +53,13 @@ class DailyGoalRingsCard extends StatelessWidget {
                       Row(
                         children: [
                           const Text('🎯 ', style: TextStyle(fontSize: 16)),
-                          const Directionality(
+                          Directionality(
                             textDirection: TextDirection.rtl,
                             child: Text(
-                              'יַעַד יוֹמִי וְהֶרְגֵּלִים',
-                              style: TextStyle(
+                              showNikkud
+                                  ? 'יַעַד יוֹמִי וְהֶרְגֵּלִים'
+                                  : HebrewNormalizer.stripNikkud('יַעַד יוֹמִי וְהֶרְגֵּלִים'),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                                 height: 1.45,

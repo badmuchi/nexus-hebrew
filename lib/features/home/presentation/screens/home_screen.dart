@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/settings/app_settings_storage.dart';
+import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../../assessment/presentation/screens/level_assessment_screen.dart';
 import '../../../gamification/domain/services/sabra_quest_service.dart';
 import '../../../gamification/presentation/widgets/sabra_daily_quests_card.dart';
@@ -185,7 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final (greetingHebrew, greetingRussian) = _getGreeting();
+    final (rawGreetingHebrew, greetingRussian) = _getGreeting();
+    final greetingHebrew = _showNikkud ? rawGreetingHebrew : HebrewNormalizer.stripNikkud(rawGreetingHebrew);
     final todayWord = WordOfTheDay.getForDate();
 
     return Scaffold(
@@ -519,6 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_dailyGoal != null) ...[
             DailyGoalRingsCard(
               progress: _dailyGoal!,
+              showNikkud: _showNikkud,
               onIntensityChanged: _onGoalIntensityChanged,
               onNavigateToCards: () => widget.onNavigateToTab?.call(2),
               onNavigateToPractice: () => widget.onNavigateToTab?.call(6),
@@ -535,6 +538,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : 0;
               return SabraDailyQuestsCard(
                 questService: _sabraQuestService,
+                showNikkud: _showNikkud,
                 streakDays: streak,
                 onXpClaimed: (_) {
                   unawaited(context.read<ProgressCubit>().loadProgress());

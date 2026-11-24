@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../domain/entities/sabra_quest.dart';
 import '../../domain/services/sabra_quest_service.dart';
 
@@ -16,6 +17,7 @@ class SabraDailyQuestsCard extends StatefulWidget {
   final VoidCallback? onNavigateToDialogue;
   final VoidCallback? onNavigateToSrs;
   final VoidCallback? onNavigateToShoresh;
+  final bool showNikkud;
 
   const SabraDailyQuestsCard({
     super.key,
@@ -26,6 +28,7 @@ class SabraDailyQuestsCard extends StatefulWidget {
     this.onNavigateToDialogue,
     this.onNavigateToSrs,
     this.onNavigateToShoresh,
+    this.showNikkud = true,
   });
 
   @override
@@ -211,11 +214,13 @@ class _SabraDailyQuestsCardState extends State<SabraDailyQuestsCard> {
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          const Directionality(
+                          Directionality(
                             textDirection: TextDirection.rtl,
                             child: Text(
-                              'מְשִׂימוֹת צַבָּר',
-                              style: TextStyle(
+                              widget.showNikkud
+                                  ? 'מְשִׂימוֹת צַבָּר'
+                                  : HebrewNormalizer.stripNikkud('מְשִׂימוֹת צַבָּר'),
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF2E7D32),
