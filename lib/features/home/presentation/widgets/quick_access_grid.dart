@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/logging/app_logger.dart';
+import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../../ai_roleplay/presentation/screens/ai_roleplay_catalog_screen.dart';
 import '../../../alphabet/presentation/screens/alphabet_screen.dart';
 import '../../../army_tzahal/presentation/screens/army_tzahal_screen.dart';
@@ -40,6 +41,7 @@ class QuickAccessGrid extends StatelessWidget {
   final AddCardToSrsUseCase? addCardToSrsUseCase;
   final GetSlangExpressionsUseCase? getSlangUseCase;
   final AppDatabase? database;
+  final bool showNikkud;
 
   const QuickAccessGrid({
     super.key,
@@ -48,6 +50,7 @@ class QuickAccessGrid extends StatelessWidget {
     this.addCardToSrsUseCase,
     this.getSlangUseCase,
     this.database,
+    this.showNikkud = true,
   });
 
   @override
@@ -537,7 +540,7 @@ class QuickAccessGrid extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final item = items[index];
-            return _QuickItemCard(item: item, theme: theme);
+            return _QuickItemCard(item: item, theme: theme, showNikkud: showNikkud);
           },
         );
       },
@@ -567,10 +570,12 @@ class _QuickItemCard extends StatelessWidget {
   const _QuickItemCard({
     required this.item,
     required this.theme,
+    required this.showNikkud,
   });
 
   final _QuickItem item;
   final ThemeData theme;
+  final bool showNikkud;
 
   @override
   Widget build(BuildContext context) {
@@ -612,7 +617,7 @@ class _QuickItemCard extends StatelessWidget {
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: Text(
-                          item.hebrewTitle,
+                          showNikkud ? item.hebrewTitle : HebrewNormalizer.stripNikkud(item.hebrewTitle),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,

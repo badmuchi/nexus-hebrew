@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/audio/audio_playback_service.dart';
 import '../../../../core/result/result.dart';
+import '../../../../core/utils/hebrew_normalizer.dart';
 import '../../../srs/domain/entities/srs_card.dart';
 import '../../../srs/domain/usecases/add_card_to_srs.dart';
 import '../../domain/entities/word_of_the_day.dart';
@@ -253,7 +254,7 @@ class _WordOfTheDayCardState extends State<WordOfTheDayCard> {
                   Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
-                      widget.word.exampleSentenceHebrew,
+                      widget.showNikkud ? widget.word.exampleSentenceHebrew : HebrewNormalizer.stripNikkud(widget.word.exampleSentenceHebrew),
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         height: 1.35,

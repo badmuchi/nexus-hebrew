@@ -343,7 +343,7 @@ class _SabraDailyQuestsCardState extends State<SabraDailyQuestsCard> {
                       Directionality(
                         textDirection: TextDirection.rtl,
                         child: Text(
-                          quest.type.titleHebrew,
+                          widget.showNikkud ? quest.type.titleHebrew : HebrewNormalizer.stripNikkud(quest.type.titleHebrew),
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,

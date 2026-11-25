@@ -652,6 +652,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 10),
           QuickAccessGrid(
+            showNikkud: _showNikkud,
             onNavigateToTab: widget.onNavigateToTab,
             audioService: widget.audioService,
             addCardToSrsUseCase: widget.addCardToSrsUseCase,
